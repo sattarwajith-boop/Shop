@@ -1162,6 +1162,49 @@ textarea.fi{resize:vertical;min-height:80px}
 .fb-ok{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb)}
 .fb-err{background:var(--redd);color:var(--red);border:1px solid var(--redb)}
 .fb-none{background:var(--ambd);color:var(--amb);border:1px solid var(--ambb)}
+
+/* ━━━━━━━━━━━━━━━━━━ MEDIA GALLERY ━━━━━━━━━━━━━━━━━━ */
+.gallery-wrap{position:relative}
+.gallery-main{
+  border-radius:var(--r5);overflow:hidden;aspect-ratio:1;
+  background:var(--l2b);border:1px solid var(--b2);
+  position:relative;box-shadow:var(--s4),var(--gx);
+  display:flex;align-items:center;justify-content:center;
+}
+.gallery-main img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--ease);cursor:zoom-in}
+.gallery-main img:hover{transform:scale(1.04)}
+.gallery-main video{width:100%;height:100%;object-fit:contain;border-radius:var(--r5)}
+.gallery-main iframe{width:100%;height:100%;border:none;border-radius:var(--r5)}
+.gallery-main .d-ph{width:100%;height:100%}
+.gallery-thumbs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.gallery-thumbs::-webkit-scrollbar{display:none}
+.gthumb{
+  width:68px;height:60px;flex-shrink:0;border-radius:var(--r2);overflow:hidden;
+  border:2px solid var(--b2);cursor:pointer;background:var(--l2b);
+  transition:border-color var(--dur) var(--ease),transform var(--dur) var(--ease);
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.gthumb img{width:100%;height:100%;object-fit:cover}
+.gthumb.vid-thumb,.gthumb.yt-thumb{background:var(--l3b);font-size:1.4rem}
+.gthumb.active{border-color:var(--g0);box-shadow:var(--gx)}
+.gthumb:hover{border-color:var(--bgs);transform:translateY(-2px)}
+.gthumb-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.38);font-size:1.1rem}
+.pm-media-item{
+  position:relative;width:80px;height:72px;border-radius:var(--r2);overflow:hidden;
+  border:1px solid var(--b2);background:var(--l2b);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:grab;
+}
+.pm-media-item img{width:100%;height:100%;object-fit:cover}
+.pm-media-item .pm-rm{
+  position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);border:none;color:#fff;
+  width:18px;height:18px;border-radius:50%;font-size:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background var(--dur) var(--ease);
+}
+.pm-media-item .pm-rm:hover{background:var(--red)}
+.pm-media-item .pm-type{position:absolute;bottom:2px;left:3px;font-size:9px;font-weight:700;color:var(--g1);background:rgba(0,0,0,.65);padding:1px 5px;border-radius:3px}
+.ship-fee{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 12px;border-radius:var(--rp);margin-bottom:.75rem}
+.ship-free{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb)}
+.ship-paid{background:var(--blud);color:var(--blu);border:1px solid rgba(96,165,250,.28)}
 @media(max-width:1100px){.adm-shell{grid-template-columns:1fr}.adm-side{display:none}}
 @media(max-width:980px){
   .sgrid{grid-template-columns:1fr 1fr}
@@ -1474,11 +1517,91 @@ textarea.fi{resize:vertical;min-height:80px}
             </div>
             <button class="btn btn-gold" style="margin-top:1.1rem" onclick="saveBank()">Save Bank Details</button>
           </div>
+          <!-- ── Image Storage Settings ── -->
           <div class="sset">
-            <h4>📷 ImgBB API Key — Free Receipt Hosting</h4>
-            <p style="font-size:13px;color:var(--t3);margin-bottom:.85rem">Get free at <strong style="color:var(--g0)">imgbb.com</strong> → Account → API. Receipts upload free — only URL stored in Firestore.</p>
-            <div class="fg" style="margin-bottom:.85rem"><label class="fl">ImgBB API Key</label><input class="fi" id="sImgbb" placeholder="xxxxxxxxxxxxxxxx"></div>
-            <button class="btn btn-gold" onclick="saveImgbb()">Save ImgBB Key</button>
+            <h4>🗄️ Media Storage — Google Drive or ImgBB</h4>
+            <p style="font-size:13px;color:var(--t3);margin-bottom:1.1rem">
+              Choose where to upload receipt images. <strong style="color:var(--g1)">Google Drive recommended</strong> — free, unlimited, your own account.
+            </p>
+
+            <!-- Storage toggle -->
+            <div class="trow" style="margin-bottom:1rem">
+              <div class="trow-lbl">
+                <strong>Active Storage</strong>
+                <span id="storageActiveLabel">Google Drive is active</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:12px;color:var(--t3)">ImgBB</span>
+                <label class="tog"><input type="checkbox" id="tGdrive" checked onchange="toggleStorageMode(this.checked)"><span class="tslider"></span></label>
+                <span style="font-size:12px;color:var(--g1)">Google Drive</span>
+              </div>
+            </div>
+
+            <!-- Google Drive section -->
+            <div id="gdriveSection">
+              <div style="background:rgba(34,197,94,.06);border:1px solid var(--grnb);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+                <p style="font-size:13px;color:var(--grn);font-weight:600;margin-bottom:.35rem">✓ Google Drive Active</p>
+                <p style="font-size:12.5px;color:var(--t3)">Receipts and product images are uploaded to your Google Drive folder via the API. Files are stored in your Google account — you own everything.</p>
+              </div>
+              <div class="fg2" style="margin-bottom:.85rem">
+                <div class="fg"><label class="fl">Google API Key</label><input class="fi" id="sGdApiKey" placeholder="AIzaSy…"></div>
+                <div class="fg"><label class="fl">Google Client ID</label><input class="fi" id="sGdClientId" placeholder="123456789-abc….apps.googleusercontent.com"></div>
+                <div class="fg fw"><label class="fl">Drive Folder ID (for uploads)</label><input class="fi" id="sGdFolderId" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs"></div>
+                <div class="fg fw">
+                  <label class="fl">Apps Script Web App URL <span style="font-weight:400;text-transform:none;font-size:11px;letter-spacing:0">— the actual upload endpoint</span></label>
+                  <input class="fi" id="sGasUrl" placeholder="https://script.google.com/macros/s/AKfycb…/exec">
+                </div>
+              </div>
+              <button class="btn btn-gold" onclick="saveGdriveCfg()">Save Google Drive Config</button>
+              <button class="btn btn-ghost btn-sm" style="margin-left:8px" onclick="testGdriveConnection()">Test Connection</button>
+              <details style="margin-top:1.25rem;cursor:pointer">
+                <summary style="font-size:13px;color:var(--g1);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px">
+                  📖 How to set up Google Drive as your server →
+                </summary>
+                <div style="margin-top:1rem;font-size:13px;color:var(--t3);line-height:2;background:var(--l2b);border:1px solid var(--b2);border-radius:var(--r2);padding:1.25rem">
+                  <strong style="color:var(--pale);display:block;margin-bottom:.5rem">Step 1 — Create the upload folder</strong>
+                  Go to <strong style="color:var(--g0)">drive.google.com</strong> → New → Folder → name it "SH Shopping Receipts"<br>
+                  Right-click the folder → Share → Anyone with the link → Viewer<br>
+                  Copy the folder ID from the URL: <code style="background:var(--l3);padding:1px 6px;border-radius:3px;font-size:12px">drive.google.com/drive/folders/<strong>THIS_IS_THE_ID</strong></code>
+                  <br><br>
+                  <strong style="color:var(--pale);display:block;margin-bottom:.5rem">Step 2 — Create the Apps Script</strong>
+                  Go to <strong style="color:var(--g0)">script.google.com</strong> → New Project → paste this code:<br>
+                  <code style="display:block;background:var(--l1);padding:.75rem;border-radius:var(--r1);margin-top:.5rem;font-size:11.5px;line-height:1.8;white-space:pre-wrap">function doPost(e){
+  const d=JSON.parse(e.postData.contents);
+  const bytes=Utilities.base64Decode(d.base64);
+  const blob=Utilities.newBlob(bytes,d.mimeType,d.filename);
+  const folder=DriveApp.getFolderById(d.folderId);
+  const file=folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE,DriveApp.Permission.VIEW);
+  return ContentService.createTextOutput(JSON.stringify({
+    url:'https://drive.google.com/uc?export=view&id='+file.getId(),
+    id:file.getId()
+  })).setMimeType(ContentService.MimeType.JSON);
+}</code>
+                  <br>
+                  <strong style="color:var(--pale);display:block;margin-bottom:.5rem">Step 3 — Deploy the Apps Script</strong>
+                  Click <strong>Deploy → New deployment</strong><br>
+                  Type: <strong>Web app</strong><br>
+                  Execute as: <strong>Me</strong><br>
+                  Who has access: <strong>Anyone</strong><br>
+                  Click <strong>Deploy</strong> → Authorize → Copy the <strong>Web app URL</strong><br>
+                  Paste it in the "Apps Script Web App URL" field above.
+                  <br><br>
+                  <strong style="color:var(--pale);display:block;margin-bottom:.5rem">Step 4 — Done!</strong>
+                  Every receipt uploaded at checkout and every product image added via Google Drive URL will be stored in your own Drive. You own all files permanently.
+                </div>
+              </details>
+            </div>
+
+            <!-- ImgBB section (hidden by default) -->
+            <div id="imgbbSection" style="display:none">
+              <div style="background:var(--ambd);border:1px solid var(--ambb);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+                <p style="font-size:13px;color:var(--amb);font-weight:600;margin-bottom:.35rem">⚠ ImgBB Mode</p>
+                <p style="font-size:12.5px;color:var(--t3)">Images hosted on ImgBB's servers (free). Get key at imgbb.com → Account → API.</p>
+              </div>
+              <div class="fg" style="margin-bottom:.85rem"><label class="fl">ImgBB API Key</label><input class="fi" id="sImgbb" placeholder="xxxxxxxxxxxxxxxx"></div>
+              <button class="btn btn-gold" onclick="saveImgbb()">Save ImgBB Key</button>
+            </div>
           </div>
           <div class="sset">
             <h4>📧 EmailJS — Order Notifications &amp; Reports</h4>
@@ -1602,34 +1725,54 @@ textarea.fi{resize:vertical;min-height:80px}
 
 <!-- ████ PRODUCT MODAL ████ -->
 <div class="ov" id="pmOv" onclick="if(event.target===this)closePM()">
-  <div class="modal">
+  <div class="modal" style="width:700px">
     <div class="mhd"><h3 id="pmTitle">Add Product</h3><button class="mclose" onclick="closePM()">✕</button></div>
     <div class="fg2">
       <div class="fg fw"><label class="fl">Product Name *</label><input class="fi" id="pm-n" placeholder="e.g. Ceylon Premium Tea 500g"></div>
       <div class="fg fw"><label class="fl">Description</label><textarea class="fi" id="pm-d" rows="3" placeholder="Describe the product…"></textarea></div>
       <div class="fg"><label class="fl">Price (Rs.) *</label><input class="fi" id="pm-p" type="number" min="0" step="1" placeholder="1500"></div>
       <div class="fg"><label class="fl">Original Price (Rs.)</label><input class="fi" id="pm-op" type="number" min="0" step="1" placeholder="optional"></div>
+      <div class="fg"><label class="fl">Shipping Fee (Rs.)</label><input class="fi" id="pm-ship" type="number" min="0" step="1" placeholder="0 = free shipping"></div>
       <div class="fg"><label class="fl">Category</label><input class="fi" id="pm-c" placeholder="e.g. Electronics"></div>
       <div class="fg"><label class="fl">Stock Quantity</label><input class="fi" id="pm-s" type="number" min="0" placeholder="50"></div>
       <div class="fg"><label class="fl">Badge</label><input class="fi" id="pm-b" placeholder="New / Sale / Hot"></div>
       <div class="fg"><label class="fl">Rating (0–5)</label><input class="fi" id="pm-r" type="number" step="0.1" min="0" max="5" placeholder="4.5"></div>
-      <div class="fg fw">
-        <label class="fl">Product Image</label>
-        <div class="iup" id="iUpArea" onclick="document.getElementById('pm-img-file').click()">
-          <div class="iup-ico">🖼️</div>
-          <div class="iup-txt">Click to upload image</div>
-          <div class="iup-hint">JPG or PNG · Max 2MB · Stored as base64</div>
-          <img id="pImgThumb" alt="">
+      <div class="fg"><label class="fl">Featured?</label><select class="fi" id="pm-feat"><option value="false">No</option><option value="true">Yes — show first</option></select></div>
+
+      <!-- ── Multi-image + Video media section ── -->
+      <div class="fg fw" style="margin-top:.5rem">
+        <label class="fl" style="margin-bottom:.6rem">Product Media — Images &amp; Videos</label>
+        <p style="font-size:12px;color:var(--t3);margin-bottom:.85rem">First image = main display. Add up to 8 images and 2 videos. Use URLs from Google Drive or any public link.</p>
+
+        <!-- Media URL input row -->
+        <div style="display:flex;gap:8px;margin-bottom:.75rem">
+          <input class="fi" id="pm-media-url" placeholder="Paste image URL or Google Drive share link or YouTube URL…" style="flex:1;font-size:13px">
+          <select class="fi" id="pm-media-type" style="width:110px;font-size:13px">
+            <option value="image">🖼 Image</option>
+            <option value="video">🎬 Video</option>
+            <option value="youtube">▶ YouTube</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="addMediaItem()" type="button">Add</button>
+        </div>
+
+        <!-- OR upload local image -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
+          <div style="flex:1;height:1px;background:var(--b1)"></div>
+          <span style="font-size:12px;color:var(--t3)">or upload local image (base64)</span>
+          <div style="flex:1;height:1px;background:var(--b1)"></div>
+        </div>
+        <div class="iup" id="iUpArea" onclick="document.getElementById('pm-img-file').click()" style="padding:1rem">
+          <div class="iup-ico" style="font-size:1.5rem">🖼️</div>
+          <div class="iup-txt" style="font-size:12.5px">Click to upload local image</div>
+          <div class="iup-hint">JPG/PNG · Max 2MB</div>
+          <img id="pImgThumb" alt="" style="max-height:80px">
         </div>
         <input type="file" id="pm-img-file" accept="image/*" style="display:none" onchange="handlePImg(this)">
-        <div style="display:flex;align-items:center;gap:8px;margin-top:.85rem">
-          <div style="flex:1;height:1px;background:var(--b1)"></div>
-          <span style="font-size:12px;color:var(--t3)">or paste image URL</span>
-          <div style="flex:1;height:1px;background:var(--b1)"></div>
-        </div>
-        <input class="fi" id="pm-img-url" placeholder="https://… image URL" style="margin-top:.75rem" oninput="prevUrl(this.value)">
+
+        <!-- Media preview grid -->
+        <div id="pm-media-grid" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem"></div>
+        <p style="font-size:11.5px;color:var(--t3);margin-top:.5rem">Drag items to reorder · Click ✕ to remove</p>
       </div>
-      <div class="fg"><label class="fl">Featured?</label><select class="fi" id="pm-feat"><option value="false">No</option><option value="true">Yes — show first</option></select></div>
     </div>
     <div class="mfoot">
       <button class="btn btn-dark" onclick="closePM()">Cancel</button>
@@ -1685,12 +1828,12 @@ try {
 /* ── Fallback hardcoded config (optional — leave as PASTE_... if using admin panel) ── */
 if(!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith('PASTE')) {
   firebaseConfig = {
-    apiKey:"AIzaSyAr3z1dK4oHKTgHPgjcvo1HxTzU1e7lRMA",
-    authDomain:"sh-shopping-479e8.firebaseapp.com",
-    projectId:"sh-shopping-479e8",
-    storageBucket:"sh-shopping-479e8.firebasestorage.app",
-    messagingSenderId:"162214181583",
-    appId:"1:162214181583:web:e38dfca0570201ce8bd5ba"
+    apiKey:"PASTE_API_KEY",
+    authDomain:"PASTE_AUTH_DOMAIN",
+    projectId:"PASTE_PROJECT_ID",
+    storageBucket:"PASTE_STORAGE_BUCKET",
+    messagingSenderId:"PASTE_SENDER_ID",
+    appId:"PASTE_APP_ID"
   };
 }
 
@@ -1956,16 +2099,38 @@ function showDetail(id){
   const sc=p.stock>20?'in':p.stock>5?'lo':'ot';
   const sl=p.stock>20?'✓ In Stock':p.stock>5?`⚠ Only ${p.stock} left`:p.stock===0?'✗ Out of Stock':`⚠ Only ${p.stock} left!`;
   const rel=prods.filter(x=>x.category===p.category&&x.id!==p.id).slice(0,4);
-  const img=p.image?`<img src="${p.image}" alt="${p.name||''}">`:`<div class="d-ph">${p.emoji||'📦'}</div>`;
+
+  // Build media array — support both old single image and new media[] array
+  const media=Array.isArray(p.media)&&p.media.length>0
+    ?p.media
+    :(p.image?[{type:'image',url:p.image}]:[]);
+
+  // Gallery HTML
+  const mainId=`gm-${p.id}`;
+  const thumbsId=`gt-${p.id}`;
+  const mainHtml=media.length
+    ?renderGalleryMain(media[0],mainId)
+    :`<div class="d-ph">${p.emoji||'📦'}</div>`;
+
+  const thumbsHtml=media.length>1?media.map((m,i)=>renderGalleryThumb(m,i,mainId,thumbsId,p.id)).join(''):'';
+
+  const shipHtml=p.shippingFee>0
+    ?`<div class="ship-fee ship-paid">🚚 Shipping: ${lkr(p.shippingFee)}</div>`
+    :`<div class="ship-fee ship-free">✓ Free Shipping</div>`;
+
   document.getElementById('detailCt').innerHTML=`
     <button class="bbtn" onclick="go('store')">Back to Store</button>
     <div class="dgrid">
-      <div class="d-media">${img}</div>
+      <div class="gallery-wrap">
+        <div class="gallery-main" id="${mainId}">${mainHtml}</div>
+        ${thumbsHtml?`<div class="gallery-thumbs" id="${thumbsId}">${thumbsHtml}</div>`:''}
+      </div>
       <div>
         <div class="dcat">${p.category||''}</div>
         <div class="dtit">${p.name||''}</div>
         ${p.rating?`<div class="drat">${stars(p.rating,true)}<strong style="margin-left:4px">${p.rating}</strong><span style="color:var(--t3);font-size:13px;margin-left:4px">(${p.reviews||0} reviews)</span></div>`:''}
         <div class="dpr">${lkr(p.price)}${p.originalPrice?`<span class="dpro">${lkr(p.originalPrice)}</span><span class="dsave">Save ${pct}%</span>`:''}</div>
+        ${shipHtml}
         <p class="ddesc">${p.description||''}</p>
         <div class="dstk ${sc}">${sl}</div>
         <div class="dact">
@@ -1986,10 +2151,8 @@ function showDetail(id){
     <div class="reviews-sec" id="rvSec-${p.id}">
       <div class="sh"><h2 class="st">Customer <em>Reviews</em></h2></div>
       <div class="rv-list" id="rvList-${p.id}"><div class="ldc"><div class="spin"></div></div></div>
-      <!-- Submit review form -->
       <div class="rv-form">
         <h4>Write a Review</h4>
-        <p style="font-size:13px;color:var(--t3);margin-bottom:1rem">Your review will appear after admin approval. No account needed — just your name.</p>
         <div class="fg" style="margin-bottom:1rem">
           <label class="fl">Your Name *</label>
           <input class="fi" id="rv-name-${p.id}" placeholder="e.g. Saman P.">
@@ -2013,8 +2176,14 @@ function showDetail(id){
       </div>
     </div>`;
   go('detail');
-  // Load approved reviews for this product
   loadProductReviews(p.id);
+  // activate first thumb
+  if(media.length>1){
+    setTimeout(()=>{
+      const ft=document.querySelector(`#${thumbsId} .gthumb`);
+      if(ft)ft.classList.add('active');
+    },50);
+  }
 }
 function adjDQ(d){detQty=Math.max(1,detQty+d);const e=document.getElementById('dqn');if(e)e.textContent=detQty}
 
@@ -2043,17 +2212,20 @@ function renderCart(){
     return;
   }
   const sub=cartSub();
+  const ship=cartShipping();
+  const grandTotal=sub+ship;
   el.innerHTML=`
     <div class="cart-wrap">
       <div>
         <div class="clist">
           ${items.map(i=>{
             const imgEl=i.p.image?`<img src="${i.p.image}" alt="">`:(i.p.emoji||'📦');
+            const sf=i.p.shippingFee||0;
             return`<div class="ci">
               <div class="ci-img">${imgEl}</div>
               <div class="ci-b">
                 <div class="ci-nm">${i.p.name}</div>
-                <div class="ci-mt">${i.p.category||''} · ${lkr(i.p.price)}</div>
+                <div class="ci-mt">${i.p.category||''} · ${lkr(i.p.price)}${sf>0?` · 🚚 ${lkr(sf)}`:'&nbsp;<span style="color:var(--grn);font-size:11px">Free shipping</span>'}</div>
               </div>
               <div class="qc">
                 <button class="qbtn" onclick="chQty('${i.p.id}',-1)">−</button>
@@ -2069,7 +2241,8 @@ function renderCart(){
       <div class="csum">
         <h3>Order Summary</h3>
         <div class="crow"><span>Subtotal (${items.reduce((s,i)=>s+i.qty,0)} items)</span><span>${lkr(sub)}</span></div>
-        <div class="crow tot"><span>Total</span><span class="ctot-val">${lkr(sub)}</span></div>
+        ${ship>0?`<div class="crow"><span>Shipping</span><span>${lkr(ship)}</span></div>`:`<div class="crow" style="color:var(--grn)"><span>Shipping</span><span>Free</span></div>`}
+        <div class="crow tot"><span>Total</span><span class="ctot-val">${lkr(grandTotal)}</span></div>
         <button class="btn btn-gold btn-lg" style="width:100%;justify-content:center;margin-top:1.5rem" onclick="openCO()">Proceed to Checkout</button>
         <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:.75rem" onclick="go('store')">Continue Shopping</button>
       </div>
@@ -2126,10 +2299,14 @@ async function applyCC(){
   renderCOSummary();
 }
 function renderCOSummary(){
-  const sub=cartSub();const disc=coDisc?.amt||0;const total=sub-disc;
+  const sub=cartSub();
+  const ship=cartShipping();
+  const disc=coDisc?.amt||0;
+  const total=sub+ship-disc;
   document.getElementById('coSummary').innerHTML=`
     <div class="csum" style="margin-bottom:.5rem">
       <div class="crow"><span>Subtotal</span><span>${lkr(sub)}</span></div>
+      ${ship>0?`<div class="crow"><span>Shipping</span><span>${lkr(ship)}</span></div>`:`<div class="crow" style="color:var(--grn)"><span>Shipping</span><span>Free</span></div>`}
       ${disc>0?`<div class="crow disc"><span>Discount (${coDisc.code})</span><span>−${lkr(disc)}</span></div>`:''}
       <div class="crow tot"><span>Total to Pay</span><span class="ctot-val">${lkr(total)}</span></div>
     </div>`;
@@ -2156,24 +2333,27 @@ async function placeOrder(){
   if(!proofLocalPreview){toast('Please upload your payment receipt.','err');return;}
   const btn=document.getElementById('placeBtn');
   btn.disabled=true;btn.textContent='Uploading receipt…';
-  document.getElementById('upStatus').textContent='Uploading to ImgBB…';
+  document.getElementById('upStatus').textContent='Uploading receipt…';
   let receiptUrl=proofLocalPreview,receiptSource='base64';
   try{
-    const result=await uploadToImgbb(proofLocalPreview,'receipt_'+Date.now());
+    const result=await uploadToStorage(proofLocalPreview,'receipt_'+Date.now());
     receiptUrl=result.url;receiptSource=result.source;
-    document.getElementById('upStatus').textContent='Receipt uploaded ✓';
-  }catch(e){console.warn('ImgBB fallback:',e.message);}
+    document.getElementById('upStatus').textContent='Receipt uploaded ✓ ('+receiptSource+')';
+  }catch(e){console.warn('Upload fallback:',e.message);}
   btn.textContent='Placing order…';
-  const sub=cartSub();const disc=coDisc?.amt||0;const total=sub-disc;
+  const sub=cartSub();
+  const ship=cartShipping();
+  const disc=coDisc?.amt||0;
+  const total=sub+ship-disc;
   const orderId=uid();
-  const items=Object.values(cart).map(i=>({id:i.p.id,name:i.p.name,price:i.p.price,qty:i.qty,image:i.p.image||null}));
+  const items=Object.values(cart).map(i=>({id:i.p.id,name:i.p.name,price:i.p.price,qty:i.qty,shippingFee:i.p.shippingFee||0,image:i.p.image||null}));
   try{
-    await fAdd('orders',{orderId,customer:{name,phone,address:addr},items,subtotal:sub,discount:disc,coupon:coDisc?.code||null,total,paymentProof:receiptUrl,paymentProofSource:receiptSource,status:'Pending Payment'});
+    await fAdd('orders',{orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,paymentProof:receiptUrl,paymentProofSource:receiptSource,status:'Pending Payment'});
     for(const i of items){const p=prods.find(x=>x.id===i.id);if(p){p.stock=Math.max(0,p.stock-i.qty);await fUpd('products',i.id,{stock:p.stock});}}
     sendOrderEmail({orderId,customer:{name,phone,address:addr},items,total});
     cart={};saveCart();updBadge();coDisc=null;proofLocalPreview=null;
     closeCO();
-    showBill({orderId,customer:{name,phone,address:addr},items,subtotal:sub,discount:disc,coupon:coDisc?.code||null,total,status:'Pending Payment'});
+    showBill({orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,status:'Pending Payment'});
     toast('Order placed! We will verify your payment shortly.','ok');
   }catch(e){toast('Error: '+e.message,'err');btn.disabled=false;btn.textContent='Place Order';}
 }
@@ -2275,6 +2455,7 @@ function showBill(o){
         </table>
         <div class="bill-tots">
           <div class="bt"><span>Subtotal</span><span>${lkr(o.subtotal)}</span></div>
+          ${(o.shipping||0)>0?`<div class="bt"><span>Shipping</span><span>${lkr(o.shipping)}</span></div>`:`<div class="bt" style="color:var(--grn)"><span>Shipping</span><span>Free</span></div>`}
           ${o.discount>0?`<div class="bt disc"><span>Discount (${o.coupon})</span><span>−${lkr(o.discount)}</span></div>`:''}
           <div class="bt total"><span>Total Paid</span><span class="bv">${lkr(o.total)}</span></div>
         </div>
@@ -2521,14 +2702,18 @@ async function renderReport(){
   });
 }
 
-/* ── Product Modal ── */
+/* ── Product Modal — multi-media + shipping ── */
+let pmMediaItems=[];  // [{type:'image'|'video'|'youtube', url:'…'}]
+
 function openPM(id){
-  editProdId=id||null;curImgData=null;
+  editProdId=id||null;curImgData=null;pmMediaItems=[];
   document.getElementById('pmTitle').textContent=id?'Edit Product':'Add Product';
-  ['pm-n','pm-d','pm-p','pm-op','pm-c','pm-s','pm-b','pm-r','pm-img-url'].forEach(k=>{const e=document.getElementById(k);if(e)e.value=''});
+  ['pm-n','pm-d','pm-p','pm-op','pm-c','pm-s','pm-b','pm-r','pm-ship','pm-media-url'].forEach(k=>{const e=document.getElementById(k);if(e)e.value=''});
   document.getElementById('pm-feat').value='false';
+  document.getElementById('pm-media-type').value='image';
   document.getElementById('iUpArea').classList.remove('filled');
   document.getElementById('pImgThumb').style.display='none';
+  renderPMGrid();
   if(id){
     wfb(async()=>{
       const p=await fOne('products',id);if(!p)return;
@@ -2540,45 +2725,109 @@ function openPM(id){
       document.getElementById('pm-s').value=p.stock||0;
       document.getElementById('pm-b').value=p.badge||'';
       document.getElementById('pm-r').value=p.rating||'';
+      document.getElementById('pm-ship').value=p.shippingFee||0;
       document.getElementById('pm-feat').value=String(p.featured||false);
-      if(p.image){document.getElementById('pm-img-url').value=p.image;prevUrl(p.image);}
+      // Load existing media
+      if(Array.isArray(p.media)&&p.media.length>0){
+        pmMediaItems=p.media.slice();
+      }else if(p.image){
+        pmMediaItems=[{type:'image',url:p.image}];
+      }
+      renderPMGrid();
     });
   }
   document.getElementById('pmOv').classList.add('open');
 }
 function closePM(){document.getElementById('pmOv').classList.remove('open')}
+
+function addMediaItem(){
+  const url=document.getElementById('pm-media-url').value.trim();
+  const type=document.getElementById('pm-media-type').value;
+  if(!url){toast('Paste a URL first.','err');return;}
+  if(pmMediaItems.length>=10){toast('Maximum 10 media items per product.','err');return;}
+  // Convert Google Drive share URL to direct view URL
+  const finalUrl=type==='image'?convertGdriveUrl(url):url;
+  pmMediaItems.push({type,url:finalUrl});
+  document.getElementById('pm-media-url').value='';
+  renderPMGrid();
+  toast('Media added ✓','ok');
+}
+
+function convertGdriveUrl(url){
+  // Convert Google Drive share URL to direct image URL
+  // https://drive.google.com/file/d/FILE_ID/view → https://drive.google.com/uc?export=view&id=FILE_ID
+  const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(m&&url.includes('drive.google.com')){
+    return`https://drive.google.com/uc?export=view&id=${m[1]}`;
+  }
+  return url;
+}
+
+function renderPMGrid(){
+  const grid=document.getElementById('pm-media-grid');if(!grid)return;
+  if(!pmMediaItems.length){grid.innerHTML='<p style="font-size:12px;color:var(--t3);padding:.25rem 0">No media added yet. First image = main product photo.</p>';return;}
+  grid.innerHTML=pmMediaItems.map((m,i)=>{
+    const preview=m.type==='image'
+      ?`<img src="${m.url}" alt="" onerror="this.parentElement.innerHTML='🖼️'">`
+      :m.type==='youtube'?`<div class="gthumb-play">▶</div>`
+      :`<div class="gthumb-play">🎬</div>`;
+    const label=i===0?'Main':(m.type==='video'?'VID':m.type==='youtube'?'YT':'IMG');
+    return`<div class="pm-media-item" draggable="true" ondragstart="pmDragStart(${i})" ondragover="event.preventDefault()" ondrop="pmDrop(${i})">
+      ${preview}
+      <span class="pm-type">${label}</span>
+      <button class="pm-rm" onclick="pmRemove(${i})" type="button">✕</button>
+    </div>`;
+  }).join('');
+}
+let pmDragIdx=null;
+function pmDragStart(i){pmDragIdx=i}
+function pmDrop(i){
+  if(pmDragIdx===null||pmDragIdx===i)return;
+  const tmp=pmMediaItems[pmDragIdx];
+  pmMediaItems.splice(pmDragIdx,1);
+  pmMediaItems.splice(i,0,tmp);
+  pmDragIdx=null;renderPMGrid();
+}
+function pmRemove(i){pmMediaItems.splice(i,1);renderPMGrid()}
+
 function handlePImg(input){
   const f=input.files[0];if(!f)return;
-  if(f.size>2*1024*1024){toast('Max 2MB for product images.','err');return;}
+  if(f.size>2*1024*1024){toast('Max 2MB for local images.','err');return;}
   const r=new FileReader();
   r.onload=e=>{
-    curImgData=e.target.result;
-    const t=document.getElementById('pImgThumb');t.src=curImgData;t.style.display='block';
+    const url=e.target.result;
+    pmMediaItems.unshift({type:'image',url});  // add as first item
     document.getElementById('iUpArea').classList.add('filled');
-    document.getElementById('pm-img-url').value='';
+    document.getElementById('pImgThumb').src=url;
+    document.getElementById('pImgThumb').style.display='block';
+    renderPMGrid();
+    toast('Image added as main photo ✓','ok');
   };
   r.readAsDataURL(f);
 }
-function prevUrl(url){
-  if(!url)return;curImgData=url;
-  const t=document.getElementById('pImgThumb');t.src=url;t.style.display='block';
-  document.getElementById('iUpArea').classList.add('filled');
-}
+function prevUrl(url){if(!url)return;curImgData=url}
+
 async function saveProd(){
   const name=document.getElementById('pm-n').value.trim();
   const price=parseFloat(document.getElementById('pm-p').value);
   if(!name||isNaN(price)){toast('Name and price are required.','err');return;}
   const btn=document.getElementById('pmSaveBtn');
   btn.disabled=true;btn.textContent='Saving…';
+  // Build data object
   const data={
-    name,description:document.getElementById('pm-d').value.trim(),
-    price,originalPrice:parseFloat(document.getElementById('pm-op').value)||null,
+    name,
+    description:document.getElementById('pm-d').value.trim(),
+    price,
+    originalPrice:parseFloat(document.getElementById('pm-op').value)||null,
+    shippingFee:parseFloat(document.getElementById('pm-ship').value)||0,
     category:document.getElementById('pm-c').value.trim()||'General',
     stock:parseInt(document.getElementById('pm-s').value)||0,
     badge:document.getElementById('pm-b').value.trim()||null,
     rating:parseFloat(document.getElementById('pm-r').value)||null,
     featured:document.getElementById('pm-feat').value==='true',
-    image:curImgData||document.getElementById('pm-img-url').value.trim()||null,
+    // Save media array; also keep single image field for backward compat
+    media:pmMediaItems,
+    image:pmMediaItems.length>0&&pmMediaItems[0].type==='image'?pmMediaItems[0].url:null,
   };
   try{
     if(editProdId)await fUpd('products',editProdId,data);
@@ -2750,7 +2999,28 @@ async function loadAdmCfg(){
   document.getElementById('tBanner').checked=!!s.showBanner;
   document.getElementById('tPeak').checked=!!s.peakMode;
   document.getElementById('tOnline').checked=s.storeOnline!==false;
-  // Pre-fill Firebase config fields from localStorage
+  // Google Drive config fields
+  const gd=getGdCfg()||(s.googleDrive||{});
+  if(gd.apiKey)document.getElementById('sGdApiKey').value=gd.apiKey;
+  if(gd.clientId)document.getElementById('sGdClientId').value=gd.clientId;
+  if(gd.folderId)document.getElementById('sGdFolderId').value=gd.folderId;
+  // Storage mode toggle — default ON (Google Drive)
+  const useGd=(s.storageMode||'gdrive')==='gdrive';
+  document.getElementById('tGdrive').checked=useGd;
+  document.getElementById('gdriveSection').style.display=useGd?'block':'none';
+  document.getElementById('imgbbSection').style.display=useGd?'none':'block';
+  document.getElementById('storageActiveLabel').textContent=useGd?'Google Drive is active':'ImgBB is active';
+  // Google Apps Script URL for Drive upload
+  if(s.gasUrl){
+    localStorage.setItem('sh_gas_url',s.gasUrl);
+    const gasEl=document.getElementById('sGasUrl');
+    if(gasEl)gasEl.value=s.gasUrl;
+  }else{
+    const gasStored=localStorage.getItem('sh_gas_url');
+    const gasEl=document.getElementById('sGasUrl');
+    if(gasEl&&gasStored)gasEl.value=gasStored;
+  }
+  // Firebase config fields
   loadFbCfgFields();
 }
 async function saveBank(){
@@ -2843,6 +3113,111 @@ async function loadProductReviews(pid){
       listEl.innerHTML='<p style="color:var(--t3);font-size:13px">Reviews unavailable.</p>';
     }
   });
+}
+
+/* ── Gallery render helpers ── */
+function renderGalleryMain(m,mainId){
+  if(!m)return`<div class="d-ph">📦</div>`;
+  if(m.type==='image')return`<img src="${m.url}" alt="" onclick="openLB('${m.url}')">`;
+  if(m.type==='video')return`<video controls src="${m.url}" style="width:100%;height:100%;object-fit:contain;border-radius:var(--r5)"></video>`;
+  if(m.type==='youtube'){
+    const vid=getYTId(m.url);
+    return vid?`<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>`:`<div class="d-ph">▶</div>`;
+  }
+  return`<div class="d-ph">📦</div>`;
+}
+function renderGalleryThumb(m,i,mainId,thumbsId,pid){
+  const preview=m.type==='image'
+    ?`<img src="${m.url}" alt="" onerror="this.style.display='none'">`
+    :m.type==='youtube'?`<div class="yt-thumb"><div class="gthumb-play">▶</div></div>`
+    :`<div class="vid-thumb"><div class="gthumb-play">🎬</div></div>`;
+  return`<div class="gthumb${i===0?' active':''}" onclick="switchGallery(this,'${mainId}','${thumbsId}',${JSON.stringify(m).replace(/'/g,"&#39;")})">${preview}</div>`;
+}
+function switchGallery(thumbEl,mainId,thumbsId,m){
+  // Update main viewer
+  document.getElementById(mainId).innerHTML=renderGalleryMain(m,mainId);
+  // Update active thumb
+  document.querySelectorAll(`#${thumbsId} .gthumb`).forEach(t=>t.classList.remove('active'));
+  thumbEl.classList.add('active');
+}
+function getYTId(url){
+  const m=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  return m?m[1]:null;
+}
+
+/* ── Google Drive Config ── */
+function saveGdriveCfg(){
+  const key=document.getElementById('sGdApiKey').value.trim();
+  const clientId=document.getElementById('sGdClientId').value.trim();
+  const folderId=document.getElementById('sGdFolderId').value.trim();
+  const gasUrl=document.getElementById('sGasUrl').value.trim();
+  if(!folderId||!gasUrl){toast('Folder ID and Apps Script URL are required.','err');return;}
+  const gd={apiKey:key,clientId,folderId};
+  localStorage.setItem('sh_gd_cfg',JSON.stringify(gd));
+  if(gasUrl)localStorage.setItem('sh_gas_url',gasUrl);
+  fSet('settings','main',{googleDrive:gd,gasUrl,storageMode:'gdrive'});
+  cfg.googleDrive=gd;cfg.storageMode='gdrive';cfg.gasUrl=gasUrl;
+  toast('Google Drive config saved! ✓','ok');
+}
+function testGdriveConnection(){
+  const gd=getGdCfg();
+  if(!gd){toast('Enter Google Drive config first.','err');return;}
+  toast('Config saved. Upload a receipt on checkout to test the full flow.','info');
+}
+function getGdCfg(){
+  try{const s=localStorage.getItem('sh_gd_cfg');return s?JSON.parse(s):null;}catch(e){return null;}
+}
+
+/* ── Storage mode toggle ── */
+function toggleStorageMode(useGdrive){
+  document.getElementById('gdriveSection').style.display=useGdrive?'block':'none';
+  document.getElementById('imgbbSection').style.display=useGdrive?'none':'block';
+  document.getElementById('storageActiveLabel').textContent=useGdrive?'Google Drive is active':'ImgBB is active';
+  fSet('settings','main',{storageMode:useGdrive?'gdrive':'imgbb'});
+  cfg.storageMode=useGdrive?'gdrive':'imgbb';
+}
+
+/* ── Upload to Google Drive (via Apps Script Web App) ── */
+async function uploadToStorage(base64data,filename){
+  const mode=cfg.storageMode||'gdrive';
+  if(mode==='imgbb'){
+    return uploadToImgbb(base64data,filename);
+  }
+  // Google Drive upload via Apps Script
+  const gd=getGdCfg();
+  if(!gd||!gd.folderId){
+    console.warn('Google Drive not configured, falling back to base64');
+    return{url:base64data,source:'base64'};
+  }
+  try{
+    const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
+    if(!gasUrl){
+      console.warn('No Google Apps Script URL set. Using base64 fallback.');
+      return{url:base64data,source:'base64'};
+    }
+    const pure=base64data.includes(',')?base64data.split(',')[1]:base64data;
+    const mimeType=base64data.includes('data:')?base64data.split(';')[0].split(':')[1]:'image/jpeg';
+    const res=await fetch(gasUrl,{
+      method:'POST',
+      body:JSON.stringify({action:'uploadFile',base64:pure,filename,mimeType,folderId:gd.folderId}),
+      headers:{'Content-Type':'application/json'},
+    });
+    const json=await res.json();
+    if(json.url)return{url:json.url,source:'gdrive'};
+    throw new Error(json.error||'Upload failed');
+  }catch(e){
+    console.warn('Google Drive upload failed:',e.message,'. Using base64 fallback.');
+    return{url:base64data,source:'base64'};
+  }
+}
+
+/* ── Shipping fee in cart total ── */
+function cartShipping(){
+  const items=Object.values(cart);
+  return items.reduce((s,i)=>{
+    const p=prods.find(x=>x.id===i.p.id);
+    return s+(p?.shippingFee||0);
+  },0);
 }
 
 /* ── Init ── */
