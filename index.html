@@ -10,7 +10,63 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
+/* ── FLASH SALE BANNER ── */
+#flashBanner{display:none}
+.flash-bar{background:linear-gradient(90deg,#1A0800,#2A1200,#1A0800);border-bottom:1px solid rgba(210,165,55,.4);padding:9px 2rem;text-align:center;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;font-size:13.5px;font-weight:600;color:var(--g2);position:relative;z-index:199}
+.flash-badge{background:var(--gg);color:var(--l1);padding:2px 10px;border-radius:var(--rp);font-size:11.5px;font-weight:800}
+#flashCountdown{font-family:var(--fd);font-size:1.15rem;font-weight:700;color:var(--g2);letter-spacing:2px;min-width:80px;display:inline-block}
+.flash-close{background:none;border:none;color:var(--g2);cursor:pointer;font-size:1.1rem;padding:0 4px;opacity:.7}
+.flash-close:hover{opacity:1}
+/* ── FREE SHIPPING PROGRESS ── */
+.ship-prog-wrap{background:var(--l2b);border:1px solid var(--b2);border-radius:var(--r2);padding:.85rem 1.25rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:1rem}
+.ship-prog-outer{flex:1;height:6px;background:var(--l5);border-radius:var(--rp);overflow:hidden}
+.ship-prog-inner{height:100%;background:var(--gg);border-radius:var(--rp);transition:width .7s var(--ease)}
+.ship-prog-label{font-size:13px;font-weight:600;white-space:nowrap;color:var(--t2)}
+/* ── SEARCH AUTOCOMPLETE ── */
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap::before{content:'⌕';position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--t3);pointer-events:none;z-index:1}
+.search-wrap .finp{width:100%;padding-left:40px}
+.ac-list{position:absolute;top:calc(100% + 5px);left:0;right:0;background:var(--l3);border:1px solid var(--b3);border-radius:var(--r3);box-shadow:var(--s3);z-index:50;max-height:300px;overflow-y:auto;display:none}
+.ac-list.show{display:block}
+.ac-item{padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;transition:background var(--dur)}
+.ac-item:last-child{border-bottom:none}.ac-item:hover{background:var(--l4)}
+.ac-img{width:38px;height:34px;object-fit:cover;border-radius:var(--r1);border:1px solid var(--b1);flex-shrink:0}
+.ac-ph{width:38px;height:34px;background:var(--l4);border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ac-nm{font-weight:600;font-size:13.5px;color:var(--t1)}.ac-pr{font-size:12px;color:var(--g1);margin-top:2px}
+/* ── SCARCITY BADGE ON CARD ── */
+.scar-badge{position:absolute;bottom:58px;left:10px;z-index:3;background:rgba(239,68,68,.90);backdrop-filter:blur(8px);border:1px solid rgba(239,68,68,.5);border-radius:var(--rp);padding:4px 10px;font-size:10.5px;font-weight:800;color:#fff;white-space:nowrap;box-shadow:var(--s1);animation:scarIn .4s var(--spring)}
+@keyframes scarIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* ── SOCIAL PROOF POPUP ── */
+#spToast{position:fixed;bottom:5.5rem;left:1.5rem;z-index:400;background:rgba(9,9,14,.93);backdrop-filter:blur(14px);border:1px solid var(--bg);border-radius:var(--r3);padding:.9rem 1.1rem;font-size:13px;color:var(--t1);box-shadow:var(--s3),var(--gx);max-width:285px;transform:translateY(120px);opacity:0;transition:all .42s var(--spring);pointer-events:none}
+#spToast.show{transform:translateY(0);opacity:1}
+#spToast strong{color:var(--g1)}
+/* ── RECENTLY VIEWED ── */
+.rv-row-sec{margin-bottom:3rem;padding-bottom:2.5rem;border-bottom:1px solid var(--b1)}
+/* ── LOYALTY POINTS ── */
+.pts-banner{background:rgba(200,155,48,.07);border:1px solid var(--bg);border-radius:var(--r2);padding:.85rem 1.2rem;margin-top:.85rem;display:flex;align-items:center;gap:.85rem;font-size:13.5px;color:var(--g1);font-weight:600}
+.pts-val{font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--g0)}
+.pts-earn-note{background:rgba(200,155,48,.06);border:1px solid var(--bg);border-radius:var(--r1);padding:7px 12px;font-size:12.5px;color:var(--g1);font-weight:600;margin-top:.75rem}
+/* ── WA BUTTON ── */
+.btn-wa{background:#075E54;color:#fff;border:none}.btn-wa:hover{background:#128C7E}
+/* ── CHART BOX ── */
+.chart-box{background:var(--l3);border:1px solid var(--b2);border-radius:var(--r3);padding:1.5rem;box-shadow:var(--s2)}
+.chart-box h4{font-family:var(--fd);font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:var(--t1)}
+/* ── LOW STOCK ── */
+.lstk-item{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;background:var(--redd);border:1px solid var(--redb);border-radius:var(--r2);margin-bottom:.65rem}
+.lstk-name{font-weight:600;color:var(--t1);font-size:13.5px}
+.lstk-qty{font-weight:800;color:var(--red);font-size:14px}
+/* ── VARIANTS ── */
+.variant-group{margin-bottom:1rem}
+.variant-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:.5rem;display:block}
+.variant-opts{display:flex;gap:7px;flex-wrap:wrap}
+.vopt{background:var(--l4);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all var(--dur);color:var(--t2)}
+.vopt:hover{border-color:var(--bg);color:var(--g1)}.vopt.on{background:rgba(200,155,48,.13);border-color:var(--bgs);color:var(--g0)}
+/* ── VERIFIED BADGE ── */
+.verified-badge{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb);font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--rp)}
+/* ── PHOTO REVIEW ── */
+.rv-photo{width:82px;height:72px;object-fit:cover;border-radius:var(--r2);margin-top:.75rem;cursor:pointer;border:1px solid var(--b2);transition:transform var(--dur)}.rv-photo:hover{transform:scale(1.06)}
 /* ╔══════════════════════════════════════════════════════════════╗
    ║  SH SHOPPING — PREMIUM DEPTH SYSTEM                        ║
    ║                                                             ║
@@ -1229,6 +1285,18 @@ textarea.fi{resize:vertical;min-height:80px}
 </head>
 <body>
 
+<!-- ⚡ FLASH SALE BANNER -->
+<div id="flashBanner">
+  <div class="flash-bar">
+    <span class="flash-badge">⚡ FLASH SALE</span>
+    <span id="flashMsg">Limited time offer!</span>
+    <span>Ends in: <strong id="flashCountdown">00:00:00</strong></span>
+    <button class="flash-close" onclick="document.getElementById('flashBanner').style.display='none'">✕</button>
+  </div>
+</div>
+<!-- SOCIAL PROOF POPUP -->
+<div id="spToast"></div>
+
 <!-- ████ NAV ████ -->
 <nav id="mainNav">
   <div class="brand" onclick="go('store')">
@@ -1241,6 +1309,7 @@ textarea.fi{resize:vertical;min-height:80px}
     <button class="nv" onclick="go('orders')">My Orders</button>
   </div>
   <div class="nav-r">
+    <button class="ic-btn" onclick="go('loyalty')" title="My Loyalty Points" style="font-size:.8rem;font-weight:700">⭐</button>
     <button class="ic-btn" id="dmBtn" onclick="toggleDark()" title="Theme">✦</button>
     <button class="cart-btn" onclick="go('cart')">
       <span>🛒</span> Cart
@@ -1321,6 +1390,10 @@ textarea.fi{resize:vertical;min-height:80px}
   </div>
 
   <div id="heroBanner"></div>
+  <!-- Free shipping progress bar -->
+  <div id="freeShipBar"></div>
+  <!-- Recently viewed -->
+  <div id="recentlyViewed"></div>
 
   <!-- L2 category chips with scroll reveal -->
   <div class="reveal">
@@ -1335,8 +1408,10 @@ textarea.fi{resize:vertical;min-height:80px}
 
   <!-- L2 filter shelf -->
   <div class="filter-bar reveal">
-    <div class="fsw">
-      <input class="finp" id="srchIn" type="text" placeholder="Search products…" oninput="renderProds()">
+    <div class="search-wrap">
+      <input class="finp" id="srchIn" type="text" placeholder="Search products…" oninput="handleSearch(this.value)" autocomplete="off">
+      <div class="ac-list" id="acList"></div>
+    </div>
     </div>
     <select class="finp" id="sortSel" onchange="renderProds()">
       <option value="">Featured First</option>
@@ -1376,6 +1451,14 @@ textarea.fi{resize:vertical;min-height:80px}
 </div>
 
 <!-- ████ MY ORDERS ████ -->
+<!-- LOYALTY PAGE -->
+<div id="pg-loyalty" class="page">
+  <div class="pg-inner">
+    <div class="sh"><h2 class="st">My <em>Loyalty Points</em></h2></div>
+    <div id="loyaltyCt"></div>
+  </div>
+</div>
+
 <div id="pg-orders" class="page">
   <div class="pg-inner">
     <div class="sh"><h2 class="st">Track <em>Order</em></h2></div>
@@ -1427,6 +1510,9 @@ textarea.fi{resize:vertical;min-height:80px}
       <button class="asi" onclick="aNav('payments',this)"><span class="ic">💳</span> Payments</button>
       <button class="asi" onclick="aNav('coupons',this)"><span class="ic">🎟️</span> Coupons</button>
       <button class="asi" onclick="aNav('reviews',this)"><span class="ic">💬</span> Reviews</button>
+      <div class="asg">Growth</div>
+      <button class="asi" onclick="aNav('loyalty',this)"><span class="ic">⭐</span> Loyalty Points</button>
+      <button class="asi" onclick="aNav('alerts',this)"><span class="ic">🔔</span> Low Stock Alerts</button>
       <div class="asg">Reports</div>
       <button class="asi" onclick="aNav('reports',this)"><span class="ic">📈</span> Profit Reports</button>
       <div class="asg">Configure</div>
@@ -1440,9 +1526,17 @@ textarea.fi{resize:vertical;min-height:80px}
       <div class="asec on" id="as-dashboard">
         <div class="adm-hd">
           <h2>Dashboard</h2>
-          <button class="btn btn-ghost btn-sm" onclick="sendReportEmail()">📧 Email Report</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" onclick="exportOrdersCSV()">⬇ Export CSV</button>
+            <button class="btn btn-ghost btn-sm" onclick="sendReportEmail()">📧 Email Report</button>
+          </div>
         </div>
         <div class="sgrid" id="admStats"></div>
+        <!-- Revenue + Top Products charts -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2rem" id="dashCharts">
+          <div class="chart-box"><h4>Revenue — Last 6 Months</h4><canvas id="revChart" height="180"></canvas></div>
+          <div class="chart-box"><h4>Top Products by Orders</h4><canvas id="topChart" height="180"></canvas></div>
+        </div>
         <h3 style="font-family:var(--fd);font-size:1.3rem;font-weight:700;margin-bottom:1.25rem">Recent Orders</h3>
         <div id="admRecent"></div>
       </div>
@@ -1459,7 +1553,7 @@ textarea.fi{resize:vertical;min-height:80px}
 
       <!-- Orders -->
       <div class="asec" id="as-orders">
-        <div class="adm-hd"><h2>All Orders</h2></div>
+        <div class="adm-hd"><h2>All Orders</h2><button class="btn btn-ghost btn-sm" onclick="exportOrdersCSV()">⬇ Export CSV</button></div>
         <select class="finp" id="aOFilt" onchange="rAdmOrds()" style="margin-bottom:1.25rem">
           <option value="">All Statuses</option>
           <option>Pending Payment</option><option>Payment Received</option>
@@ -1481,6 +1575,37 @@ textarea.fi{resize:vertical;min-height:80px}
         <div class="adm-hd"><h2>Coupon Codes</h2><button class="btn btn-gold" onclick="openCM()">+ Add Coupon</button></div>
         <p style="font-size:13.5px;color:var(--t3);margin-bottom:1.75rem;max-width:600px">Create percentage or flat-amount discounts with expiry dates and usage limits.</p>
         <div id="admCT"></div>
+      </div>
+
+      <!-- Loyalty Points -->
+      <div class="asec" id="as-loyalty">
+        <div class="adm-hd"><h2>Loyalty Points</h2></div>
+        <p style="font-size:13.5px;color:var(--t3);margin-bottom:1.5rem;max-width:600px">Every Rs.100 spent = 1 point. Set how many points equals Rs.100 discount. Tracked by customer phone number — no account needed.</p>
+        <div class="sset" style="max-width:500px">
+          <h4>⭐ Points Configuration</h4>
+          <div class="fg2" style="margin-bottom:1rem">
+            <div class="fg"><label class="fl">Points per Rs.100 spent</label><input class="fi" id="loyPPH" type="number" min="1" value="1" placeholder="1"></div>
+            <div class="fg"><label class="fl">Points needed for Rs.100 off</label><input class="fi" id="loyPPD" type="number" min="1" value="100" placeholder="100"></div>
+            <div class="fg fw"><label class="fl">Free Shipping Threshold (Rs.) — 0 = disabled</label><input class="fi" id="loyFreeShip" type="number" min="0" value="0" placeholder="e.g. 3000"></div>
+          </div>
+          <button class="btn btn-gold" onclick="saveLoyaltyCfg()">Save Loyalty Settings</button>
+        </div>
+        <h3 style="font-family:var(--fd);font-size:1.3rem;font-weight:700;margin:2rem 0 1rem">Customer Points</h3>
+        <div id="admLoyalty"><div class="ldc"><div class="spin"></div></div></div>
+      </div>
+
+      <!-- Low Stock Alerts -->
+      <div class="asec" id="as-alerts">
+        <div class="adm-hd"><h2>Low Stock Alerts</h2></div>
+        <div class="sset" style="max-width:400px;margin-bottom:2rem">
+          <h4>🔔 Alert Settings</h4>
+          <div class="fg" style="margin-bottom:1rem">
+            <label class="fl">Alert when stock drops below</label>
+            <input class="fi" id="lstkThresh" type="number" min="1" value="5" placeholder="5">
+          </div>
+          <button class="btn btn-gold" onclick="saveLstkThresh()">Save Threshold</button>
+        </div>
+        <div id="lstkList"><div class="ldc"><div class="spin"></div></div></div>
       </div>
 
       <!-- Reports -->
@@ -1517,7 +1642,61 @@ textarea.fi{resize:vertical;min-height:80px}
             </div>
             <button class="btn btn-gold" style="margin-top:1.1rem" onclick="saveBank()">Save Bank Details</button>
           </div>
-          <!-- ── Image Storage Settings ── -->
+
+          <!-- WhatsApp Notifications -->
+          <div class="sset">
+            <h4>📱 WhatsApp Notifications (CallMeBot — Free)</h4>
+            <p style="font-size:13px;color:var(--t3);margin-bottom:.85rem">
+              Get instant WhatsApp alerts when orders arrive. Setup: open WhatsApp → message
+              <strong style="color:var(--g0)">+34644717361</strong> → send exactly:
+              <code style="background:var(--l2b);padding:2px 7px;border-radius:3px;font-size:12px">I allow callmebot to send me messages</code>
+              → wait for API key reply (usually 1 min).
+            </p>
+            <div class="fg2" style="margin-bottom:.85rem">
+              <div class="fg">
+                <label class="fl">Your WhatsApp Number</label>
+                <input class="fi" id="sWaPhone" placeholder="+94771234567 (with +94)">
+              </div>
+              <div class="fg">
+                <label class="fl">CallMeBot API Key</label>
+                <input class="fi" id="sWaKey" placeholder="From the reply message">
+              </div>
+            </div>
+            <button class="btn btn-gold" onclick="saveWaCfg()">Save WhatsApp Settings</button>
+            <button class="btn btn-wa btn-sm" style="margin-left:8px" onclick="testWaNotif()">Send Test Message</button>
+          </div>
+
+          <!-- Flash Sale Timer -->
+          <div class="sset">
+            <h4>⚡ Flash Sale Countdown Timer</h4>
+            <p style="font-size:13px;color:var(--t3);margin-bottom:.85rem">Shows a countdown banner at the top of your store. Disappears automatically when timer hits zero.</p>
+            <div class="fg2" style="margin-bottom:.85rem">
+              <div class="fg">
+                <label class="fl">Sale Message</label>
+                <input class="fi" id="sFlashMsg" placeholder="e.g. 30% off all Electronics!">
+              </div>
+              <div class="fg">
+                <label class="fl">Sale End Date &amp; Time</label>
+                <input class="fi" id="sFlashEnd" type="datetime-local">
+              </div>
+            </div>
+            <div class="trow">
+              <div class="trow-lbl"><strong>Flash Sale Active</strong><span>Show countdown banner on store homepage</span></div>
+              <label class="tog"><input type="checkbox" id="tFlash" onchange="saveFlashSale()"><span class="tslider"></span></label>
+            </div>
+            <button class="btn btn-gold" style="margin-top:1rem" onclick="saveFlashSale()">Save Flash Sale</button>
+          </div>
+
+          <!-- Free Shipping Threshold -->
+          <div class="sset">
+            <h4>🚚 Free Shipping Threshold</h4>
+            <p style="font-size:13px;color:var(--t3);margin-bottom:.85rem">Show a progress bar in the store. When cart total reaches this amount, shipping becomes free. Set 0 to disable.</p>
+            <div class="fg" style="margin-bottom:.85rem;max-width:280px">
+              <label class="fl">Free Shipping from (Rs.)</label>
+              <input class="fi" id="sFreeShip" type="number" min="0" placeholder="e.g. 3000 — 0 = disabled">
+            </div>
+            <button class="btn btn-gold" onclick="saveFreeShipThreshold()">Save Threshold</button>
+          </div>
           <div class="sset">
             <h4>🗄️ Media Storage — Google Drive or ImgBB</h4>
             <p style="font-size:13px;color:var(--t3);margin-bottom:1.1rem">
@@ -1629,6 +1808,10 @@ textarea.fi{resize:vertical;min-height:80px}
             <div class="trow">
               <div class="trow-lbl"><strong>Store Online</strong><span>Toggle offline for maintenance</span></div>
               <label class="tog"><input type="checkbox" id="tOnline" onchange="saveToggle('storeOnline',this.checked)" checked><span class="tslider"></span></label>
+            </div>
+            <div class="trow">
+              <div class="trow-lbl"><strong>Social Proof Popups</strong><span>Show recent purchase notifications on store</span></div>
+              <label class="tog"><input type="checkbox" id="tSocialProof" onchange="saveToggle('socialProof',this.checked)" checked><span class="tslider"></span></label>
             </div>
           </div>
           <div class="sset">
@@ -3046,6 +3229,527 @@ async function saveToggle(key,val){
 
 /* ── Lightbox ── */
 function openLB(src){document.getElementById('lbImg').src=src;document.getElementById('lbOv').classList.add('open')}
+
+/* ════════════════════════════════════════
+   ★ NEW FEATURES — ALL ADDED BELOW
+════════════════════════════════════════ */
+
+/* ── 1. WhatsApp Notifications (CallMeBot — free) ── */
+async function sendWhatsApp(message){
+  try{
+    const phone=cfg.whatsapp?.phone,key=cfg.whatsapp?.key;
+    if(!phone||!key)return;
+    const url=`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(message)}&apikey=${key}`;
+    await fetch(url,{mode:'no-cors'});
+  }catch(e){console.warn('WhatsApp notify failed:',e.message);}
+}
+async function saveWaCfg(){
+  const data={whatsapp:{phone:document.getElementById('sWaPhone').value.trim(),key:document.getElementById('sWaKey').value.trim()}};
+  await fSet('settings','main',data);cfg={...cfg,...data};
+  toast('WhatsApp settings saved!','ok');
+}
+async function testWaNotif(){
+  const phone=document.getElementById('sWaPhone').value.trim();
+  const key=document.getElementById('sWaKey').value.trim();
+  if(!phone||!key){toast('Enter phone and API key first.','err');return;}
+  const url=`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent('✅ SH Shopping test message. WhatsApp notifications are working!')}&apikey=${key}`;
+  await fetch(url,{mode:'no-cors'});
+  toast('Test message sent! Check your WhatsApp.','ok');
+}
+
+/* ── 2. Flash Sale Countdown Banner ── */
+let _flashInt=null;
+function startFlashCountdown(endTime,msg){
+  document.getElementById('flashBanner').style.display='block';
+  document.getElementById('flashMsg').textContent=msg||'Limited time offer!';
+  if(_flashInt)clearInterval(_flashInt);
+  function tick(){
+    const diff=endTime-Date.now();
+    if(diff<=0){document.getElementById('flashBanner').style.display='none';clearInterval(_flashInt);return;}
+    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+    document.getElementById('flashCountdown').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  tick();_flashInt=setInterval(tick,1000);
+}
+async function saveFlashSale(){
+  const msg=document.getElementById('sFlashMsg').value.trim();
+  const endStr=document.getElementById('sFlashEnd').value;
+  const active=document.getElementById('tFlash').checked;
+  const endTime=endStr?new Date(endStr).getTime():null;
+  await fSet('settings','main',{flash:{active,message:msg,endTime}});
+  cfg.flash={active,message:msg,endTime};
+  if(active&&endTime&&endTime>Date.now())startFlashCountdown(endTime,msg);
+  else document.getElementById('flashBanner').style.display='none';
+  toast('Flash sale saved!','ok');
+}
+function applyFlash(){
+  if(cfg.flash?.active&&cfg.flash?.endTime&&cfg.flash.endTime>Date.now()){
+    startFlashCountdown(cfg.flash.endTime,cfg.flash.message);
+    document.getElementById('sFlashMsg').value=cfg.flash.message||'';
+    document.getElementById('tFlash').checked=true;
+  }
+}
+
+/* ── 3. Free Shipping Progress Bar ── */
+function renderFreeShipBar(){
+  const el=document.getElementById('freeShipBar');if(!el)return;
+  const threshold=cfg.freeShipThreshold||0;
+  if(!threshold){el.innerHTML='';return;}
+  const sub=cartSub();
+  if(sub>=threshold){
+    el.innerHTML=`<div class="ship-prog-wrap"><span style="font-size:1.1rem">🎉</span><div class="ship-prog-outer"><div class="ship-prog-inner" style="width:100%"></div></div><span class="ship-prog-label" style="color:var(--grn)">You've unlocked free shipping!</span></div>`;
+    return;
+  }
+  const pct=Math.min(100,Math.round(sub/threshold*100));
+  const needed=threshold-sub;
+  el.innerHTML=`<div class="ship-prog-wrap"><span style="font-size:1rem">🚚</span><div class="ship-prog-outer"><div class="ship-prog-inner" style="width:${pct}%"></div></div><span class="ship-prog-label">Add <strong style="color:var(--g1)">${lkr(needed)}</strong> more for free shipping!</span></div>`;
+}
+async function saveFreeShipThreshold(){
+  const v=parseFloat(document.getElementById('sFreeShip').value)||0;
+  await fSet('settings','main',{freeShipThreshold:v});cfg.freeShipThreshold=v;
+  renderFreeShipBar();toast('Free shipping threshold saved!','ok');
+}
+// Override cartShipping to respect free threshold
+function cartShipping(){
+  const threshold=cfg.freeShipThreshold||0;
+  if(threshold>0&&cartSub()>=threshold)return 0;
+  return Object.values(cart).reduce((s,i)=>{
+    const p=prods.find(x=>x.id===i.p.id);return s+(p?.shippingFee||0);
+  },0);
+}
+
+/* ── 4. Search Autocomplete ── */
+let _acTimer=null;
+function handleSearch(q){
+  renderProds();
+  clearTimeout(_acTimer);
+  const list=document.getElementById('acList');
+  if(!q||q.length<2){list.classList.remove('show');return;}
+  _acTimer=setTimeout(()=>{
+    const hits=prods.filter(p=>
+      p.name?.toLowerCase().includes(q.toLowerCase())||
+      p.category?.toLowerCase().includes(q.toLowerCase())
+    ).slice(0,6);
+    if(!hits.length){list.classList.remove('show');return;}
+    list.innerHTML=hits.map(p=>{
+      const thumb=p.image?`<img class="ac-img" src="${p.image}" alt="">`:`<div class="ac-ph">${p.emoji||'📦'}</div>`;
+      return`<div class="ac-item" onclick="selectAC('${p.id}')">${thumb}<div><div class="ac-nm">${p.name}</div><div class="ac-pr">${lkr(p.price)}</div></div></div>`;
+    }).join('');
+    list.classList.add('show');
+  },180);
+}
+function selectAC(id){
+  document.getElementById('acList').classList.remove('show');
+  document.getElementById('srchIn').value='';
+  showDetail(id);
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('acList')?.classList.remove('show');});
+
+/* ── 5. Recently Viewed Products ── */
+let recentlyViewed=JSON.parse(localStorage.getItem('sh_rv')||'[]');
+const saveRV=()=>localStorage.setItem('sh_rv',JSON.stringify(recentlyViewed));
+function addRecentlyViewed(id){
+  recentlyViewed=recentlyViewed.filter(x=>x!==id);
+  recentlyViewed.unshift(id);
+  recentlyViewed=recentlyViewed.slice(0,8);
+  saveRV();
+}
+function renderRecentlyViewed(){
+  const el=document.getElementById('recentlyViewed');if(!el)return;
+  const rvp=recentlyViewed.map(id=>prods.find(p=>p.id===id)).filter(Boolean).slice(0,6);
+  if(rvp.length<2){el.innerHTML='';return;}
+  el.innerHTML=`<div class="rv-row-sec"><div class="sh"><h2 class="st">Recently <em>Viewed</em></h2></div><div class="pgrid">${rvp.map(pCard).join('')}</div></div>`;
+}
+
+/* ── 6. Social Proof Purchase Popups ── */
+let _spScheduled=false;
+async function schedSocialProof(){
+  if(_spScheduled)return;
+  if(cfg.socialProof===false)return;
+  _spScheduled=true;
+  wfb(async()=>{
+    try{
+      const orders=await fGetAll('orders');
+      const recent=orders.filter(o=>o.createdAt?.toDate&&(Date.now()-o.createdAt.toDate().getTime())<72*3600000&&o.items?.length);
+      if(recent.length<2)return;
+      let idx=0;
+      function showNext(){
+        if(document.getElementById('pg-store')?.classList.contains('active')){
+          const o=recent[idx%recent.length];idx++;
+          const item=o.items[0];
+          const mins=Math.floor((Date.now()-o.createdAt.toDate().getTime())/60000);
+          const timeStr=mins<60?`${mins} min ago`:`${Math.floor(mins/60)} hrs ago`;
+          const el=document.getElementById('spToast');
+          el.innerHTML=`<div style="display:flex;align-items:center;gap:.65rem"><span style="font-size:1.4rem">🛍️</span><div><strong>${o.customer?.name?.split(' ')[0]||'Someone'}</strong> just ordered <strong>${item.name}</strong><br><span style="font-size:11.5px;color:var(--t3)">${timeStr}</span></div></div>`;
+          el.classList.add('show');
+          setTimeout(()=>el.classList.remove('show'),4800);
+        }
+      }
+      setTimeout(showNext,9000);
+      setInterval(showNext,20000);
+    }catch(e){}
+  });
+}
+
+/* ── 7. Loyalty Points System ── */
+let loyaltyPts=JSON.parse(localStorage.getItem('sh_pts')||'{}');
+const saveLoyalty=()=>localStorage.setItem('sh_pts',JSON.stringify(loyaltyPts));
+
+function earnPoints(phone,total){
+  if(!phone)return;
+  const pph=cfg.loyalty?.pph||1;
+  const earned=Math.floor(total/100)*pph;
+  if(!loyaltyPts[phone])loyaltyPts[phone]=0;
+  loyaltyPts[phone]+=earned;
+  saveLoyalty();
+  fSet('loyalty',phone,{phone,points:loyaltyPts[phone],updatedAt:window._fb.serverTimestamp()}).catch(()=>{});
+}
+function renderLoyaltyPage(){
+  const el=document.getElementById('loyaltyCt');if(!el)return;
+  const phone=localStorage.getItem('sh_last_phone');
+  if(!phone){
+    el.innerHTML=`<div style="max-width:440px"><p style="color:var(--t3);margin-bottom:1.25rem;line-height:1.8">Enter the phone number you use at checkout to check your loyalty points balance.</p><div style="display:flex;gap:10px"><input class="finp" id="loyPhone" type="tel" placeholder="07XXXXXXXX" style="flex:1"><button class="btn btn-gold" onclick="checkLoyalty()">Check Points</button></div><div id="loyResult" style="margin-top:1.5rem"></div></div>`;
+    return;
+  }
+  const pts=loyaltyPts[phone]||0;
+  const ppd=cfg.loyalty?.ppd||100;
+  const worth=Math.floor(pts/ppd)*100;
+  el.innerHTML=`<div class="sset" style="max-width:460px">
+    <div style="text-align:center;padding:1.5rem 0">
+      <div style="font-family:var(--fd);font-size:3rem;font-weight:700;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${pts}</div>
+      <div style="font-size:1rem;color:var(--t3);margin-top:.3rem">Loyalty Points</div>
+      ${worth>0?`<div style="font-size:14px;color:var(--grn);margin-top:.75rem;font-weight:600">Worth ${lkr(worth)} discount at checkout!</div>`:''}
+      <div style="font-size:13px;color:var(--t3);margin-top:.5rem">Linked to: ${phone}</div>
+    </div>
+    <div style="background:var(--l2b);border:1px solid var(--b2);border-radius:var(--r2);padding:1rem;font-size:13.5px;color:var(--t3);line-height:2.2">
+      <div>Every <strong style="color:var(--t1)">Rs.100 spent</strong> = <strong style="color:var(--g1)">${cfg.loyalty?.pph||1} point</strong></div>
+      <div>Every <strong style="color:var(--t1)">${cfg.loyalty?.ppd||100} points</strong> = <strong style="color:var(--grn)">Rs.100 off</strong></div>
+      <div>Points are tracked automatically by your phone number</div>
+    </div>
+    <button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="localStorage.removeItem('sh_last_phone');renderLoyaltyPage()">Check different number</button>
+  </div>`;
+}
+async function checkLoyalty(){
+  const phone=document.getElementById('loyPhone')?.value.trim();if(!phone)return;
+  localStorage.setItem('sh_last_phone',phone);
+  try{const d=await fOne('loyalty',phone);if(d?.points)loyaltyPts[phone]=d.points;saveLoyalty();}catch(e){}
+  renderLoyaltyPage();
+}
+async function saveLoyaltyCfg(){
+  const pph=parseInt(document.getElementById('loyPPH').value)||1;
+  const ppd=parseInt(document.getElementById('loyPPD').value)||100;
+  const freeShip=parseFloat(document.getElementById('loyFreeShip').value)||0;
+  await fSet('settings','main',{loyalty:{pph,ppd},freeShipThreshold:freeShip});
+  cfg.loyalty={pph,ppd};cfg.freeShipThreshold=freeShip;
+  toast('Loyalty settings saved!','ok');
+}
+async function rAdmLoyalty(){
+  wfb(async()=>{
+    const s=await fOne('settings','main');
+    if(s?.loyalty){document.getElementById('loyPPH').value=s.loyalty.pph||1;document.getElementById('loyPPD').value=s.loyalty.ppd||100;}
+    if(s?.freeShipThreshold)document.getElementById('loyFreeShip').value=s.freeShipThreshold;
+    const all=await fGetAll('loyalty').catch(()=>[]);
+    const el=document.getElementById('admLoyalty');
+    if(!all.length){el.innerHTML='<p style="color:var(--t3)">No customer points yet. Points accumulate automatically when customers place orders.</p>';return;}
+    all.sort((a,b)=>(b.points||0)-(a.points||0));
+    const ppd=cfg.loyalty?.ppd||100;
+    el.innerHTML=`<table class="at"><thead><tr><th>Phone</th><th>Points</th><th>Worth</th><th>Action</th></tr></thead><tbody>${all.map(c=>`<tr>
+      <td>${c.phone}</td>
+      <td><strong style="color:var(--g1)">${c.points||0}</strong></td>
+      <td style="color:var(--grn)">${lkr(Math.floor((c.points||0)/ppd)*100)}</td>
+      <td><button class="ta" onclick="resetLoyalty('${c.id}','${c.phone}')">Reset</button></td>
+    </tr>`).join('')}</tbody></table>`;
+  });
+}
+async function resetLoyalty(docId,phone){
+  if(!confirm(`Reset points for ${phone}?`))return;
+  await fUpd('loyalty',docId,{points:0});
+  if(loyaltyPts[phone]){loyaltyPts[phone]=0;saveLoyalty();}
+  toast('Points reset.','ok');rAdmLoyalty();
+}
+
+/* ── 8. Dashboard Charts (Chart.js) ── */
+async function renderDashboardCharts(){
+  wfb(async()=>{
+    try{
+      const [ords,ps]=await Promise.all([fGetAll('orders'),fGetAll('products')]);
+      const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const now=new Date();const yr=now.getFullYear();
+      const last6=Array.from({length:6},(_,i)=>{
+        const d=new Date(yr,now.getMonth()-5+i,1);
+        return{label:MONTHS[d.getMonth()],year:d.getFullYear(),month:d.getMonth()};
+      });
+      const revData=last6.map(m=>ords.filter(o=>{
+        if(!o.createdAt?.toDate||o.status==='Cancelled')return false;
+        const d=o.createdAt.toDate();
+        return d.getFullYear()===m.year&&d.getMonth()===m.month;
+      }).reduce((s,o)=>s+(o.total||0),0));
+      // Revenue chart
+      const rc=document.getElementById('revChart');
+      if(rc&&window.Chart){
+        if(window._revChart)window._revChart.destroy();
+        window._revChart=new Chart(rc,{type:'bar',data:{labels:last6.map(m=>m.label),datasets:[{label:'Revenue (Rs.)',data:revData,backgroundColor:'rgba(212,168,67,.35)',borderColor:'rgba(212,168,67,.75)',borderWidth:2,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{color:'#666058',callback:v=>'Rs.'+Math.round(v/1000)+'k'},grid:{color:'rgba(255,255,255,.04)'}},x:{ticks:{color:'#666058'},grid:{display:false}}}}});
+      }
+      // Top products
+      const pc={};ords.forEach(o=>o.items?.forEach(i=>{if(i.id)pc[i.id]=(pc[i.id]||0)+i.qty;}));
+      const top=Object.entries(pc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const tl=top.map(([id])=>(ps.find(p=>p.id===id)?.name||'Unknown').substr(0,14));
+      const tv=top.map(([,q])=>q);
+      const tc=document.getElementById('topChart');
+      if(tc&&tl.length&&window.Chart){
+        if(window._topChart)window._topChart.destroy();
+        window._topChart=new Chart(tc,{type:'doughnut',data:{labels:tl,datasets:[{data:tv,backgroundColor:['rgba(212,168,67,.75)','rgba(212,168,67,.55)','rgba(212,168,67,.38)','rgba(212,168,67,.22)','rgba(212,168,67,.12)'],borderColor:'rgba(212,168,67,.25)',borderWidth:1}]},options:{responsive:true,plugins:{legend:{labels:{color:'#A8A098',font:{size:11},boxWidth:12}}}}});
+      }
+    }catch(e){console.warn('Charts failed:',e.message);}
+  });
+}
+
+/* ── 9. CSV Export ── */
+async function exportOrdersCSV(){
+  wfb(async()=>{
+    try{
+      const orders=await fGetAll('orders');
+      orders.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+      const rows=[['Order ID','Date','Customer Name','Phone','Address','Items','Subtotal','Shipping','Discount','Total','Status','Payment Source']];
+      orders.forEach(o=>{
+        const date=o.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||'';
+        const items=(o.items||[]).map(i=>`${i.name}x${i.qty}`).join(' | ');
+        rows.push([o.orderId,date,o.customer?.name||'',o.customer?.phone||'',o.customer?.address||'',items,o.subtotal||0,o.shipping||0,o.discount||0,o.total||0,o.status||'',o.paymentProofSource||'']);
+      });
+      const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const a=document.createElement('a');
+      a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+      a.download=`SH-Orders-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      toast('CSV downloaded!','ok');
+    }catch(e){toast('CSV export failed: '+e.message,'err');}
+  });
+}
+
+/* ── 10. Low Stock Alerts ── */
+async function rLowStockAlerts(){
+  wfb(async()=>{
+    const thresh=parseInt(localStorage.getItem('sh_lstk_thresh')||'5');
+    document.getElementById('lstkThresh').value=thresh;
+    const ps=await fGetAll('products');
+    const low=ps.filter(p=>typeof p.stock==='number'&&p.stock<=thresh).sort((a,b)=>a.stock-b.stock);
+    const el=document.getElementById('lstkList');
+    if(!low.length){el.innerHTML=`<div style="color:var(--grn);font-weight:600;font-size:14px;padding:1rem 0">✓ All products are above the ${thresh}-unit threshold. No restocking needed.</div>`;return;}
+    el.innerHTML=`<div style="color:var(--red);font-weight:700;font-size:14px;margin-bottom:1rem">⚠ ${low.length} product(s) need restocking</div>`+
+      low.map(p=>`<div class="lstk-item">
+        <span class="lstk-name">${p.name}</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="lstk-qty">${p.stock} left</span>
+          <button class="ta" onclick="openPM('${p.id}')">Update Stock</button>
+        </div>
+      </div>`).join('');
+  });
+}
+function saveLstkThresh(){
+  const v=parseInt(document.getElementById('lstkThresh').value)||5;
+  localStorage.setItem('sh_lstk_thresh',String(v));
+  toast('Threshold saved — '+v+' units.','ok');
+  rLowStockAlerts();
+}
+
+/* ── 11. WA share on product detail page ── */
+function shareProductWA(id){
+  const p=prods.find(x=>x.id===id);if(!p)return;
+  const url=location.href.split('?')[0];
+  const msg=`🛍️ Check out *${p.name}* on SH Shopping!\nPrice: ${lkr(p.price)}\nShop here: ${url}\n(Go to Store and search "${p.name}")`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+}
+function shareWishlistWA(){
+  const wp=prods.filter(p=>wl.includes(p.id));if(!wp.length)return;
+  const list=wp.map(p=>`• ${p.name} — ${lkr(p.price)}`).join('\n');
+  window.open(`https://wa.me/?text=${encodeURIComponent('My SH Shopping Wishlist 🛍️\n'+list+'\n\nShop here: '+location.href)}`, '_blank');
+}
+function shareOrderWA(orderId,phone){
+  const msg=`🛍️ SH Shopping Order Confirmation\nOrder ID: *${orderId}*\nTrack your order at ${location.href.split('?')[0]}\n(My Orders → enter phone: ${phone})`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+/* ── 12. Abandoned Cart Recovery ── */
+async function saveAbandonedCart(phone){
+  if(!phone||!Object.keys(cart).length)return;
+  try{
+    const items=Object.values(cart).map(i=>i.p.name).join(', ');
+    const total=cartSub();
+    await fSet('abandoned',phone,{phone,cartTotal:total,cartItems:items,updatedAt:window._fb.serverTimestamp()});
+  }catch(e){}
+}
+
+/* ── Patch: hook abandoned cart into addCart ── */
+const _origAddCart=window.addCart;
+function addCart(id,qty){
+  qty=qty||1;const p=prods.find(x=>x.id===id);if(!p||p.stock===0)return;
+  if(!cart[id])cart[id]={p,qty:0};
+  cart[id].qty=Math.min(cart[id].qty+qty,p.stock);
+  saveCart();updBadge();toast('Added to cart!','ok');
+  renderFreeShipBar();
+  const phone=localStorage.getItem('sh_last_phone');
+  if(phone)saveAbandonedCart(phone);
+}
+
+/* ── Patch: hook recently viewed + WA share into showDetail ── */
+const _origShowDetail=showDetail;
+showDetail=function(id){
+  addRecentlyViewed(id);
+  _origShowDetail(id);
+};
+
+/* ── Patch: hook social proof into go() ── */
+const _origGo=go;
+go=function(p){
+  _origGo(p);
+  if(p==='store'){renderRecentlyViewed();renderFreeShipBar();}
+  if(p==='loyalty')renderLoyaltyPage();
+};
+
+/* ── Patch: hook loyalty earning into placeOrder success ── */
+const _origPlaceOrder=placeOrder;
+placeOrder=async function(){
+  // We override directly to add WA + loyalty + abandoned cart clearing
+  const name=document.getElementById('co-name').value.trim();
+  const phone=document.getElementById('co-phone').value.trim();
+  const addr=document.getElementById('co-addr').value.trim();
+  if(!name||!phone||!addr){toast('Please fill in name, phone and address.','err');return;}
+  if(!proofLocalPreview){toast('Please upload your payment receipt.','err');return;}
+  const btn=document.getElementById('placeBtn');
+  btn.disabled=true;btn.textContent='Uploading receipt…';
+  document.getElementById('upStatus').textContent='Uploading receipt…';
+  let receiptUrl=proofLocalPreview,receiptSource='base64';
+  try{const r=await uploadToStorage(proofLocalPreview,'receipt_'+Date.now());receiptUrl=r.url;receiptSource=r.source;document.getElementById('upStatus').textContent='Receipt uploaded ✓ ('+receiptSource+')';}catch(e){console.warn('Upload fallback:',e.message);}
+  btn.textContent='Placing order…';
+  const sub=cartSub();const ship=cartShipping();const disc=coDisc?.amt||0;const total=sub+ship-disc;
+  const orderId=uid();
+  const items=Object.values(cart).map(i=>({id:i.p.id,name:i.p.name,price:i.p.price,qty:i.qty,shippingFee:i.p.shippingFee||0,image:i.p.image||null}));
+  try{
+    await fAdd('orders',{orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,paymentProof:receiptUrl,paymentProofSource:receiptSource,status:'Pending Payment'});
+    for(const i of items){const p=prods.find(x=>x.id===i.id);if(p){p.stock=Math.max(0,p.stock-i.qty);await fUpd('products',i.id,{stock:p.stock});}}
+    // ★ Earn loyalty points
+    earnPoints(phone,total);localStorage.setItem('sh_last_phone',phone);
+    // ★ WhatsApp admin notification
+    sendWhatsApp(`🛒 New Order!\nID: ${orderId}\nCustomer: ${name} | ${phone}\nItems: ${items.map(i=>i.name+'×'+i.qty).join(', ')}\nTotal: ${lkr(total)}\nAddress: ${addr}`);
+    // ★ Clear abandoned cart record
+    fSet('abandoned',phone,{phone,cartTotal:0,cleared:true,updatedAt:window._fb.serverTimestamp()}).catch(()=>{});
+    sendOrderEmail({orderId,customer:{name,phone,address:addr},items,total});
+    cart={};saveCart();updBadge();coDisc=null;proofLocalPreview=null;
+    closeCO();
+    showBill({orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,status:'Pending Payment'});
+    toast('Order placed! We will verify your payment shortly.','ok');
+  }catch(e){toast('Error: '+e.message,'err');btn.disabled=false;btn.textContent='Place Order';}
+};
+
+/* ── Patch: hook charts + loyalty into renderAdmin ── */
+const _origRenderAdmin=renderAdmin;
+renderAdmin=function(){
+  _origRenderAdmin();
+  renderDashboardCharts();
+};
+
+/* ── Patch: aNav to handle new sections ── */
+const _origANav=aNav;
+aNav=function(sec,el){
+  _origANav(sec,el);
+  if(sec==='loyalty')rAdmLoyalty();
+  if(sec==='alerts')rLowStockAlerts();
+  if(sec==='dashboard')renderDashboardCharts();
+};
+
+/* ── Patch: loadCfg to apply flash + free ship bar ── */
+const _origLoadCfg=loadCfg;
+loadCfg=async function(){
+  await _origLoadCfg();
+  applyFlash();
+  renderFreeShipBar();
+  // Pre-fill settings fields if already set
+  if(cfg.whatsapp?.phone)document.getElementById('sWaPhone').value=cfg.whatsapp.phone;
+  if(cfg.whatsapp?.key)document.getElementById('sWaKey').value=cfg.whatsapp.key;
+  if(cfg.flash?.message)document.getElementById('sFlashMsg').value=cfg.flash.message;
+  if(cfg.freeShipThreshold)document.getElementById('sFreeShip').value=cfg.freeShipThreshold;
+  if(cfg.socialProof===false)document.getElementById('tSocialProof').checked=false;
+  schedSocialProof();
+};
+
+/* ── Patch: loadAdmCfg to fill new setting fields ── */
+const _origLoadAdmCfg=loadAdmCfg;
+loadAdmCfg=async function(){
+  await _origLoadAdmCfg();
+  if(cfg.whatsapp?.phone)document.getElementById('sWaPhone').value=cfg.whatsapp.phone;
+  if(cfg.whatsapp?.key)document.getElementById('sWaKey').value=cfg.whatsapp.key;
+  if(cfg.flash?.message)document.getElementById('sFlashMsg').value=cfg.flash.message;
+  if(cfg.flash?.endTime){const d=new Date(cfg.flash.endTime);document.getElementById('sFlashEnd').value=d.toISOString().slice(0,16);}
+  if(cfg.flash?.active)document.getElementById('tFlash').checked=cfg.flash.active;
+  if(cfg.freeShipThreshold)document.getElementById('sFreeShip').value=cfg.freeShipThreshold;
+};
+
+/* ── Patch: Bill page — add WA share + loyalty points earned ── */
+const _origShowBill=showBill;
+showBill=function(o){
+  _origShowBill(o);
+  // Add WA share button + points note to bill
+  const ptsEarned=Math.floor((o.total||0)/100)*(cfg.loyalty?.pph||1);
+  const billEl=document.getElementById('billCt');if(!billEl)return;
+  const extras=document.createElement('div');
+  extras.className='no-print';
+  extras.style='margin-top:1.5rem;display:flex;gap:10px;flex-wrap:wrap;justify-content:center';
+  extras.innerHTML=`
+    <button class="btn btn-wa btn-sm" onclick="shareOrderWA('${o.orderId}','${o.customer?.phone||''}')">📲 Share on WhatsApp</button>
+    ${ptsEarned>0?`<div class="pts-banner" style="font-size:13px">⭐ You earned <strong>${ptsEarned} loyalty points</strong> from this order!</div>`:''}`;
+  const billWrap=billEl.querySelector('.bill-wrap');
+  if(billWrap)billWrap.appendChild(extras);
+};
+
+/* ── Patch: pCard to show live scarcity badge ── */
+const _origPCard=pCard;
+pCard=function(p){
+  let html=_origPCard(p);
+  // inject scarcity badge before </div> of .pm
+  if(p.stock>0&&p.stock<=5){
+    html=html.replace('</div>\n    <div class="pb">',`<div class="scar-badge">🔥 Only ${p.stock} left!</div>\n    </div>\n    <div class="pb">`);
+  }
+  return html;
+};
+
+/* ── Patch: wishlist to add WA share button ── */
+const _origRenderWishlist=renderWishlist;
+renderWishlist=function(){
+  _origRenderWishlist();
+  const el=document.getElementById('wishCt');
+  if(!el||!wl.length)return;
+  const shareDiv=document.createElement('div');
+  shareDiv.style='margin-bottom:1.5rem';
+  shareDiv.innerHTML=`<button class="btn btn-wa" onclick="shareWishlistWA()">📲 Share Wishlist on WhatsApp</button>`;
+  el.insertBefore(shareDiv,el.firstChild);
+};
+
+/* ── Patch: product detail — add WA share + points note ── */
+const _origShowDetailPatched=showDetail;
+showDetail=function(id){
+  _origShowDetailPatched(id);
+  // After detail renders, inject WA share + points note
+  setTimeout(()=>{
+    const p=prods.find(x=>x.id===id);if(!p)return;
+    const ptsEarn=Math.floor(p.price/100)*(cfg.loyalty?.pph||1);
+    const dact=document.querySelector('.dact');
+    if(dact&&!dact.querySelector('.btn-wa')){
+      const waBtn=document.createElement('button');
+      waBtn.className='btn btn-wa btn-sm';waBtn.innerHTML='📲 Share';
+      waBtn.onclick=()=>shareProductWA(id);
+      dact.appendChild(waBtn);
+    }
+    if(ptsEarn>0){
+      const dtit=document.querySelector('.dtit');
+      if(dtit&&!document.querySelector('.pts-earn-note')){
+        const note=document.createElement('div');
+        note.className='pts-earn-note';
+        note.textContent=`⭐ Earn ${ptsEarn} loyalty points with this purchase`;
+        dtit.parentElement.insertBefore(note,dtit.nextSibling.nextSibling.nextSibling);
+      }
+    }
+  },60);
+};
 
 /* ── Product Reviews ── */
 let rvRatings={};  // productId → picked star rating
