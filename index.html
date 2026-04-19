@@ -1,4 +1,3 @@
-<meta name="facebook-domain-verification" content="0clegynr21984zgwekk9dk7oj97cwq" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1413,7 +1412,6 @@ textarea.fi{resize:vertical;min-height:80px}
       <input class="finp" id="srchIn" type="text" placeholder="Search products…" oninput="handleSearch(this.value)" autocomplete="off">
       <div class="ac-list" id="acList"></div>
     </div>
-    </div>
     <select class="finp" id="sortSel" onchange="renderProds()">
       <option value="">Featured First</option>
       <option value="rating">Top Rated</option>
@@ -1646,25 +1644,76 @@ textarea.fi{resize:vertical;min-height:80px}
 
           <!-- WhatsApp Notifications -->
           <div class="sset">
-            <h4>📱 WhatsApp Notifications (CallMeBot — Free)</h4>
-            <p style="font-size:13px;color:var(--t3);margin-bottom:.85rem">
-              Get instant WhatsApp alerts when orders arrive. Setup: open WhatsApp → message
-              <strong style="color:var(--g0)">+34644717361</strong> → send exactly:
-              <code style="background:var(--l2b);padding:2px 7px;border-radius:3px;font-size:12px">I allow callmebot to send me messages</code>
-              → wait for API key reply (usually 1 min).
+            <h4>📱 WhatsApp Notifications</h4>
+            <p style="font-size:13px;color:var(--t3);margin-bottom:1rem">
+              Choose how to receive WhatsApp alerts when orders arrive. Pick the method that works for you.
             </p>
-            <div class="fg2" style="margin-bottom:.85rem">
-              <div class="fg">
-                <label class="fl">Your WhatsApp Number</label>
-                <input class="fi" id="sWaPhone" placeholder="+94771234567 (with +94)">
-              </div>
-              <div class="fg">
-                <label class="fl">CallMeBot API Key</label>
-                <input class="fi" id="sWaKey" placeholder="From the reply message">
-              </div>
+
+            <div class="fg" style="margin-bottom:1rem">
+              <label class="fl">Notification Method</label>
+              <select class="fi" id="sWaMethod" onchange="showWaMethod()">
+                <option value="walink">Method 1 — WhatsApp Link (no setup, always works)</option>
+                <option value="callmebot">Method 2 — CallMeBot API (automatic, free)</option>
+                <option value="ultramsg">Method 3 — UltraMsg API (reliable, free tier)</option>
+                <option value="fonnte">Method 4 — Fonnte API (works in Sri Lanka)</option>
+              </select>
             </div>
-            <button class="btn btn-gold" onclick="saveWaCfg()">Save WhatsApp Settings</button>
-            <button class="btn btn-wa btn-sm" style="margin-left:8px" onclick="testWaNotif()">Send Test Message</button>
+
+            <!-- Method 1: WhatsApp Link — no API, just opens WA -->
+            <div id="wm-walink">
+              <div style="background:rgba(34,197,94,.06);border:1px solid var(--grnb);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+                <p style="font-size:13px;color:var(--grn);font-weight:600;margin-bottom:.35rem">✓ Recommended — Zero Setup Required</p>
+                <p style="font-size:12.5px;color:var(--t3)">When an order is placed, a button appears that opens WhatsApp pre-filled with the order details. Just tap Send. No API key needed.</p>
+              </div>
+              <div class="fg" style="margin-bottom:.85rem">
+                <label class="fl">Your WhatsApp Number (with country code)</label>
+                <input class="fi" id="sWaPhone" placeholder="+94771234567">
+              </div>
+              <button class="btn btn-gold" onclick="saveWaCfg()">Save WhatsApp Number</button>
+            </div>
+
+            <!-- Method 2: CallMeBot -->
+            <div id="wm-callmebot" style="display:none">
+              <div style="background:var(--ambd);border:1px solid var(--ambb);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+                <p style="font-size:13px;color:var(--amb);font-weight:600;margin-bottom:.35rem">⚠ CallMeBot Setup Required</p>
+                <p style="font-size:12.5px;color:var(--t3)">Open WhatsApp on your phone → find the number <strong style="color:var(--t1)">+34 644 71 73 61</strong> → send this exact message:<br><code style="background:var(--l1);padding:2px 7px;border-radius:3px;font-size:12px;display:inline-block;margin-top:4px">I allow callmebot to send me messages</code><br>Wait for the API key reply (can take up to 2 minutes).</p>
+              </div>
+              <div class="fg2" style="margin-bottom:.85rem">
+                <div class="fg"><label class="fl">Your WhatsApp Number</label><input class="fi" id="sWaPhoneCB" placeholder="+94771234567"></div>
+                <div class="fg"><label class="fl">API Key (from reply message)</label><input class="fi" id="sWaKey" placeholder="e.g. 1234567"></div>
+              </div>
+              <button class="btn btn-gold" onclick="saveWaCfgCB()">Save CallMeBot Settings</button>
+              <button class="btn btn-ghost btn-sm" style="margin-left:8px" onclick="testWaNotif()">Send Test</button>
+            </div>
+
+            <!-- Method 3: UltraMsg -->
+            <div id="wm-ultramsg" style="display:none">
+              <div style="background:rgba(96,165,250,.06);border:1px solid var(--blub);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+                <p style="font-size:13px;color:var(--blu);font-weight:600;margin-bottom:.35rem">UltraMsg — Free Tier Available</p>
+                <p style="font-size:12.5px;color:var(--t3)">Go to <strong style="color:var(--t1)">ultramsg.com</strong> → Sign Up Free → Create Instance → Scan QR with your WhatsApp → copy Instance ID and Token.</p>
+              </div>
+              <div class="fg2" style="margin-bottom:.85rem">
+                <div class="fg"><label class="fl">UltraMsg Instance ID</label><input class="fi" id="sUMInstance" placeholder="instance12345"></div>
+                <div class="fg"><label class="fl">UltraMsg Token</label><input class="fi" id="sUMToken" placeholder="your_token_here"></div>
+                <div class="fg fw"><label class="fl">Your WhatsApp Number (recipient)</label><input class="fi" id="sUMPhone" placeholder="+94771234567"></div>
+              </div>
+              <button class="btn btn-gold" onclick="saveUltraMsgCfg()">Save UltraMsg Settings</button>
+              <button class="btn btn-ghost btn-sm" style="margin-left:8px" onclick="testUltraMsg()">Send Test</button>
+            </div>
+
+            <!-- Method 4: Fonnte -->
+            <div id="wm-fonnte" style="display:none">
+              <div style="background:rgba(96,165,250,.06);border:1px solid var(--blub);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+                <p style="font-size:13px;color:var(--blu);font-weight:600;margin-bottom:.35rem">Fonnte — Works Well in Sri Lanka</p>
+                <p style="font-size:12.5px;color:var(--t3)">Go to <strong style="color:var(--t1)">fonnte.com</strong> → Register → Add Device → Scan QR code with your WhatsApp → get your API Token from dashboard.</p>
+              </div>
+              <div class="fg2" style="margin-bottom:.85rem">
+                <div class="fg"><label class="fl">Fonnte API Token</label><input class="fi" id="sFonnteToken" placeholder="your_fonnte_token"></div>
+                <div class="fg"><label class="fl">Your WhatsApp Number</label><input class="fi" id="sFonntePhone" placeholder="+94771234567"></div>
+              </div>
+              <button class="btn btn-gold" onclick="saveFonnteCfg()">Save Fonnte Settings</button>
+              <button class="btn btn-ghost btn-sm" style="margin-left:8px" onclick="testFonnte()">Send Test</button>
+            </div>
           </div>
 
           <!-- Flash Sale Timer -->
@@ -3235,28 +3284,97 @@ function openLB(src){document.getElementById('lbImg').src=src;document.getElemen
    ★ NEW FEATURES — ALL ADDED BELOW
 ════════════════════════════════════════ */
 
-/* ── 1. WhatsApp Notifications (CallMeBot — free) ── */
+/* ── 1. WhatsApp Notifications — Multi-method ── */
+
+// Show/hide the right method panel
+function showWaMethod(){
+  const m=document.getElementById('sWaMethod')?.value||'walink';
+  ['walink','callmebot','ultramsg','fonnte'].forEach(id=>{
+    const el=document.getElementById('wm-'+id);
+    if(el)el.style.display=id===m?'block':'none';
+  });
+}
+
+// Method 1: WhatsApp Link (no API — just opens pre-filled WA)
 async function sendWhatsApp(message){
-  try{
-    const phone=cfg.whatsapp?.phone,key=cfg.whatsapp?.key;
-    if(!phone||!key)return;
-    const url=`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(message)}&apikey=${key}`;
-    await fetch(url,{mode:'no-cors'});
-  }catch(e){console.warn('WhatsApp notify failed:',e.message);}
+  const wa=cfg.whatsapp||{};
+  const method=wa.method||'walink';
+
+  if(method==='walink'){
+    // Open WhatsApp with pre-filled message — admin taps Send manually
+    if(wa.phone){
+      const phone=wa.phone.replace(/[^0-9]/g,'');
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`,'_blank');
+    }
+    return;
+  }
+  if(method==='callmebot'){
+    try{
+      const url=`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(wa.phone)}&text=${encodeURIComponent(message)}&apikey=${wa.key}`;
+      await fetch(url,{mode:'no-cors'});
+    }catch(e){console.warn('CallMeBot failed:',e.message);}
+    return;
+  }
+  if(method==='ultramsg'){
+    try{
+      await fetch(`https://api.ultramsg.com/${wa.umInstance}/messages/chat`,{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:`token=${wa.umToken}&to=${encodeURIComponent(wa.umPhone)}&body=${encodeURIComponent(message)}`,
+      });
+    }catch(e){console.warn('UltraMsg failed:',e.message);}
+    return;
+  }
+  if(method==='fonnte'){
+    try{
+      await fetch('https://api.fonnte.com/send',{
+        method:'POST',
+        headers:{'Authorization':wa.fonnteToken},
+        body:new URLSearchParams({target:wa.fonntePhone,message}),
+      });
+    }catch(e){console.warn('Fonnte failed:',e.message);}
+  }
 }
+
+// Save Method 1 (WhatsApp Link)
 async function saveWaCfg(){
-  const data={whatsapp:{phone:document.getElementById('sWaPhone').value.trim(),key:document.getElementById('sWaKey').value.trim()}};
+  const phone=document.getElementById('sWaPhone')?.value.trim()||'';
+  const data={whatsapp:{method:'walink',phone}};
   await fSet('settings','main',data);cfg={...cfg,...data};
-  toast('WhatsApp settings saved!','ok');
+  toast('WhatsApp number saved! Orders will open WhatsApp pre-filled.','ok');
 }
+
+// Save Method 2 (CallMeBot)
+async function saveWaCfgCB(){
+  const phone=document.getElementById('sWaPhoneCB')?.value.trim()||'';
+  const key=document.getElementById('sWaKey')?.value.trim()||'';
+  if(!phone||!key){toast('Enter phone and API key.','err');return;}
+  const data={whatsapp:{method:'callmebot',phone,key}};
+  await fSet('settings','main',data);cfg={...cfg,...data};
+  toast('CallMeBot settings saved!','ok');
+}
+
+// Save Method 3 (UltraMsg)
+async function saveUltraMsgCfg(){
+  const d={whatsapp:{method:'ultramsg',umInstance:document.getElementById('sUMInstance')?.value.trim(),umToken:document.getElementById('sUMToken')?.value.trim(),umPhone:document.getElementById('sUMPhone')?.value.trim()}};
+  await fSet('settings','main',d);cfg={...cfg,...d};
+  toast('UltraMsg settings saved!','ok');
+}
+
+// Save Method 4 (Fonnte)
+async function saveFonnteCfg(){
+  const d={whatsapp:{method:'fonnte',fonnteToken:document.getElementById('sFonnteToken')?.value.trim(),fonntePhone:document.getElementById('sFonntePhone')?.value.trim()}};
+  await fSet('settings','main',d);cfg={...cfg,...d};
+  toast('Fonnte settings saved!','ok');
+}
+
+// Test notifications
 async function testWaNotif(){
-  const phone=document.getElementById('sWaPhone').value.trim();
-  const key=document.getElementById('sWaKey').value.trim();
-  if(!phone||!key){toast('Enter phone and API key first.','err');return;}
-  const url=`https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent('✅ SH Shopping test message. WhatsApp notifications are working!')}&apikey=${key}`;
-  await fetch(url,{mode:'no-cors'});
-  toast('Test message sent! Check your WhatsApp.','ok');
+  await sendWhatsApp('✅ SH Shopping test message. WhatsApp notifications are working!');
+  toast('Test sent! Check your WhatsApp.','ok');
 }
+async function testUltraMsg(){await sendWhatsApp('✅ SH Shopping UltraMsg test message!');toast('Test sent via UltraMsg!','ok');}
+async function testFonnte(){await sendWhatsApp('✅ SH Shopping Fonnte test message!');toast('Test sent via Fonnte!','ok');}
 
 /* ── 2. Flash Sale Countdown Banner ── */
 let _flashInt=null;
@@ -3677,8 +3795,19 @@ loadCfg=async function(){
 const _origLoadAdmCfg=loadAdmCfg;
 loadAdmCfg=async function(){
   await _origLoadAdmCfg();
-  if(cfg.whatsapp?.phone)document.getElementById('sWaPhone').value=cfg.whatsapp.phone;
-  if(cfg.whatsapp?.key)document.getElementById('sWaKey').value=cfg.whatsapp.key;
+  const wa=cfg.whatsapp||{};
+  const method=wa.method||'walink';
+  const sel=document.getElementById('sWaMethod');
+  if(sel)sel.value=method;
+  showWaMethod();
+  if(wa.phone)document.getElementById('sWaPhone').value=wa.phone;
+  if(wa.phone&&method==='callmebot'){const el=document.getElementById('sWaPhoneCB');if(el)el.value=wa.phone;}
+  if(wa.key){const el=document.getElementById('sWaKey');if(el)el.value=wa.key;}
+  if(wa.umInstance){document.getElementById('sUMInstance').value=wa.umInstance;}
+  if(wa.umToken){document.getElementById('sUMToken').value=wa.umToken;}
+  if(wa.umPhone){document.getElementById('sUMPhone').value=wa.umPhone;}
+  if(wa.fonnteToken){document.getElementById('sFonnteToken').value=wa.fonnteToken;}
+  if(wa.fonntePhone){document.getElementById('sFonntePhone').value=wa.fonntePhone;}
   if(cfg.flash?.message)document.getElementById('sFlashMsg').value=cfg.flash.message;
   if(cfg.flash?.endTime){const d=new Date(cfg.flash.endTime);document.getElementById('sFlashEnd').value=d.toISOString().slice(0,16);}
   if(cfg.flash?.active)document.getElementById('tFlash').checked=cfg.flash.active;
