@@ -1775,7 +1775,7 @@ textarea.fi{resize:vertical;min-height:80px}
               <div class="fg2" style="margin-bottom:.85rem">
                 <div class="fg"><label class="fl">Google API Key</label><input class="fi" id="sGdApiKey" placeholder="AIzaSy…"></div>
                 <div class="fg"><label class="fl">Google Client ID</label><input class="fi" id="sGdClientId" placeholder="123456789-abc….apps.googleusercontent.com"></div>
-                <div class="fg fw"><label class="fl">Drive Folder ID (for uploads)</label><input class="fi" id="sGdFolderId" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs"></div>
+                <div class="fg fw"><label class="fl">Drive Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste the full folder URL or just the ID</span></label><input class="fi" id="sGdFolderId" placeholder="Paste full URL or just the ID like: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs"></div>
                 <div class="fg fw">
                   <label class="fl">Apps Script Web App URL <span style="font-weight:400;text-transform:none;font-size:11px;letter-spacing:0">— the actual upload endpoint</span></label>
                   <input class="fi" id="sGasUrl" placeholder="https://script.google.com/macros/s/AKfycb…/exec">
@@ -1796,16 +1796,25 @@ textarea.fi{resize:vertical;min-height:80px}
                   <strong style="color:var(--pale);display:block;margin-bottom:.5rem">Step 2 — Create the Apps Script</strong>
                   Go to <strong style="color:var(--g0)">script.google.com</strong> → New Project → paste this code:<br>
                   <code style="display:block;background:var(--l1);padding:.75rem;border-radius:var(--r1);margin-top:.5rem;font-size:11.5px;line-height:1.8;white-space:pre-wrap">function doPost(e){
-  const d=JSON.parse(e.postData.contents);
-  const bytes=Utilities.base64Decode(d.base64);
-  const blob=Utilities.newBlob(bytes,d.mimeType,d.filename);
-  const folder=DriveApp.getFolderById(d.folderId);
-  const file=folder.createFile(blob);
-  file.setSharing(DriveApp.Access.ANYONE,DriveApp.Permission.VIEW);
-  return ContentService.createTextOutput(JSON.stringify({
-    url:'https://drive.google.com/uc?export=view&id='+file.getId(),
-    id:file.getId()
-  })).setMimeType(ContentService.MimeType.JSON);
+  try{
+    var d=JSON.parse(e.postData.contents);
+    var bytes=Utilities.base64Decode(d.base64);
+    var blob=Utilities.newBlob(bytes,d.mimeType,d.filename);
+    var folder=DriveApp.getFolderById(d.folderId);
+    var file=folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,
+                    DriveApp.Permission.VIEW);
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        url:'https://drive.google.com/uc?export=view&id='+file.getId(),
+        id:file.getId()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }catch(err){
+    return ContentService
+      .createTextOutput(JSON.stringify({error:err.message}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }</code>
                   <br>
                   <strong style="color:var(--pale);display:block;margin-bottom:.5rem">Step 3 — Deploy the Apps Script</strong>
@@ -2184,9 +2193,13 @@ function go(p){
   const nm={store:0,wishlist:1,orders:2};
   document.querySelectorAll('.nv').forEach(b=>b.classList.remove('on'));
   if(nm[p]!==undefined)document.querySelectorAll('.nv')[nm[p]]?.classList.add('on');
-  if(p==='store'){renderCats();renderProds();}
+  if(p==='store'){renderCats();renderProds();
+    if(typeof renderRecentlyViewed==='function')renderRecentlyViewed();
+    if(typeof renderFreeShipBar==='function')renderFreeShipBar();
+  }
   if(p==='cart')renderCart();
   if(p==='wishlist')renderWishlist();
+  if(p==='loyalty'&&typeof renderLoyaltyPage==='function')renderLoyaltyPage();
   if(p==='admin'){if(!window._admin){go('admin-login');return;}renderAdmin();}
   scrollTo({top:0,behavior:'smooth'});
 }
@@ -2256,7 +2269,14 @@ function loadProds(){
     document.querySelectorAll('.stagger').forEach(el=>io2.observe(el));
   });
 }
-async function loadCfg(){const s=await fOne('settings','main');if(s)cfg=s;applyCfg()}
+async function loadCfg(){
+  const s=await fOne('settings','main');
+  if(s)cfg=s;
+  applyCfg();
+  if(typeof applyFlash==='function')applyFlash();
+  if(typeof renderFreeShipBar==='function')renderFreeShipBar();
+  if(typeof schedSocialProof==='function')schedSocialProof();
+}
 function applyCfg(){
   const b=document.getElementById('heroBanner');
   if(cfg.showBanner&&!cfg.peakMode){
@@ -2304,11 +2324,14 @@ function pCard(p){
   const sc=p.stock>30?'s-in':p.stock>5?'s-lo':'s-out';
   const sl=p.stock>30?'● In Stock':p.stock>0?`● Only ${p.stock} left`:'● Out of Stock';
   const img=p.image?`<img src="${p.image}" alt="${p.name||''}" loading="lazy">`:`<div class="pm-ph">${p.emoji||'📦'}</div>`;
+  // Live scarcity badge
+  const scarce=(p.stock>0&&p.stock<=5)?`<div class="scar-badge">🔥 Only ${p.stock} left!</div>`:'';
   return`<div class="pcard" onclick="showDetail('${p.id}')">
     <div class="pm">
       ${img}
       ${p.badge?`<div class="pbg ${bMap[p.badge]||'b-new'}">${p.badge}</div>`:''}
       <button class="wb${inWL?' on':''}" onclick="event.stopPropagation();toggleWL('${p.id}')">${inWL?'❤️':'🤍'}</button>
+      ${scarce}
     </div>
     <div class="pb">
       <div class="pc-cat">${p.category||''}</div>
@@ -2327,30 +2350,20 @@ function pCard(p){
 function showDetail(id){
   const p=prods.find(x=>x.id===id);if(!p)return;
   detQty=1;
+  // Track recently viewed
+  if(typeof addRecentlyViewed==='function')addRecentlyViewed(id);
   const inWL=wl.includes(p.id);
   const pct=p.originalPrice?Math.round((1-p.price/p.originalPrice)*100):0;
   const sc=p.stock>20?'in':p.stock>5?'lo':'ot';
   const sl=p.stock>20?'✓ In Stock':p.stock>5?`⚠ Only ${p.stock} left`:p.stock===0?'✗ Out of Stock':`⚠ Only ${p.stock} left!`;
   const rel=prods.filter(x=>x.category===p.category&&x.id!==p.id).slice(0,4);
-
-  // Build media array — support both old single image and new media[] array
-  const media=Array.isArray(p.media)&&p.media.length>0
-    ?p.media
-    :(p.image?[{type:'image',url:p.image}]:[]);
-
-  // Gallery HTML
-  const mainId=`gm-${p.id}`;
-  const thumbsId=`gt-${p.id}`;
-  const mainHtml=media.length
-    ?renderGalleryMain(media[0],mainId)
-    :`<div class="d-ph">${p.emoji||'📦'}</div>`;
-
+  const media=Array.isArray(p.media)&&p.media.length>0?p.media:(p.image?[{type:'image',url:p.image}]:[]);
+  const mainId=`gm-${p.id}`;const thumbsId=`gt-${p.id}`;
+  const mainHtml=media.length?renderGalleryMain(media[0],mainId):`<div class="d-ph">${p.emoji||'📦'}</div>`;
   const thumbsHtml=media.length>1?media.map((m,i)=>renderGalleryThumb(m,i,mainId,thumbsId,p.id)).join(''):'';
-
-  const shipHtml=p.shippingFee>0
-    ?`<div class="ship-fee ship-paid">🚚 Shipping: ${lkr(p.shippingFee)}</div>`
-    :`<div class="ship-fee ship-free">✓ Free Shipping</div>`;
-
+  const shipHtml=p.shippingFee>0?`<div class="ship-fee ship-paid">🚚 Shipping: ${lkr(p.shippingFee)}</div>`:`<div class="ship-fee ship-free">✓ Free Shipping</div>`;
+  const ptsEarn=Math.floor(p.price/100)*(cfg.loyalty?.pph||1);
+  const ptsHtml=ptsEarn>0?`<div class="pts-earn-note">⭐ Earn <strong>${ptsEarn} loyalty points</strong> with this purchase</div>`:'';
   document.getElementById('detailCt').innerHTML=`
     <button class="bbtn" onclick="go('store')">Back to Store</button>
     <div class="dgrid">
@@ -2364,6 +2377,7 @@ function showDetail(id){
         ${p.rating?`<div class="drat">${stars(p.rating,true)}<strong style="margin-left:4px">${p.rating}</strong><span style="color:var(--t3);font-size:13px;margin-left:4px">(${p.reviews||0} reviews)</span></div>`:''}
         <div class="dpr">${lkr(p.price)}${p.originalPrice?`<span class="dpro">${lkr(p.originalPrice)}</span><span class="dsave">Save ${pct}%</span>`:''}</div>
         ${shipHtml}
+        ${ptsHtml}
         <p class="ddesc">${p.description||''}</p>
         <div class="dstk ${sc}">${sl}</div>
         <div class="dact">
@@ -2376,22 +2390,18 @@ function showDetail(id){
           <button class="wbl${inWL?' on':''}" id="wblBtn" onclick="toggleWL('${p.id}');this.classList.toggle('on');this.textContent=wl.includes('${p.id}')?'❤️ Saved':'🤍 Save'">
             ${inWL?'❤️ Saved':'🤍 Save'}
           </button>
+          <button class="btn btn-wa btn-sm" onclick="shareProductWA('${p.id}')">📲 Share</button>
         </div>
       </div>
     </div>
     ${rel.length?`<div style="border-top:1px solid var(--b1);padding-top:3rem"><div class="sh"><h2 class="st">More in <em>${p.category}</em></h2></div><div class="pgrid">${rel.map(pCard).join('')}</div></div>`:''}
-    <!-- Reviews section -->
     <div class="reviews-sec" id="rvSec-${p.id}">
       <div class="sh"><h2 class="st">Customer <em>Reviews</em></h2></div>
       <div class="rv-list" id="rvList-${p.id}"><div class="ldc"><div class="spin"></div></div></div>
       <div class="rv-form">
         <h4>Write a Review</h4>
-        <div class="fg" style="margin-bottom:1rem">
-          <label class="fl">Your Name *</label>
-          <input class="fi" id="rv-name-${p.id}" placeholder="e.g. Saman P.">
-        </div>
-        <div class="fg" style="margin-bottom:1rem">
-          <label class="fl">Rating *</label>
+        <div class="fg" style="margin-bottom:1rem"><label class="fl">Your Name *</label><input class="fi" id="rv-name-${p.id}" placeholder="e.g. Saman P."></div>
+        <div class="fg" style="margin-bottom:1rem"><label class="fl">Rating *</label>
           <div class="star-pick" id="starPick-${p.id}">
             <button type="button" onclick="pickStar('${p.id}',1)" data-v="1">★</button>
             <button type="button" onclick="pickStar('${p.id}',2)" data-v="2">★</button>
@@ -2400,23 +2410,14 @@ function showDetail(id){
             <button type="button" onclick="pickStar('${p.id}',5)" data-v="5">★</button>
           </div>
         </div>
-        <div class="fg" style="margin-bottom:1.25rem">
-          <label class="fl">Review *</label>
-          <textarea class="fi" id="rv-text-${p.id}" rows="3" placeholder="Share your experience with this product…"></textarea>
-        </div>
+        <div class="fg" style="margin-bottom:1.25rem"><label class="fl">Review *</label><textarea class="fi" id="rv-text-${p.id}" rows="3" placeholder="Share your experience with this product…"></textarea></div>
         <button class="btn btn-gold" onclick="submitRv('${p.id}','${(p.name||'').replace(/'/g,"\\'")}')">Submit Review</button>
         <div id="rvMsg-${p.id}" style="font-size:13px;margin-top:.75rem"></div>
       </div>
     </div>`;
   go('detail');
   loadProductReviews(p.id);
-  // activate first thumb
-  if(media.length>1){
-    setTimeout(()=>{
-      const ft=document.querySelector(`#${thumbsId} .gthumb`);
-      if(ft)ft.classList.add('active');
-    },50);
-  }
+  if(media.length>1){setTimeout(()=>{document.querySelector(`#${thumbsId} .gthumb`)?.classList.add('active');},50);}
 }
 function adjDQ(d){detQty=Math.max(1,detQty+d);const e=document.getElementById('dqn');if(e)e.textContent=detQty}
 
@@ -2427,6 +2428,9 @@ function addCart(id,qty){
   if(!cart[id])cart[id]={p,qty:0};
   cart[id].qty=Math.min(cart[id].qty+qty,p.stock);
   saveCart();updBadge();toast('Added to cart!','ok');
+  if(typeof renderFreeShipBar==='function')renderFreeShipBar();
+  const phone=localStorage.getItem('sh_last_phone');
+  if(phone&&typeof saveAbandonedCart==='function')saveAbandonedCart(phone);
 }
 function rmCart(id){delete cart[id];saveCart();updBadge();renderCart()}
 function chQty(id,d){
@@ -2493,7 +2497,7 @@ function renderWishlist(){
   const wp=prods.filter(p=>wl.includes(p.id));
   const el=document.getElementById('wishCt');
   if(!wp.length){el.innerHTML=`<div class="empty"><div class="empty-ico">🤍</div><h3>Wishlist is empty</h3><p>Tap ❤️ on any product to save it here.</p><button class="btn btn-gold" onclick="go('store')">Browse Products</button></div>`;return;}
-  el.innerHTML=`<div class="pgrid">${wp.map(pCard).join('')}</div>`;
+  el.innerHTML=`<div style="margin-bottom:1.5rem"><button class="btn btn-wa" onclick="shareWishlistWA()">📲 Share Wishlist on WhatsApp</button></div><div class="pgrid">${wp.map(pCard).join('')}</div>`;
 }
 
 /* ── Checkout ── */
@@ -2565,30 +2569,75 @@ async function placeOrder(){
   if(!name||!phone||!addr){toast('Please fill in name, phone and address.','err');return;}
   if(!proofLocalPreview){toast('Please upload your payment receipt.','err');return;}
   const btn=document.getElementById('placeBtn');
+  const resetBtn=()=>{btn.disabled=false;btn.textContent='Place Order';};
   btn.disabled=true;btn.textContent='Uploading receipt…';
   document.getElementById('upStatus').textContent='Uploading receipt…';
+
+  // Step 1: Upload receipt (never blocks order if it fails)
   let receiptUrl=proofLocalPreview,receiptSource='base64';
   try{
-    const result=await uploadToStorage(proofLocalPreview,'receipt_'+Date.now());
-    receiptUrl=result.url;receiptSource=result.source;
+    const mode=cfg.storageMode||'gdrive';
+    if(mode==='imgbb'&&cfg.imgbbKey){
+      const r=await uploadToImgbb(proofLocalPreview,'receipt_'+Date.now());
+      receiptUrl=r.url;receiptSource='imgbb';
+    }else if(mode==='gdrive'){
+      const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
+      const gd=getGdCfg()||(cfg.googleDrive||{});
+      // Extract folder ID if full URL was pasted
+      let folderId=gd.folderId||'';
+      const folderMatch=folderId.match(/folders\/([a-zA-Z0-9_-]+)/);
+      if(folderMatch)folderId=folderMatch[1];
+      if(gasUrl&&folderId){
+        const pure=proofLocalPreview.includes(',')?proofLocalPreview.split(',')[1]:proofLocalPreview;
+        const mimeType=proofLocalPreview.includes('data:')?proofLocalPreview.split(';')[0].split(':')[1]:'image/jpeg';
+        const res=await fetch(gasUrl,{
+          method:'POST',
+          headers:{'Content-Type':'text/plain'},
+          body:JSON.stringify({action:'uploadFile',base64:pure,filename:'receipt_'+Date.now()+'.jpg',mimeType,folderId}),
+        });
+        if(res.ok){
+          const json=await res.json();
+          if(json.url){receiptUrl=json.url;receiptSource='gdrive';}
+          else{console.warn('Drive response missing url:',json);}
+        }else{console.warn('Drive upload HTTP error:',res.status);}
+      }else{console.warn('Drive upload skipped: missing gasUrl or folderId');}
+    }
     document.getElementById('upStatus').textContent='Receipt uploaded ✓ ('+receiptSource+')';
-  }catch(e){console.warn('Upload fallback:',e.message);}
+  }catch(e){
+    console.warn('Receipt upload failed, using base64 fallback:',e.message);
+    document.getElementById('upStatus').textContent='Upload failed — receipt stored locally';
+    receiptUrl=proofLocalPreview;receiptSource='base64';
+  }
+
+  // Step 2: Place order in Firestore
   btn.textContent='Placing order…';
   const sub=cartSub();
-  const ship=cartShipping();
+  const ship=typeof cartShipping==='function'?cartShipping():0;
   const disc=coDisc?.amt||0;
   const total=sub+ship-disc;
   const orderId=uid();
   const items=Object.values(cart).map(i=>({id:i.p.id,name:i.p.name,price:i.p.price,qty:i.qty,shippingFee:i.p.shippingFee||0,image:i.p.image||null}));
   try{
     await fAdd('orders',{orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,paymentProof:receiptUrl,paymentProofSource:receiptSource,status:'Pending Payment'});
+    // Decrement stock
     for(const i of items){const p=prods.find(x=>x.id===i.id);if(p){p.stock=Math.max(0,p.stock-i.qty);await fUpd('products',i.id,{stock:p.stock});}}
+    // Notifications (non-blocking)
     sendOrderEmail({orderId,customer:{name,phone,address:addr},items,total});
+    // Loyalty + WA handled by patch below if it exists
+    if(typeof earnPoints==='function')earnPoints(phone,total);
+    localStorage.setItem('sh_last_phone',phone);
+    if(typeof sendWhatsApp==='function'){
+      sendWhatsApp(`🛒 New Order! ID: ${orderId} | ${name} | ${phone} | ${items.map(i=>i.name+'×'+i.qty).join(', ')} | Total: ${lkr(total)}`);
+    }
+    // Clear state
     cart={};saveCart();updBadge();coDisc=null;proofLocalPreview=null;
     closeCO();
     showBill({orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,status:'Pending Payment'});
     toast('Order placed! We will verify your payment shortly.','ok');
-  }catch(e){toast('Error: '+e.message,'err');btn.disabled=false;btn.textContent='Place Order';}
+  }catch(e){
+    toast('Could not place order: '+e.message,'err');
+    resetBtn();
+  }
 }
 
 /* ── EmailJS ── */
@@ -2663,6 +2712,7 @@ async function testEmail(){
 function showBill(o){
   const date=new Date().toLocaleDateString('en-LK',{year:'numeric',month:'long',day:'numeric'});
   const stMap={'Pending Payment':'bs-pend','Payment Received':'bs-ok','Delivered':'bs-ok','Cancelled':'bs-bad'};
+  const ptsEarned=Math.floor((o.total||0)/100)*(cfg.loyalty?.pph||1);
   document.getElementById('billCt').innerHTML=`
     <div class="no-print" style="margin-bottom:2rem;display:flex;gap:10px;flex-wrap:wrap">
       <button class="bbtn" onclick="go('store')" style="margin-bottom:0">Back to Store</button>
@@ -2692,10 +2742,14 @@ function showBill(o){
           ${o.discount>0?`<div class="bt disc"><span>Discount (${o.coupon})</span><span>−${lkr(o.discount)}</span></div>`:''}
           <div class="bt total"><span>Total Paid</span><span class="bv">${lkr(o.total)}</span></div>
         </div>
+        ${ptsEarned>0?`<div class="pts-earn-note" style="margin-top:1rem">⭐ You earned <strong>${ptsEarned} loyalty points</strong> from this order!</div>`:''}
         <div class="bill-foot">
           <p>Thank you for shopping with SH Shopping!</p>
           <p>Your order will be processed once payment is verified.</p>
           <p style="margin-top:.5rem">Order ID: <strong style="color:var(--g0)">${o.orderId}</strong></p>
+        </div>
+        <div class="no-print" style="margin-top:1.5rem;text-align:center">
+          <button class="btn btn-wa btn-sm" onclick="shareOrderWA('${o.orderId}','${o.customer?.phone||''}')">📲 Share on WhatsApp</button>
         </div>
       </div>
     </div>`;
@@ -2732,7 +2786,11 @@ async function lookupOrder(){
 }
 
 /* ── Admin ── */
-function renderAdmin(){rAdmStats();rAdmProds();rAdmOrds();rAdmPayments();rAdmCoupons();rAdmReviews();loadAdmCfg();populateRptYears()}
+function renderAdmin(){
+  rAdmStats();rAdmProds();rAdmOrds();rAdmPayments();rAdmCoupons();rAdmReviews();
+  loadAdmCfg();populateRptYears();
+  if(typeof renderDashboardCharts==='function')renderDashboardCharts();
+}
 
 function aNav(sec,el){
   document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
@@ -2741,6 +2799,9 @@ function aNav(sec,el){
   el.classList.add('on');
   if(sec==='reports')renderReport();
   if(sec==='reviews')rAdmReviews();
+  if(sec==='loyalty'&&typeof rAdmLoyalty==='function')rAdmLoyalty();
+  if(sec==='alerts'&&typeof rLowStockAlerts==='function')rLowStockAlerts();
+  if(sec==='dashboard'&&typeof renderDashboardCharts==='function')renderDashboardCharts();
 }
 
 async function rAdmStats(){
@@ -3232,28 +3293,38 @@ async function loadAdmCfg(){
   document.getElementById('tBanner').checked=!!s.showBanner;
   document.getElementById('tPeak').checked=!!s.peakMode;
   document.getElementById('tOnline').checked=s.storeOnline!==false;
-  // Google Drive config fields
+  if(s.socialProof===false){const el=document.getElementById('tSocialProof');if(el)el.checked=false;}
+  // Google Drive
   const gd=getGdCfg()||(s.googleDrive||{});
   if(gd.apiKey)document.getElementById('sGdApiKey').value=gd.apiKey;
   if(gd.clientId)document.getElementById('sGdClientId').value=gd.clientId;
   if(gd.folderId)document.getElementById('sGdFolderId').value=gd.folderId;
-  // Storage mode toggle — default ON (Google Drive)
   const useGd=(s.storageMode||'gdrive')==='gdrive';
   document.getElementById('tGdrive').checked=useGd;
   document.getElementById('gdriveSection').style.display=useGd?'block':'none';
   document.getElementById('imgbbSection').style.display=useGd?'none':'block';
   document.getElementById('storageActiveLabel').textContent=useGd?'Google Drive is active':'ImgBB is active';
-  // Google Apps Script URL for Drive upload
-  if(s.gasUrl){
-    localStorage.setItem('sh_gas_url',s.gasUrl);
-    const gasEl=document.getElementById('sGasUrl');
-    if(gasEl)gasEl.value=s.gasUrl;
-  }else{
-    const gasStored=localStorage.getItem('sh_gas_url');
-    const gasEl=document.getElementById('sGasUrl');
-    if(gasEl&&gasStored)gasEl.value=gasStored;
-  }
-  // Firebase config fields
+  const gasUrl=s.gasUrl||localStorage.getItem('sh_gas_url')||'';
+  if(gasUrl){localStorage.setItem('sh_gas_url',gasUrl);const el=document.getElementById('sGasUrl');if(el)el.value=gasUrl;}
+  // WhatsApp settings
+  const wa=s.whatsapp||{};
+  const method=wa.method||'walink';
+  const waMethodEl=document.getElementById('sWaMethod');
+  if(waMethodEl){waMethodEl.value=method;if(typeof showWaMethod==='function')showWaMethod();}
+  if(wa.phone){const el=document.getElementById('sWaPhone');if(el)el.value=wa.phone;}
+  if(wa.phone&&method==='callmebot'){const el=document.getElementById('sWaPhoneCB');if(el)el.value=wa.phone;}
+  if(wa.key){const el=document.getElementById('sWaKey');if(el)el.value=wa.key;}
+  if(wa.umInstance){const el=document.getElementById('sUMInstance');if(el)el.value=wa.umInstance;}
+  if(wa.umToken){const el=document.getElementById('sUMToken');if(el)el.value=wa.umToken;}
+  if(wa.umPhone){const el=document.getElementById('sUMPhone');if(el)el.value=wa.umPhone;}
+  if(wa.fonnteToken){const el=document.getElementById('sFonnteToken');if(el)el.value=wa.fonnteToken;}
+  if(wa.fonntePhone){const el=document.getElementById('sFonntePhone');if(el)el.value=wa.fonntePhone;}
+  // Flash sale
+  if(s.flash?.message){const el=document.getElementById('sFlashMsg');if(el)el.value=s.flash.message;}
+  if(s.flash?.endTime){const el=document.getElementById('sFlashEnd');if(el)el.value=new Date(s.flash.endTime).toISOString().slice(0,16);}
+  if(s.flash?.active){const el=document.getElementById('tFlash');if(el)el.checked=true;}
+  if(s.freeShipThreshold){const el=document.getElementById('sFreeShip');if(el)el.value=s.freeShipThreshold;}
+  // Firebase config
   loadFbCfgFields();
 }
 async function saveBank(){
@@ -3698,189 +3769,6 @@ async function saveAbandonedCart(phone){
   }catch(e){}
 }
 
-/* ── Patch: hook abandoned cart into addCart ── */
-const _origAddCart=window.addCart;
-function addCart(id,qty){
-  qty=qty||1;const p=prods.find(x=>x.id===id);if(!p||p.stock===0)return;
-  if(!cart[id])cart[id]={p,qty:0};
-  cart[id].qty=Math.min(cart[id].qty+qty,p.stock);
-  saveCart();updBadge();toast('Added to cart!','ok');
-  renderFreeShipBar();
-  const phone=localStorage.getItem('sh_last_phone');
-  if(phone)saveAbandonedCart(phone);
-}
-
-/* ── Patch: hook recently viewed + WA share into showDetail ── */
-const _origShowDetail=showDetail;
-showDetail=function(id){
-  addRecentlyViewed(id);
-  _origShowDetail(id);
-};
-
-/* ── Patch: hook social proof into go() ── */
-const _origGo=go;
-go=function(p){
-  _origGo(p);
-  if(p==='store'){renderRecentlyViewed();renderFreeShipBar();}
-  if(p==='loyalty')renderLoyaltyPage();
-};
-
-/* ── Patch: hook loyalty earning into placeOrder success ── */
-const _origPlaceOrder=placeOrder;
-placeOrder=async function(){
-  // We override directly to add WA + loyalty + abandoned cart clearing
-  const name=document.getElementById('co-name').value.trim();
-  const phone=document.getElementById('co-phone').value.trim();
-  const addr=document.getElementById('co-addr').value.trim();
-  if(!name||!phone||!addr){toast('Please fill in name, phone and address.','err');return;}
-  if(!proofLocalPreview){toast('Please upload your payment receipt.','err');return;}
-  const btn=document.getElementById('placeBtn');
-  btn.disabled=true;btn.textContent='Uploading receipt…';
-  document.getElementById('upStatus').textContent='Uploading receipt…';
-  let receiptUrl=proofLocalPreview,receiptSource='base64';
-  try{const r=await uploadToStorage(proofLocalPreview,'receipt_'+Date.now());receiptUrl=r.url;receiptSource=r.source;document.getElementById('upStatus').textContent='Receipt uploaded ✓ ('+receiptSource+')';}catch(e){console.warn('Upload fallback:',e.message);}
-  btn.textContent='Placing order…';
-  const sub=cartSub();const ship=cartShipping();const disc=coDisc?.amt||0;const total=sub+ship-disc;
-  const orderId=uid();
-  const items=Object.values(cart).map(i=>({id:i.p.id,name:i.p.name,price:i.p.price,qty:i.qty,shippingFee:i.p.shippingFee||0,image:i.p.image||null}));
-  try{
-    await fAdd('orders',{orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,paymentProof:receiptUrl,paymentProofSource:receiptSource,status:'Pending Payment'});
-    for(const i of items){const p=prods.find(x=>x.id===i.id);if(p){p.stock=Math.max(0,p.stock-i.qty);await fUpd('products',i.id,{stock:p.stock});}}
-    // ★ Earn loyalty points
-    earnPoints(phone,total);localStorage.setItem('sh_last_phone',phone);
-    // ★ WhatsApp admin notification
-    sendWhatsApp(`🛒 New Order!\nID: ${orderId}\nCustomer: ${name} | ${phone}\nItems: ${items.map(i=>i.name+'×'+i.qty).join(', ')}\nTotal: ${lkr(total)}\nAddress: ${addr}`);
-    // ★ Clear abandoned cart record
-    fSet('abandoned',phone,{phone,cartTotal:0,cleared:true,updatedAt:window._fb.serverTimestamp()}).catch(()=>{});
-    sendOrderEmail({orderId,customer:{name,phone,address:addr},items,total});
-    cart={};saveCart();updBadge();coDisc=null;proofLocalPreview=null;
-    closeCO();
-    showBill({orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,status:'Pending Payment'});
-    toast('Order placed! We will verify your payment shortly.','ok');
-  }catch(e){toast('Error: '+e.message,'err');btn.disabled=false;btn.textContent='Place Order';}
-};
-
-/* ── Patch: hook charts + loyalty into renderAdmin ── */
-const _origRenderAdmin=renderAdmin;
-renderAdmin=function(){
-  _origRenderAdmin();
-  renderDashboardCharts();
-};
-
-/* ── Patch: aNav to handle new sections ── */
-const _origANav=aNav;
-aNav=function(sec,el){
-  _origANav(sec,el);
-  if(sec==='loyalty')rAdmLoyalty();
-  if(sec==='alerts')rLowStockAlerts();
-  if(sec==='dashboard')renderDashboardCharts();
-};
-
-/* ── Patch: loadCfg to apply flash + free ship bar ── */
-const _origLoadCfg=loadCfg;
-loadCfg=async function(){
-  await _origLoadCfg();
-  applyFlash();
-  renderFreeShipBar();
-  // Pre-fill settings fields if already set
-  if(cfg.whatsapp?.phone)document.getElementById('sWaPhone').value=cfg.whatsapp.phone;
-  if(cfg.whatsapp?.key)document.getElementById('sWaKey').value=cfg.whatsapp.key;
-  if(cfg.flash?.message)document.getElementById('sFlashMsg').value=cfg.flash.message;
-  if(cfg.freeShipThreshold)document.getElementById('sFreeShip').value=cfg.freeShipThreshold;
-  if(cfg.socialProof===false)document.getElementById('tSocialProof').checked=false;
-  schedSocialProof();
-};
-
-/* ── Patch: loadAdmCfg to fill new setting fields ── */
-const _origLoadAdmCfg=loadAdmCfg;
-loadAdmCfg=async function(){
-  await _origLoadAdmCfg();
-  const wa=cfg.whatsapp||{};
-  const method=wa.method||'walink';
-  const sel=document.getElementById('sWaMethod');
-  if(sel)sel.value=method;
-  showWaMethod();
-  if(wa.phone)document.getElementById('sWaPhone').value=wa.phone;
-  if(wa.phone&&method==='callmebot'){const el=document.getElementById('sWaPhoneCB');if(el)el.value=wa.phone;}
-  if(wa.key){const el=document.getElementById('sWaKey');if(el)el.value=wa.key;}
-  if(wa.umInstance){document.getElementById('sUMInstance').value=wa.umInstance;}
-  if(wa.umToken){document.getElementById('sUMToken').value=wa.umToken;}
-  if(wa.umPhone){document.getElementById('sUMPhone').value=wa.umPhone;}
-  if(wa.fonnteToken){document.getElementById('sFonnteToken').value=wa.fonnteToken;}
-  if(wa.fonntePhone){document.getElementById('sFonntePhone').value=wa.fonntePhone;}
-  if(cfg.flash?.message)document.getElementById('sFlashMsg').value=cfg.flash.message;
-  if(cfg.flash?.endTime){const d=new Date(cfg.flash.endTime);document.getElementById('sFlashEnd').value=d.toISOString().slice(0,16);}
-  if(cfg.flash?.active)document.getElementById('tFlash').checked=cfg.flash.active;
-  if(cfg.freeShipThreshold)document.getElementById('sFreeShip').value=cfg.freeShipThreshold;
-};
-
-/* ── Patch: Bill page — add WA share + loyalty points earned ── */
-const _origShowBill=showBill;
-showBill=function(o){
-  _origShowBill(o);
-  // Add WA share button + points note to bill
-  const ptsEarned=Math.floor((o.total||0)/100)*(cfg.loyalty?.pph||1);
-  const billEl=document.getElementById('billCt');if(!billEl)return;
-  const extras=document.createElement('div');
-  extras.className='no-print';
-  extras.style='margin-top:1.5rem;display:flex;gap:10px;flex-wrap:wrap;justify-content:center';
-  extras.innerHTML=`
-    <button class="btn btn-wa btn-sm" onclick="shareOrderWA('${o.orderId}','${o.customer?.phone||''}')">📲 Share on WhatsApp</button>
-    ${ptsEarned>0?`<div class="pts-banner" style="font-size:13px">⭐ You earned <strong>${ptsEarned} loyalty points</strong> from this order!</div>`:''}`;
-  const billWrap=billEl.querySelector('.bill-wrap');
-  if(billWrap)billWrap.appendChild(extras);
-};
-
-/* ── Patch: pCard to show live scarcity badge ── */
-const _origPCard=pCard;
-pCard=function(p){
-  let html=_origPCard(p);
-  // inject scarcity badge before </div> of .pm
-  if(p.stock>0&&p.stock<=5){
-    html=html.replace('</div>\n    <div class="pb">',`<div class="scar-badge">🔥 Only ${p.stock} left!</div>\n    </div>\n    <div class="pb">`);
-  }
-  return html;
-};
-
-/* ── Patch: wishlist to add WA share button ── */
-const _origRenderWishlist=renderWishlist;
-renderWishlist=function(){
-  _origRenderWishlist();
-  const el=document.getElementById('wishCt');
-  if(!el||!wl.length)return;
-  const shareDiv=document.createElement('div');
-  shareDiv.style='margin-bottom:1.5rem';
-  shareDiv.innerHTML=`<button class="btn btn-wa" onclick="shareWishlistWA()">📲 Share Wishlist on WhatsApp</button>`;
-  el.insertBefore(shareDiv,el.firstChild);
-};
-
-/* ── Patch: product detail — add WA share + points note ── */
-const _origShowDetailPatched=showDetail;
-showDetail=function(id){
-  _origShowDetailPatched(id);
-  // After detail renders, inject WA share + points note
-  setTimeout(()=>{
-    const p=prods.find(x=>x.id===id);if(!p)return;
-    const ptsEarn=Math.floor(p.price/100)*(cfg.loyalty?.pph||1);
-    const dact=document.querySelector('.dact');
-    if(dact&&!dact.querySelector('.btn-wa')){
-      const waBtn=document.createElement('button');
-      waBtn.className='btn btn-wa btn-sm';waBtn.innerHTML='📲 Share';
-      waBtn.onclick=()=>shareProductWA(id);
-      dact.appendChild(waBtn);
-    }
-    if(ptsEarn>0){
-      const dtit=document.querySelector('.dtit');
-      if(dtit&&!document.querySelector('.pts-earn-note')){
-        const note=document.createElement('div');
-        note.className='pts-earn-note';
-        note.textContent=`⭐ Earn ${ptsEarn} loyalty points with this purchase`;
-        dtit.parentElement.insertBefore(note,dtit.nextSibling.nextSibling.nextSibling);
-      }
-    }
-  },60);
-};
-
 /* ── Product Reviews ── */
 let rvRatings={};  // productId → picked star rating
 
@@ -3983,20 +3871,43 @@ function getYTId(url){
 function saveGdriveCfg(){
   const key=document.getElementById('sGdApiKey').value.trim();
   const clientId=document.getElementById('sGdClientId').value.trim();
-  const folderId=document.getElementById('sGdFolderId').value.trim();
+  let folderId=document.getElementById('sGdFolderId').value.trim();
   const gasUrl=document.getElementById('sGasUrl').value.trim();
+  // Auto-extract folder ID if full Google Drive URL was pasted
+  const folderMatch=folderId.match(/folders\/([a-zA-Z0-9_-]+)/);
+  if(folderMatch){
+    folderId=folderMatch[1];
+    document.getElementById('sGdFolderId').value=folderId;
+  }
   if(!folderId||!gasUrl){toast('Folder ID and Apps Script URL are required.','err');return;}
   const gd={apiKey:key,clientId,folderId};
   localStorage.setItem('sh_gd_cfg',JSON.stringify(gd));
-  if(gasUrl)localStorage.setItem('sh_gas_url',gasUrl);
+  localStorage.setItem('sh_gas_url',gasUrl);
   fSet('settings','main',{googleDrive:gd,gasUrl,storageMode:'gdrive'});
   cfg.googleDrive=gd;cfg.storageMode='gdrive';cfg.gasUrl=gasUrl;
-  toast('Google Drive config saved! ✓','ok');
+  toast('Google Drive saved! Folder ID: '+folderId,'ok');
 }
-function testGdriveConnection(){
-  const gd=getGdCfg();
-  if(!gd){toast('Enter Google Drive config first.','err');return;}
-  toast('Config saved. Upload a receipt on checkout to test the full flow.','info');
+async function testGdriveConnection(){
+  const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
+  const gd=getGdCfg()||(cfg.googleDrive||{});
+  if(!gasUrl){toast('Enter and save your Apps Script URL first.','err');return;}
+  if(!gd?.folderId){toast('Enter and save your Folder ID first.','err');return;}
+  toast('Testing connection…','info');
+  try{
+    // Send a tiny 1x1 white pixel as test
+    const testB64='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+    const res=await fetch(gasUrl,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'uploadFile',base64:testB64,filename:'sh_test_'+Date.now()+'.png',mimeType:'image/png',folderId:gd.folderId}),
+    });
+    if(!res.ok){toast('Connection failed — HTTP '+res.status+'. Check your Apps Script deployment settings.','err');return;}
+    const json=await res.json();
+    if(json.url){toast('✅ Google Drive working! Check your folder for sh_test file.','ok');}
+    else{toast('Apps Script responded but no URL returned. Check the script code.','err');console.log('Drive response:',json);}
+  }catch(e){
+    toast('Connection error: '+e.message+'. Make sure Apps Script is deployed as "Anyone".','err');
+  }
 }
 function getGdCfg(){
   try{const s=localStorage.getItem('sh_gd_cfg');return s?JSON.parse(s):null;}catch(e){return null;}
@@ -4043,15 +3954,6 @@ async function uploadToStorage(base64data,filename){
     console.warn('Google Drive upload failed:',e.message,'. Using base64 fallback.');
     return{url:base64data,source:'base64'};
   }
-}
-
-/* ── Shipping fee in cart total ── */
-function cartShipping(){
-  const items=Object.values(cart);
-  return items.reduce((s,i)=>{
-    const p=prods.find(x=>x.id===i.p.id);
-    return s+(p?.shippingFee||0);
-  },0);
 }
 
 /* ── Init ── */
