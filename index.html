@@ -1775,9 +1775,10 @@ textarea.fi{resize:vertical;min-height:80px}
               <div class="fg2" style="margin-bottom:.85rem">
                 <div class="fg"><label class="fl">Google API Key</label><input class="fi" id="sGdApiKey" placeholder="AIzaSy…"></div>
                 <div class="fg"><label class="fl">Google Client ID</label><input class="fi" id="sGdClientId" placeholder="123456789-abc….apps.googleusercontent.com"></div>
-                <div class="fg fw"><label class="fl">Drive Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste the full folder URL or just the ID</span></label><input class="fi" id="sGdFolderId" placeholder="Paste full URL or just the ID like: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs"></div>
+                <div class="fg fw"><label class="fl">📎 Receipts Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdFolderId" placeholder="Paste Drive folder URL or ID — for payment receipts"></div>
+                <div class="fg fw"><label class="fl">🖼️ Product Images/Videos Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdProductFolderId" placeholder="Paste Drive folder URL or ID — for product media"></div>
                 <div class="fg fw">
-                  <label class="fl">Apps Script Web App URL <span style="font-weight:400;text-transform:none;font-size:11px;letter-spacing:0">— the actual upload endpoint</span></label>
+                  <label class="fl">Apps Script Web App URL <span style="font-weight:400;text-transform:none;font-size:11px;letter-spacing:0">— same URL used for both folders</span></label>
                   <input class="fi" id="sGasUrl" placeholder="https://script.google.com/macros/s/AKfycb…/exec">
                 </div>
               </div>
@@ -1843,7 +1844,12 @@ textarea.fi{resize:vertical;min-height:80px}
           </div>
           <div class="sset">
             <h4>📧 EmailJS — Order Notifications &amp; Reports</h4>
-            <p style="font-size:13px;color:var(--t3);margin-bottom:.85rem">Setup at <strong style="color:var(--g0)">emailjs.com</strong> (free 200 emails/month). New orders and monthly reports auto-emailed to admins.</p>
+            <div style="background:var(--redd);border:1px solid var(--redb);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1rem">
+              <p style="font-size:13px;color:var(--red);font-weight:600;margin-bottom:.25rem">⚠ Getting "Email failed: undefined" or error 412?</p>
+              <p style="font-size:12.5px;color:var(--t3)">Your Gmail OAuth token expired. Fix in 30 seconds: Go to <strong style="color:var(--t1)">emailjs.com</strong> → <strong style="color:var(--t1)">Email Services</strong> → click your Gmail service → click <strong style="color:var(--t1)">Reconnect Account</strong> → sign in with Google again. This happens every few weeks.</p>
+              <a href="https://dashboard.emailjs.com/admin/services" target="_blank" class="btn btn-red btn-sm" style="margin-top:.65rem;display:inline-flex">Fix Now — Open EmailJS Services ↗</a>
+            </div>
+            <p style="font-size:13px;color:var(--t3);margin-bottom:.85rem">Setup at <strong style="color:var(--g0)">emailjs.com</strong> (free 200/month). Orders and reports auto-emailed.</p>
             <div class="fg2" style="margin-bottom:.85rem">
               <div class="fg"><label class="fl">Public Key</label><input class="fi" id="sEJSKey" placeholder="xxxxxxxxxxxxxxx"></div>
               <div class="fg"><label class="fl">Service ID</label><input class="fi" id="sEJSService" placeholder="service_xxxxxxx"></div>
@@ -1878,7 +1884,18 @@ textarea.fi{resize:vertical;min-height:80px}
             <p style="font-size:13.5px;color:var(--t3);margin-bottom:1rem">Stored in Firebase Auth — never in code. To change: Build → Authentication → Users → ⋮ → Reset password</p>
             <a href="https://console.firebase.google.com" target="_blank" class="btn btn-outline btn-sm" style="display:inline-flex">Open Firebase Console ↗</a>
           </div>
-          <!-- ▼ FIREBASE CONFIG — saved locally, loaded on startup -->
+
+          <!-- System Restart -->
+          <div class="sset">
+            <h4>🔄 System Restart</h4>
+            <p style="font-size:13px;color:var(--t3);margin-bottom:1rem">
+              Use if the site behaves unexpectedly. Soft restart just reloads. Hard restart clears all local cache (cart, wishlist, loyalty cache, stored configs) then reloads. Firebase data (orders, products) is never affected.
+            </p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-ghost" onclick="softRestart()">🔄 Soft Restart</button>
+              <button class="btn btn-red" onclick="hardRestart()">⚠ Hard Restart (clear all cache)</button>
+            </div>
+          </div>
           <div class="sset" id="fbCfgBox">
             <h4>🔥 Firebase Configuration</h4>
             <p style="font-size:13px;color:var(--t3);margin-bottom:1rem">
@@ -2070,12 +2087,12 @@ try {
 /* ── Fallback hardcoded config (optional — leave as PASTE_... if using admin panel) ── */
 if(!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith('PASTE')) {
   firebaseConfig = {
-    apiKey:"AIzaSyAr3z1dK4oHKTgHPgjcvo1HxTzU1e7lRMA",
-    authDomain:"sh-shopping-479e8.firebaseapp.com",
-    projectId:"sh-shopping-479e8",
-    storageBucket:"sh-shopping-479e8.firebasestorage.app",
-    messagingSenderId:"162214181583",
-    appId:"1:162214181583:web:e38dfca0570201ce8bd5ba"
+    apiKey:"PASTE_API_KEY",
+    authDomain:"PASTE_AUTH_DOMAIN",
+    projectId:"PASTE_PROJECT_ID",
+    storageBucket:"PASTE_STORAGE_BUCKET",
+    messagingSenderId:"PASTE_SENDER_ID",
+    appId:"PASTE_APP_ID"
   };
 }
 
@@ -2886,7 +2903,7 @@ async function rAdmOrds(){
         <td><strong>${o.orderId}</strong><br><span style="font-size:11px;color:var(--t3)">${o.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||''}</span></td>
         <td>${o.customer?.name||'—'}<br><span style="font-size:12px;color:var(--t3)">${o.customer?.phone||''}</span><br><span style="font-size:11px;color:var(--t4)">${o.customer?.address||''}</span></td>
         <td>${o.items?.map(i=>`${i.name}×${i.qty}`).join('<br>')||'—'}<br><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
-        <td>${o.paymentProof?`<img src="${o.paymentProof}" class="prf-img" onclick="openLB('${o.paymentProof}')" title="Click to view">`:'<span style="font-size:12px;color:var(--t3)">None</span>'}</td>
+        <td>${o.paymentProof?`<img src="${driveImgUrl(o.paymentProof)}" class="prf-img" onclick="openLB('${o.paymentProof}')" title="Click to view" onerror="this.outerHTML='<a href=&quot;'+this.src+'&quot; target=&quot;_blank&quot; style=&quot;color:var(--g1);font-size:12px&quot;>View</a>'">`:'<span style="font-size:12px;color:var(--t3)">None</span>'}</td>
         <td><span class="sp ${stm[o.status]||'sp-pend'}">${o.status}</span></td>
         <td>
           <select style="padding:5px 9px;border:1px solid var(--b2);border-radius:var(--r1);font-size:12.5px;background:var(--l2b);color:var(--t0);width:150px;margin-bottom:5px" onchange="updOrd('${o.id}',this.value)">
@@ -2909,7 +2926,7 @@ async function rAdmPayments(){
         <td><strong>${o.orderId}</strong></td>
         <td>${o.customer?.name||'—'}<br><span style="font-size:12px;color:var(--t3)">${o.customer?.phone||''}</span></td>
         <td><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
-        <td><img src="${o.paymentProof}" class="prf-img" onclick="openLB('${o.paymentProof}')" title="View"></td>
+        <td><img src="${driveImgUrl(o.paymentProof)}" class="prf-img" onclick="openLB('${o.paymentProof}')" title="View" onerror="this.outerHTML='<a href=&quot;${o.paymentProof}&quot; target=&quot;_blank&quot; style=&quot;color:var(--g1);font-size:12px&quot;>View Receipt</a>'"></td>
         <td><span class="sp ${'Pending Payment'===o.status?'sp-pend':'Payment Received'===o.status?'sp-ok':'sp-bad'}">${o.status}</span></td>
         <td>
           <button class="btn btn-grn btn-sm" style="display:block;width:100%;margin-bottom:5px" onclick="updOrd('${o.id}','Payment Received')">✓ Confirm</button>
@@ -3107,7 +3124,45 @@ async function saveProd(){
   if(!name||isNaN(price)){toast('Name and price are required.','err');return;}
   const btn=document.getElementById('pmSaveBtn');
   btn.disabled=true;btn.textContent='Saving…';
-  // Build data object
+
+  // Upload any base64 images to Google Drive product folder before saving
+  const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
+  const gd=getGdCfg()||(cfg.googleDrive||{});
+  const productFolderId=gd.productFolderId||gd.folderId||'';
+
+  const processedMedia=[];
+  for(let i=0;i<pmMediaItems.length;i++){
+    const m=pmMediaItems[i];
+    if(m.type==='image'&&m.url&&m.url.startsWith('data:')){
+      // This is a base64 image — upload to Drive product folder
+      if(gasUrl&&productFolderId){
+        try{
+          btn.textContent=`Uploading image ${i+1}/${pmMediaItems.length}…`;
+          const pure=m.url.split(',')[1];
+          const mimeType=m.url.split(';')[0].split(':')[1]||'image/jpeg';
+          const res=await fetch(gasUrl,{
+            method:'POST',
+            headers:{'Content-Type':'text/plain'},
+            body:JSON.stringify({action:'uploadFile',base64:pure,filename:'product_'+Date.now()+'_'+i+'.jpg',mimeType,folderId:productFolderId}),
+          });
+          if(res.ok){
+            const json=await res.json();
+            if(json.url){
+              processedMedia.push({type:'image',url:json.url});
+              continue;
+            }
+          }
+        }catch(e){console.warn('Product image upload failed:',e.message);}
+      }
+      // If Drive upload failed or not configured — compress before storing
+      const compressed=await compressBase64(m.url,0.55);
+      processedMedia.push({type:'image',url:compressed});
+    }else{
+      processedMedia.push(m);
+    }
+  }
+
+  btn.textContent='Saving product…';
   const data={
     name,
     description:document.getElementById('pm-d').value.trim(),
@@ -3119,9 +3174,8 @@ async function saveProd(){
     badge:document.getElementById('pm-b').value.trim()||null,
     rating:parseFloat(document.getElementById('pm-r').value)||null,
     featured:document.getElementById('pm-feat').value==='true',
-    // Save media array; also keep single image field for backward compat
-    media:pmMediaItems,
-    image:pmMediaItems.length>0&&pmMediaItems[0].type==='image'?pmMediaItems[0].url:null,
+    media:processedMedia,
+    image:processedMedia.length>0&&processedMedia[0].type==='image'?processedMedia[0].url:null,
   };
   try{
     if(editProdId)await fUpd('products',editProdId,data);
@@ -3130,8 +3184,32 @@ async function saveProd(){
     rAdmProds();renderCats();renderProds();
     document.getElementById('hStatP').textContent=prods.length;
     toast(editProdId?'Product updated!':'Product added!','ok');
-  }catch(e){toast('Error: '+e.message,'err');}
+  }catch(e){
+    if(e.message&&(e.message.includes('maximum allowed size')||e.message.includes('1,048,576'))){
+      toast('Images too large for Firestore (1MB limit). Set up a Google Drive product folder in Settings to upload images there instead.','err');
+    }else{
+      toast('Error saving product: '+e.message,'err');
+    }
+  }
   btn.disabled=false;btn.textContent='Save Product';
+}
+
+// Compress base64 image using canvas
+function compressBase64(b64,quality){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=800;
+      let w=img.width,h=img.height;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      const canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      resolve(canvas.toDataURL('image/jpeg',quality||0.6));
+    };
+    img.onerror=()=>resolve(b64);
+    img.src=b64;
+  });
 }
 async function delProd(id){
   if(!confirm('Delete this product?'))return;
@@ -3299,6 +3377,7 @@ async function loadAdmCfg(){
   if(gd.apiKey)document.getElementById('sGdApiKey').value=gd.apiKey;
   if(gd.clientId)document.getElementById('sGdClientId').value=gd.clientId;
   if(gd.folderId)document.getElementById('sGdFolderId').value=gd.folderId;
+  if(gd.productFolderId){const el=document.getElementById('sGdProductFolderId');if(el)el.value=gd.productFolderId;}
   const useGd=(s.storageMode||'gdrive')==='gdrive';
   document.getElementById('tGdrive').checked=useGd;
   document.getElementById('gdriveSection').style.display=useGd?'block':'none';
@@ -3349,7 +3428,14 @@ async function saveToggle(key,val){
 }
 
 /* ── Lightbox ── */
-function openLB(src){document.getElementById('lbImg').src=src;document.getElementById('lbOv').classList.add('open')}
+function openLB(src){
+  // For Drive URLs, try to open as full image in lightbox
+  // Fall back to opening in new tab if blocked
+  const img=document.getElementById('lbImg');
+  img.src=driveImgUrl?driveImgUrl(src):src;
+  img.onerror=()=>{window.open(src,'_blank');document.getElementById('lbOv').classList.remove('open');};
+  document.getElementById('lbOv').classList.add('open');
+}
 
 /* ════════════════════════════════════════
    ★ NEW FEATURES — ALL ADDED BELOW
@@ -3769,7 +3855,34 @@ async function saveAbandonedCart(phone){
   }catch(e){}
 }
 
-/* ── Product Reviews ── */
+// Convert Google Drive view URL to thumbnail URL that works in <img> tags
+function driveImgUrl(url){
+  if(!url)return url;
+  // Already a thumbnail URL - return as is
+  if(url.includes('thumbnail'))return url;
+  // Convert uc?export=view&id=FILE_ID to thumbnail
+  const m1=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m1)return`https://drive.google.com/thumbnail?id=${m1[1]}&sz=w400`;
+  // Convert /file/d/FILE_ID/view
+  const m2=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(m2)return`https://drive.google.com/thumbnail?id=${m2[1]}&sz=w400`;
+  return url;
+}
+
+/* ── Restart Functions ── */
+function softRestart(){location.reload();}
+function hardRestart(){
+  if(!confirm('Clear ALL local data (cart, wishlist, loyalty cache, stored configs) and reload? Firebase data is not affected.'))return;
+  const keep=['sh_fb_cfg','sh_gd_cfg','sh_gas_url'];// keep Firebase + Drive configs
+  const toRemove=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(!keep.includes(k))toRemove.push(k);
+  }
+  toRemove.forEach(k=>localStorage.removeItem(k));
+  toast('Cache cleared! Reloading…','ok');
+  setTimeout(()=>location.reload(),1000);
+}
 let rvRatings={};  // productId → picked star rating
 
 function pickStar(pid,val){
@@ -3872,20 +3985,20 @@ function saveGdriveCfg(){
   const key=document.getElementById('sGdApiKey').value.trim();
   const clientId=document.getElementById('sGdClientId').value.trim();
   let folderId=document.getElementById('sGdFolderId').value.trim();
+  let productFolderId=(document.getElementById('sGdProductFolderId')?.value||'').trim();
   const gasUrl=document.getElementById('sGasUrl').value.trim();
-  // Auto-extract folder ID if full Google Drive URL was pasted
-  const folderMatch=folderId.match(/folders\/([a-zA-Z0-9_-]+)/);
-  if(folderMatch){
-    folderId=folderMatch[1];
-    document.getElementById('sGdFolderId').value=folderId;
-  }
-  if(!folderId||!gasUrl){toast('Folder ID and Apps Script URL are required.','err');return;}
-  const gd={apiKey:key,clientId,folderId};
+  // Auto-extract folder IDs if full Google Drive URLs were pasted
+  const m1=folderId.match(/folders\/([a-zA-Z0-9_-]+)/);
+  if(m1){folderId=m1[1];document.getElementById('sGdFolderId').value=folderId;}
+  const m2=productFolderId.match(/folders\/([a-zA-Z0-9_-]+)/);
+  if(m2){productFolderId=m2[1];document.getElementById('sGdProductFolderId').value=productFolderId;}
+  if(!folderId||!gasUrl){toast('Receipts Folder ID and Apps Script URL are required.','err');return;}
+  const gd={apiKey:key,clientId,folderId,productFolderId:productFolderId||folderId};
   localStorage.setItem('sh_gd_cfg',JSON.stringify(gd));
   localStorage.setItem('sh_gas_url',gasUrl);
   fSet('settings','main',{googleDrive:gd,gasUrl,storageMode:'gdrive'});
   cfg.googleDrive=gd;cfg.storageMode='gdrive';cfg.gasUrl=gasUrl;
-  toast('Google Drive saved! Folder ID: '+folderId,'ok');
+  toast('Google Drive saved! Receipts: '+folderId+(productFolderId?' | Products: '+productFolderId:''),'ok');
 }
 async function testGdriveConnection(){
   const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
@@ -3910,7 +4023,13 @@ async function testGdriveConnection(){
   }
 }
 function getGdCfg(){
-  try{const s=localStorage.getItem('sh_gd_cfg');return s?JSON.parse(s):null;}catch(e){return null;}
+  try{
+    const s=localStorage.getItem('sh_gd_cfg');
+    const local=s?JSON.parse(s):null;
+    if(local&&cfg.googleDrive?.productFolderId&&!local.productFolderId)
+      local.productFolderId=cfg.googleDrive.productFolderId;
+    return local;
+  }catch(e){return null;}
 }
 
 /* ── Storage mode toggle ── */
