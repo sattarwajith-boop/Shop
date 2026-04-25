@@ -1420,12 +1420,33 @@ textarea.fi{resize:vertical;min-height:80px}
     overflow-y:hidden;
     scrollbar-width:none;
     align-items:center;
+    flex-wrap:wrap;
   }
   nav::-webkit-scrollbar{display:none}
   .brand{gap:8px;min-width:max-content}
   .brand-mark{width:30px;height:30px;border-radius:8px;font-size:.7rem}
   .brand-text{font-size:1.32rem;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-r{gap:6px;flex-shrink:0}
+  .nav-mid{
+    order:3;
+    flex:1 0 100%;
+    display:flex;
+    overflow-x:auto;
+    gap:6px;
+    padding-top:4px;
+    scrollbar-width:none;
+  }
+  .nav-mid::-webkit-scrollbar{display:none}
+  .nv{
+    flex:0 0 auto;
+    padding:7px 12px;
+    background:var(--l3);
+    border:1px solid var(--b2);
+    border-radius:var(--rp);
+    font-size:12px;
+  }
+  .nv.on{border-color:var(--bg);background:rgba(200,155,48,.10)}
+  .nv::after{display:none}
+  .nav-r{gap:6px;flex-shrink:0;margin-left:auto}
   .ic-btn{width:36px;height:36px;flex:0 0 36px}
   .cart-btn{height:38px;padding:8px 14px;font-size:13px;min-width:max-content}
   .adm-nv-btn{height:38px;padding:8px 12px;min-width:max-content;font-size:0}
@@ -1595,6 +1616,45 @@ textarea.fi{resize:vertical;min-height:80px}
   .mfoot .btn{width:100%;justify-content:center}
 
   .adm-shell{display:block;min-height:auto}
+  .adm-side{
+    display:flex!important;
+    position:sticky;
+    top:0;
+    z-index:120;
+    width:calc(100vw - 32px);
+    margin:0 16px 1rem;
+    padding:10px 0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    flex-direction:row;
+    gap:8px;
+    background:rgba(6,6,10,.92);
+    border-right:none;
+    border-bottom:1px solid var(--b1);
+    scrollbar-width:none;
+  }
+  .adm-side::-webkit-scrollbar{display:none}
+  .adm-logo,.asg{display:none}
+  .asi{
+    flex:0 0 auto;
+    width:auto;
+    white-space:nowrap;
+    padding:9px 13px;
+    border-radius:var(--rp);
+    background:var(--l3);
+    border:1px solid var(--b2);
+    color:var(--t2);
+  }
+  .asi .ic{width:auto}
+  .asi.on{
+    border-left:none;
+    padding-left:13px;
+    border-color:var(--bg);
+    background:rgba(200,155,48,.12);
+    box-shadow:var(--gx);
+  }
+  .asi[style*="flex:1"]{display:none!important}
+  .asi[onclick="doLogout()"]{color:var(--red)!important}
   .adm-main{
     width:100%;
     padding:1.5rem 16px 4rem;
