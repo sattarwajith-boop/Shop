@@ -1433,13 +1433,13 @@ textarea.fi{resize:vertical;min-height:80px}
     <button class="nv" onclick="go('orders')">My Orders</button>
   </div>
   <div class="nav-r">
-    <button class="ic-btn" onclick="go('loyalty')" title="My Loyalty Points" style="font-size:.8rem;font-weight:700">⭐</button>
-    <button class="ic-btn" id="dmBtn" onclick="toggleDark()" title="Theme">✦</button>
-    <button class="cart-btn" onclick="go('cart')">
+    <button class="ic-btn" onclick="go('loyalty')" title="My Loyalty Points" aria-label="My Loyalty Points" style="font-size:.8rem;font-weight:700">⭐</button>
+    <button class="ic-btn" id="dmBtn" onclick="toggleDark()" title="Theme" aria-label="Theme">✦</button>
+    <button class="cart-btn" onclick="go('cart')" aria-label="Open cart">
       <span>🛒</span> Cart
       <span class="cbadge" id="cBadge">0</span>
     </button>
-    <button class="adm-nv-btn" id="admBtn" onclick="go('admin')">Admin</button>
+    <button class="adm-nv-btn" id="admBtn" onclick="go('admin')" aria-label="Open admin dashboard">Admin</button>
   </div>
 </nav>
 
@@ -1946,7 +1946,6 @@ textarea.fi{resize:vertical;min-height:80px}
                 <div class="fg fw"><label class="fl">📎 Receipts Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdFolderId" placeholder="Paste Drive folder URL or ID — for payment receipts"></div>
                 <div class="fg fw"><label class="fl">🖼️ Product Images/Videos Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdProductFolderId" placeholder="Paste Drive folder URL or ID — for product media"></div>
                 <div class="fg fw"><label class="fl">⭐ Review Photos Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdReviewFolderId" placeholder="Paste Drive folder URL or ID — for customer review photos"></div>
-                <div class="fg fw"><label class="fl">⭐ Review Photos Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdReviewFolderId" placeholder="Paste Drive folder URL or ID — for review photos"></div>
                 <div class="fg fw">
                   <label class="fl">Apps Script Web App URL <span style="font-weight:400;text-transform:none;font-size:11px;letter-spacing:0">— same URL used for both folders</span></label>
                   <input class="fi" id="sGasUrl" placeholder="https://script.google.com/macros/s/AKfycb…/exec">
@@ -2332,6 +2331,8 @@ let coDisc=null;
 
 /* ── Helpers ── */
 const lkr=n=>'Rs. '+Math.round(n).toLocaleString('en');
+const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+const escAttr=value=>esc(value).replace(/`/g,'&#096;');
 const saveCart=()=>localStorage.setItem('sh_cart',JSON.stringify(cart));
 const saveWL=()=>localStorage.setItem('sh_wl',JSON.stringify(wl));
 const uid=()=>'SH-'+Math.random().toString(36).substr(2,7).toUpperCase();
@@ -2556,19 +2557,22 @@ function pCard(p){
   const bMap={Sale:'b-sale',New:'b-new',Hot:'b-hot'};
   const sc=p.stock>30?'s-in':p.stock>5?'s-lo':'s-out';
   const sl=p.stock>30?'● In Stock':p.stock>0?`● Only ${p.stock} left`:'● Out of Stock';
-  const img=p.image?`<img src="${p.image}" alt="${p.name||''}" loading="lazy">`:`<div class="pm-ph">${p.emoji||'📦'}</div>`;
+  const safeName=esc(p.name||'');
+  const safeCat=esc(p.category||'');
+  const safeBadge=esc(p.badge||'');
+  const img=p.image?`<img src="${escAttr(p.image)}" alt="${safeName||'Product image'}" loading="lazy">`:`<div class="pm-ph">${esc(p.emoji||'📦')}</div>`;
   // Live scarcity badge
   const scarce=(p.stock>0&&p.stock<=5)?`<div class="scar-badge">🔥 Only ${p.stock} left!</div>`:'';
   return`<div class="pcard" onclick="showDetail('${p.id}')">
     <div class="pm">
       ${img}
-      ${p.badge?`<div class="pbg ${bMap[p.badge]||'b-new'}">${p.badge}</div>`:''}
-      <button class="wb${inWL?' on':''}" onclick="event.stopPropagation();toggleWL('${p.id}')">${inWL?'❤️':'🤍'}</button>
+      ${p.badge?`<div class="pbg ${bMap[p.badge]||'b-new'}">${safeBadge}</div>`:''}
+      <button class="wb${inWL?' on':''}" onclick="event.stopPropagation();toggleWL('${p.id}')" aria-label="${inWL?'Remove from wishlist':'Add to wishlist'}">${inWL?'❤️':'🤍'}</button>
       ${scarce}
     </div>
     <div class="pb">
-      <div class="pc-cat">${p.category||''}</div>
-      <div class="pc-nm">${p.name||''}</div>
+      <div class="pc-cat">${safeCat}</div>
+      <div class="pc-nm">${safeName}</div>
       ${p.rating?`<div class="rat">${stars(p.rating)}<span class="rn">${p.rating} (${p.reviews||0})</span></div>`:''}
       <div class="pp"><span class="pmain">${lkr(p.price)}</span>${p.originalPrice?`<span class="porig">${lkr(p.originalPrice)}</span><span class="psave">−${pct}%</span>`:''}</div>
       <div class="pst ${sc}">${sl}</div>
@@ -2597,6 +2601,9 @@ function showDetail(id){
   const shipHtml=p.shippingFee>0?`<div class="ship-fee ship-paid">🚚 Shipping: ${lkr(p.shippingFee)}</div>`:`<div class="ship-fee ship-free">✓ Free Shipping</div>`;
   const ptsEarn=Math.floor(p.price/100)*(cfg.loyalty?.pph||1);
   const ptsHtml=ptsEarn>0?`<div class="pts-earn-note">⭐ Earn <strong>${ptsEarn} loyalty points</strong> with this purchase</div>`:'';
+  const safeName=esc(p.name||'');
+  const safeCat=esc(p.category||'');
+  const safeDesc=esc(p.description||'');
   document.getElementById('detailCt').innerHTML=`
     <button class="bbtn" onclick="go('store')">Back to Store</button>
     <div class="dgrid">
@@ -2605,13 +2612,13 @@ function showDetail(id){
         ${thumbsHtml?`<div class="gallery-thumbs" id="${thumbsId}">${thumbsHtml}</div>`:''}
       </div>
       <div>
-        <div class="dcat">${p.category||''}</div>
-        <div class="dtit">${p.name||''}</div>
+        <div class="dcat">${safeCat}</div>
+        <div class="dtit">${safeName}</div>
         ${p.rating?`<div class="drat">${stars(p.rating,true)}<strong style="margin-left:4px">${p.rating}</strong><span style="color:var(--t3);font-size:13px;margin-left:4px">(${p.reviews||0} reviews)</span></div>`:''}
         <div class="dpr">${lkr(p.price)}${p.originalPrice?`<span class="dpro">${lkr(p.originalPrice)}</span><span class="dsave">Save ${pct}%</span>`:''}</div>
         ${shipHtml}
         ${ptsHtml}
-        <p class="ddesc">${p.description||''}</p>
+        <p class="ddesc">${safeDesc}</p>
         <div class="dstk ${sc}">${sl}</div>
         <div class="dact">
           <div class="qrow">
@@ -2627,7 +2634,7 @@ function showDetail(id){
         </div>
       </div>
     </div>
-    ${rel.length?`<div style="border-top:1px solid var(--b1);padding-top:3rem"><div class="sh"><h2 class="st">More in <em>${p.category}</em></h2></div><div class="pgrid">${rel.map(pCard).join('')}</div></div>`:''}
+    ${rel.length?`<div style="border-top:1px solid var(--b1);padding-top:3rem"><div class="sh"><h2 class="st">More in <em>${safeCat}</em></h2></div><div class="pgrid">${rel.map(pCard).join('')}</div></div>`:''}
     <div class="reviews-sec" id="rvSec-${p.id}">
       <div class="sh"><h2 class="st">Customer <em>Reviews</em></h2></div>
       <div class="rv-list" id="rvList-${p.id}"><div class="ldc"><div class="spin"></div></div></div>
@@ -2648,7 +2655,7 @@ function showDetail(id){
           <label class="fl">Photo <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">optional — uploaded to Google Drive</span></label>
           <input type="file" accept="image/*" id="rv-photo-${p.id}" class="fi" style="padding:8px;cursor:pointer">
         </div>
-        <button class="btn btn-gold" onclick="submitRv('${p.id}','${(p.name||'').replace(/'/g,"\\'")}')">Submit Review</button>
+        <button class="btn btn-gold" onclick="submitRv('${p.id}')">Submit Review</button>
         <div id="rvMsg-${p.id}" style="font-size:13px;margin-top:.75rem"></div>
       </div>
     </div>`;
@@ -2693,13 +2700,13 @@ function renderCart(){
       <div>
         <div class="clist">
           ${items.map(i=>{
-            const imgEl=i.p.image?`<img src="${i.p.image}" alt="">`:(i.p.emoji||'📦');
+            const imgEl=i.p.image?`<img src="${escAttr(i.p.image)}" alt="${escAttr(i.p.name||'Product image')}">`:esc(i.p.emoji||'📦');
             const sf=i.p.shippingFee||0;
             return`<div class="ci">
               <div class="ci-img">${imgEl}</div>
               <div class="ci-b">
-                <div class="ci-nm">${i.p.name}</div>
-                <div class="ci-mt">${i.p.category||''} · ${lkr(i.p.price)}${sf>0?` · 🚚 ${lkr(sf)}`:'&nbsp;<span style="color:var(--grn);font-size:11px">Free shipping</span>'}</div>
+                <div class="ci-nm">${esc(i.p.name||'')}</div>
+                <div class="ci-mt">${esc(i.p.category||'')} · ${lkr(i.p.price)}${sf>0?` · 🚚 ${lkr(sf)}`:'&nbsp;<span style="color:var(--grn);font-size:11px">Free shipping</span>'}</div>
               </div>
               <div class="qc">
                 <button class="qbtn" onclick="chQty('${i.p.id}',-1)">−</button>
@@ -2962,32 +2969,32 @@ function showBill(o){
         <div class="bill-top">
           <div class="bill-logo">SH Shopping</div>
           <div class="bill-tagline">Sri Lanka · Official Purchase Receipt</div>
-          <div class="bill-oid">${o.orderId}</div><br>
-          <div class="bill-st ${stMap[o.status]||'bs-pend'}">${o.status==='Pending Payment'?'⏳':'✓'} ${o.status}</div>
+          <div class="bill-oid">${esc(o.orderId)}</div><br>
+          <div class="bill-st ${stMap[o.status]||'bs-pend'}">${o.status==='Pending Payment'?'⏳':'✓'} ${esc(o.status)}</div>
           <p style="font-size:12px;margin-top:.65rem;color:var(--t3)">${date}</p>
         </div>
         <div class="bill-cust">
           <div class="bill-ch">Customer Details</div>
-          <div class="bill-cp">${o.customer.name}<br>📞 ${o.customer.phone}<br>📍 ${o.customer.address}</div>
+          <div class="bill-cp">${esc(o.customer.name)}<br>📞 ${esc(o.customer.phone)}<br>📍 ${esc(o.customer.address)}</div>
         </div>
         <table class="bill-tbl">
           <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
-          <tbody>${o.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${lkr(i.price)}</td><td>${lkr(i.price*i.qty)}</td></tr>`).join('')}</tbody>
+          <tbody>${o.items.map(i=>`<tr><td>${esc(i.name)}</td><td>${i.qty}</td><td>${lkr(i.price)}</td><td>${lkr(i.price*i.qty)}</td></tr>`).join('')}</tbody>
         </table>
         <div class="bill-tots">
           <div class="bt"><span>Subtotal</span><span>${lkr(o.subtotal)}</span></div>
           ${(o.shipping||0)>0?`<div class="bt"><span>Shipping</span><span>${lkr(o.shipping)}</span></div>`:`<div class="bt" style="color:var(--grn)"><span>Shipping</span><span>Free</span></div>`}
-          ${o.discount>0?`<div class="bt disc"><span>Discount (${o.coupon})</span><span>−${lkr(o.discount)}</span></div>`:''}
+          ${o.discount>0?`<div class="bt disc"><span>Discount (${esc(o.coupon)})</span><span>−${lkr(o.discount)}</span></div>`:''}
           <div class="bt total"><span>Total Paid</span><span class="bv">${lkr(o.total)}</span></div>
         </div>
         ${ptsEarned>0?`<div class="pts-earn-note" style="margin-top:1rem">⭐ You earned <strong>${ptsEarned} loyalty points</strong> from this order!</div>`:''}
         <div class="bill-foot">
           <p>Thank you for shopping with SH Shopping!</p>
           <p>Your order will be processed once payment is verified.</p>
-          <p style="margin-top:.5rem">Order ID: <strong style="color:var(--g0)">${o.orderId}</strong></p>
+          <p style="margin-top:.5rem">Order ID: <strong style="color:var(--g0)">${esc(o.orderId)}</strong></p>
         </div>
         <div class="no-print" style="margin-top:1.5rem;text-align:center">
-          <button class="btn btn-wa btn-sm" onclick="shareOrderWA('${o.orderId}','${o.customer?.phone||''}')">📲 Share on WhatsApp</button>
+          <button class="btn btn-wa btn-sm" onclick="shareOrderWA('${escAttr(o.orderId)}','${escAttr(o.customer?.phone||'')}')">📲 Share on WhatsApp</button>
         </div>
       </div>
     </div>`;
@@ -3009,12 +3016,12 @@ async function lookupOrder(){
       el.innerHTML=res.map(o=>`
         <div class="ord-card">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem">
-            <strong style="font-family:var(--fd);font-size:1.1rem;letter-spacing:-.02em">${o.orderId}</strong>
-            <span class="sp ${stMap[o.status]||'sp-pend'}">${o.status}</span>
+            <strong style="font-family:var(--fd);font-size:1.1rem;letter-spacing:-.02em">${esc(o.orderId)}</strong>
+            <span class="sp ${stMap[o.status]||'sp-pend'}">${esc(o.status)}</span>
           </div>
           <div style="font-size:14px;color:var(--t3);line-height:2">
             <div>${o.items?.length||0} item(s) · <strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></div>
-            <div>👤 ${o.customer?.name} — ${o.customer?.phone}</div>
+            <div>👤 ${esc(o.customer?.name)} — ${esc(o.customer?.phone)}</div>
             ${o.createdAt?.toDate?`<div>📅 ${o.createdAt.toDate().toLocaleDateString('en-LK')}</div>`:''}
           </div>
           <button class="btn btn-ghost btn-sm" style="margin-top:.85rem" onclick='showBill(${JSON.stringify(o)})'>View Receipt</button>
@@ -3060,10 +3067,10 @@ async function rAdmStats(){
     document.getElementById('admRecent').innerHTML=`<table class="at">
       <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
       <tbody>${rec.map(o=>`<tr>
-        <td><strong>${o.orderId}</strong></td>
-        <td>${o.customer?.name||'—'}<br><span style="font-size:12px;color:var(--t3)">${o.customer?.phone||''}</span></td>
+        <td><strong>${esc(o.orderId)}</strong></td>
+        <td>${esc(o.customer?.name||'—')}<br><span style="font-size:12px;color:var(--t3)">${esc(o.customer?.phone||'')}</span></td>
         <td><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
-        <td><span class="sp ${stm[o.status]||'sp-pend'}">${o.status}</span></td>
+        <td><span class="sp ${stm[o.status]||'sp-pend'}">${esc(o.status)}</span></td>
         <td><button class="ta" onclick='showBill(${JSON.stringify(o)})'>View Bill</button></td>
       </tr>`).join('')}</tbody>
     </table>`;
@@ -3085,12 +3092,12 @@ async function rAdmProds(){
         const sc=p.stock>30?'sp-in':p.stock>5?'sp-lo':'sp-out';
         const sl=p.stock>30?'In Stock':p.stock>5?'Low Stock':'Out of Stock';
         const imgEl=p.image
-          ?`<img src="${p.image}" style="width:52px;height:44px;object-fit:cover;border-radius:var(--r1);border:1px solid var(--b2)">`
-          :`<div style="width:52px;height:44px;background:var(--l2b);border-radius:var(--r1);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.5rem">${p.emoji||'📦'}</div>`;
+          ?`<img src="${escAttr(p.image)}" alt="${escAttr(p.name||'Product image')}" style="width:52px;height:44px;object-fit:cover;border-radius:var(--r1);border:1px solid var(--b2)">`
+          :`<div style="width:52px;height:44px;background:var(--l2b);border-radius:var(--r1);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.5rem">${esc(p.emoji||'📦')}</div>`;
         return`<tr>
           <td>${imgEl}</td>
-          <td><strong style="font-size:13.5px">${p.name}</strong>${p.featured?'<br><span style="font-size:11px;color:var(--g0);font-weight:700">★ Featured</span>':''}</td>
-          <td style="font-size:13px;color:var(--t2)">${p.category||'—'}</td>
+          <td><strong style="font-size:13.5px">${esc(p.name||'')}</strong>${p.featured?'<br><span style="font-size:11px;color:var(--g0);font-weight:700">★ Featured</span>':''}</td>
+          <td style="font-size:13px;color:var(--t2)">${esc(p.category||'—')}</td>
           <td><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(p.price)}</strong>${p.originalPrice?`<br><span style="color:var(--t3);text-decoration:line-through;font-size:12px">${lkr(p.originalPrice)}</span>`:''}</td>
           <td><div style="display:flex;align-items:center;gap:7px">
             <input type="number" value="${p.stock}" min="0" style="width:56px;padding:5px 8px;border:1px solid var(--b2);border-radius:var(--r1);font-size:13px;background:var(--l2b);color:var(--t0)" onchange="qStk('${p.id}',this.value)">
@@ -3122,11 +3129,11 @@ async function rAdmOrds(){
     document.getElementById('admOT').innerHTML=`<table class="at">
       <thead><tr><th>Order ID</th><th>Customer</th><th>Items & Total</th><th>Receipt</th><th>Status</th><th>Update</th></tr></thead>
       <tbody>${ords.map(o=>`<tr>
-        <td><strong>${o.orderId}</strong><br><span style="font-size:11px;color:var(--t3)">${o.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||''}</span></td>
-        <td>${o.customer?.name||'—'}<br><span style="font-size:12px;color:var(--t3)">${o.customer?.phone||''}</span><br><span style="font-size:11px;color:var(--t4)">${o.customer?.address||''}</span></td>
-        <td>${o.items?.map(i=>`${i.name}×${i.qty}`).join('<br>')||'—'}<br><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
-        <td>${o.paymentProof?`<img src="${driveImgUrl(o.paymentProof)}" class="prf-img" onclick="openLB('${o.paymentProof}')" title="Click to view" onerror="this.outerHTML='<a href=&quot;'+this.src+'&quot; target=&quot;_blank&quot; style=&quot;color:var(--g1);font-size:12px&quot;>View</a>'">`:'<span style="font-size:12px;color:var(--t3)">None</span>'}</td>
-        <td><span class="sp ${stm[o.status]||'sp-pend'}">${o.status}</span></td>
+        <td><strong>${esc(o.orderId)}</strong><br><span style="font-size:11px;color:var(--t3)">${o.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||''}</span></td>
+        <td>${esc(o.customer?.name||'—')}<br><span style="font-size:12px;color:var(--t3)">${esc(o.customer?.phone||'')}</span><br><span style="font-size:11px;color:var(--t4)">${esc(o.customer?.address||'')}</span></td>
+        <td>${o.items?.map(i=>`${esc(i.name)}×${i.qty}`).join('<br>')||'—'}<br><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
+        <td>${o.paymentProof?`<img src="${escAttr(driveImgUrl(o.paymentProof))}" class="prf-img" onclick="openLB(this.dataset.src)" data-src="${escAttr(o.paymentProof)}" title="Click to view" onerror="this.outerHTML='<a href=&quot;'+this.src+'&quot; target=&quot;_blank&quot; style=&quot;color:var(--g1);font-size:12px&quot;>View</a>'">`:'<span style="font-size:12px;color:var(--t3)">None</span>'}</td>
+        <td><span class="sp ${stm[o.status]||'sp-pend'}">${esc(o.status)}</span></td>
         <td>
           <select style="padding:5px 9px;border:1px solid var(--b2);border-radius:var(--r1);font-size:12.5px;background:var(--l2b);color:var(--t0);width:150px;margin-bottom:5px" onchange="updOrd('${o.id}',this.value)">
             ${['Pending Payment','Payment Received','Processing','Shipped','Delivered','Cancelled'].map(s=>`<option${s===o.status?' selected':''}>${s}</option>`).join('')}
@@ -3145,11 +3152,11 @@ async function rAdmPayments(){
     document.getElementById('admPayT').innerHTML=ords.length?`<table class="at">
       <thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Action</th></tr></thead>
       <tbody>${ords.map(o=>`<tr>
-        <td><strong>${o.orderId}</strong></td>
-        <td>${o.customer?.name||'—'}<br><span style="font-size:12px;color:var(--t3)">${o.customer?.phone||''}</span></td>
+        <td><strong>${esc(o.orderId)}</strong></td>
+        <td>${esc(o.customer?.name||'—')}<br><span style="font-size:12px;color:var(--t3)">${esc(o.customer?.phone||'')}</span></td>
         <td><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
-        <td><img src="${driveImgUrl(o.paymentProof)}" class="prf-img" onclick="openLB('${o.paymentProof}')" title="View" onerror="this.outerHTML='<a href=&quot;${o.paymentProof}&quot; target=&quot;_blank&quot; style=&quot;color:var(--g1);font-size:12px&quot;>View Receipt</a>'"></td>
-        <td><span class="sp ${'Pending Payment'===o.status?'sp-pend':'Payment Received'===o.status?'sp-ok':'sp-bad'}">${o.status}</span></td>
+        <td><img src="${escAttr(driveImgUrl(o.paymentProof))}" class="prf-img" onclick="openLB(this.dataset.src)" data-src="${escAttr(o.paymentProof)}" title="View" onerror="this.outerHTML='<a href=&quot;'+this.dataset.src+'&quot; target=&quot;_blank&quot; style=&quot;color:var(--g1);font-size:12px&quot;>View Receipt</a>'"></td>
+        <td><span class="sp ${'Pending Payment'===o.status?'sp-pend':'Payment Received'===o.status?'sp-ok':'sp-bad'}">${esc(o.status)}</span></td>
         <td>
           <button class="btn btn-grn btn-sm" style="display:block;width:100%;margin-bottom:5px" onclick="updOrd('${o.id}','Payment Received')">✓ Confirm</button>
           <button class="btn btn-red btn-sm" style="display:block;width:100%" onclick="updOrd('${o.id}','Cancelled')">✕ Reject</button>
@@ -3216,16 +3223,16 @@ async function renderReport(){
         ${filtered.length?`<table class="at">
           <thead><tr><th>Order ID</th><th>Customer</th><th>Email</th><th>Total</th><th>Status</th></tr></thead>
           <tbody>${filtered.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).map(o=>`<tr>
-            <td><strong>${o.orderId}</strong></td>
-            <td>${o.customer?.name||'—'} — ${o.customer?.phone||''}</td>
-            <td style="font-size:12px;color:var(--t3)">${o.customerEmail||'—'}</td>
+            <td><strong>${esc(o.orderId)}</strong></td>
+            <td>${esc(o.customer?.name||'—')} — ${esc(o.customer?.phone||'')}</td>
+            <td style="font-size:12px;color:var(--t3)">${esc(o.customerEmail||'—')}</td>
             <td><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
-            <td><span class="sp ${'Delivered'===o.status||'Payment Received'===o.status?'sp-ok':'Cancelled'===o.status?'sp-bad':'sp-pend'}">${o.status}</span></td>
+            <td><span class="sp ${'Delivered'===o.status||'Payment Received'===o.status?'sp-ok':'Cancelled'===o.status?'sp-bad':'sp-pend'}">${esc(o.status)}</span></td>
           </tr>`).join('')}</tbody>
         </table>`:'<p style="color:var(--t3)">No orders in this period.</p>'}
         ${monthExp.length?`<h4 style="font-family:var(--fd);margin:1.5rem 0 .75rem;font-weight:700">Expenses — ${MONTHS[idx]}</h4>
         <table class="at"><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th></tr></thead>
-        <tbody>${monthExp.map(e=>`<tr><td>${e.date}</td><td>${e.category}</td><td>${e.description}</td><td style="color:var(--red);font-weight:600">−${lkr(e.amount)}</td></tr>`).join('')}</tbody></table>`:''}`;
+        <tbody>${monthExp.map(e=>`<tr><td>${esc(e.date)}</td><td>${esc(e.category)}</td><td>${esc(e.description)}</td><td style="color:var(--red);font-weight:600">−${lkr(e.amount)}</td></tr>`).join('')}</tbody></table>`:''}`;
     }else{
       const yearOrds=orders.filter(o=>{if(!o.createdAt?.toDate||o.status==='Cancelled')return false;return o.createdAt.toDate().getFullYear()===yr;});
       const yearExp=expenses.filter(e=>{if(!e.date)return false;return new Date(e.date).getFullYear()===yr;});
@@ -3530,14 +3537,14 @@ async function rAdmReviews(){
       <div class="rv-card">
         <div class="rv-head">
           <div>
-            <span class="rv-author">${r.authorName||'Anonymous'}</span>
-            ${r.productName?`<span class="rv-prod" style="margin-left:8px">${r.productName}</span>`:''}
+            <span class="rv-author">${esc(r.authorName||'Anonymous')}</span>
+            ${r.productName?`<span class="rv-prod" style="margin-left:8px">${esc(r.productName)}</span>`:''}
           </div>
           <span class="sp ${r.status==='rejected'?'sp-bad':'sp-ok'}">${r.status==='rejected'?'Hidden':'Visible'}</span>
         </div>
         <div class="rv-stars">${starsHtml(r.rating)}</div>
-        <div class="rv-text" style="margin-top:.5rem">${r.text||''}</div>
-        ${r.photoUrl?`<img src="${driveImgUrl?driveImgUrl(r.photoUrl):r.photoUrl}" class="rv-photo" onclick="openLB('${r.photoUrl}')" onerror="this.style.display='none'">`:''}
+        <div class="rv-text" style="margin-top:.5rem">${esc(r.text||'')}</div>
+        ${r.photoUrl?`<img src="${escAttr(driveImgUrl?driveImgUrl(r.photoUrl):r.photoUrl)}" class="rv-photo" onclick="openLB(this.dataset.src)" data-src="${escAttr(r.photoUrl)}" onerror="this.style.display='none'">`:''}
         <div class="rv-date">${r.createdAt?.toDate?.()?.toLocaleDateString('en-LK',{year:'numeric',month:'long',day:'numeric'})||''}</div>
         <div class="rv-actions">
           ${r.status==='rejected'
@@ -3812,8 +3819,14 @@ async function saveFlashSale(){
 function applyFlash(){
   if(cfg.flash?.active&&cfg.flash?.endTime&&cfg.flash.endTime>Date.now()){
     startFlashCountdown(cfg.flash.endTime,cfg.flash.message);
-    document.getElementById('sFlashMsg').value=cfg.flash.message||'';
-    document.getElementById('tFlash').checked=true;
+    const msgEl=document.getElementById('sFlashMsg');
+    const flashEl=document.getElementById('tFlash');
+    if(msgEl)msgEl.value=cfg.flash.message||'';
+    if(flashEl)flashEl.checked=true;
+  }else{
+    document.getElementById('flashBanner').style.display='none';
+    const flashEl=document.getElementById('tFlash');
+    if(flashEl)flashEl.checked=false;
   }
 }
 
@@ -3860,7 +3873,7 @@ function handleSearch(q){
     if(!hits.length){list.classList.remove('show');return;}
     list.innerHTML=hits.map(p=>{
       const thumb=p.image?`<img class="ac-img" src="${p.image}" alt="">`:`<div class="ac-ph">${p.emoji||'📦'}</div>`;
-      return`<div class="ac-item" onclick="selectAC('${p.id}')">${thumb}<div><div class="ac-nm">${p.name}</div><div class="ac-pr">${lkr(p.price)}</div></div></div>`;
+      return`<div class="ac-item" onclick="selectAC('${p.id}')">${thumb}<div><div class="ac-nm">${esc(p.name||'')}</div><div class="ac-pr">${lkr(p.price)}</div></div></div>`;
     }).join('');
     list.classList.add('show');
   },180);
@@ -3907,7 +3920,7 @@ async function schedSocialProof(){
           const mins=Math.floor((Date.now()-o.createdAt.toDate().getTime())/60000);
           const timeStr=mins<60?`${mins} min ago`:`${Math.floor(mins/60)} hrs ago`;
           const el=document.getElementById('spToast');
-          el.innerHTML=`<div style="display:flex;align-items:center;gap:.65rem"><span style="font-size:1.4rem">🛍️</span><div><strong>${o.customer?.name?.split(' ')[0]||'Someone'}</strong> just ordered <strong>${item.name}</strong><br><span style="font-size:11.5px;color:var(--t3)">${timeStr}</span></div></div>`;
+          el.innerHTML=`<div style="display:flex;align-items:center;gap:.65rem"><span style="font-size:1.4rem">🛍️</span><div><strong>${esc(o.customer?.name?.split(' ')[0]||'Someone')}</strong> just ordered <strong>${esc(item.name||'an item')}</strong><br><span style="font-size:11.5px;color:var(--t3)">${timeStr}</span></div></div>`;
           el.classList.add('show');
           setTimeout(()=>el.classList.remove('show'),4800);
         }
@@ -4064,7 +4077,7 @@ async function rLowStockAlerts(){
     if(!low.length){el.innerHTML=`<div style="color:var(--grn);font-weight:600;font-size:14px;padding:1rem 0">✓ All products are above the ${thresh}-unit threshold. No restocking needed.</div>`;return;}
     el.innerHTML=`<div style="color:var(--red);font-weight:700;font-size:14px;margin-bottom:1rem">⚠ ${low.length} product(s) need restocking</div>`+
       low.map(p=>`<div class="lstk-item">
-        <span class="lstk-name">${p.name}</span>
+        <span class="lstk-name">${esc(p.name||'')}</span>
         <div style="display:flex;align-items:center;gap:10px">
           <span class="lstk-qty">${p.stock} left</span>
           <button class="ta" onclick="openPM('${p.id}')">Update Stock</button>
@@ -4145,7 +4158,8 @@ function pickStar(pid,val){
   });
 }
 
-async function submitRv(pid,pname){
+async function submitRv(pid){
+  const pname=prods.find(p=>p.id===pid)?.name||'';
   const name=(document.getElementById('rv-name-'+pid)?.value||'').trim();
   const text=(document.getElementById('rv-text-'+pid)?.value||'').trim();
   const rating=rvRatings[pid]||0;
@@ -4211,13 +4225,13 @@ async function loadProductReviews(pid){
         <div class="rv-item">
           <div class="rv-item-head">
             <div>
-              <span class="rv-item-name">${r.authorName||'Anonymous'}</span>
+              <span class="rv-item-name">${esc(r.authorName||'Anonymous')}</span>
               <span style="margin-left:8px;font-size:12px">${starsHtml(r.rating||0)}</span>
             </div>
             <span class="rv-item-date">${r.createdAt?.toDate?.()?.toLocaleDateString('en-LK',{month:'short',day:'numeric',year:'numeric'})||''}</span>
           </div>
-          <div class="rv-item-body">${r.text||''}</div>
-          ${r.photoUrl?`<img src="${typeof driveImgUrl==='function'?driveImgUrl(r.photoUrl):r.photoUrl}" class="rv-photo" onclick="openLB('${r.photoUrl}')" alt="Review photo" onerror="this.style.display='none'">`:''}
+          <div class="rv-item-body">${esc(r.text||'')}</div>
+          ${r.photoUrl?`<img src="${escAttr(typeof driveImgUrl==='function'?driveImgUrl(r.photoUrl):r.photoUrl)}" class="rv-photo" onclick="openLB(this.dataset.src)" data-src="${escAttr(r.photoUrl)}" alt="Review photo" onerror="this.style.display='none'">`:''}
         </div>`).join('');
     }catch(e){
       listEl.innerHTML='<p style="color:var(--t3);font-size:13px">Reviews unavailable.</p>';
@@ -4381,12 +4395,12 @@ function renderFeatured(){
   while(featured.length<5)featured.push(featured[featured.length-1]||featured[0]);
   const cards=featured.map((p,i)=>{
     const img=p.image
-      ?`<img src="${typeof driveImgUrl==='function'?driveImgUrl(p.image):p.image}" alt="${p.name||''}" onerror="this.src='${p.image}';this.onerror=null">`
-      :`<div class="fc-ph">${p.emoji||'📦'}</div>`;
+      ?`<img src="${escAttr(typeof driveImgUrl==='function'?driveImgUrl(p.image):p.image)}" alt="${escAttr(p.name||'Product image')}" onerror="this.src='${escAttr(p.image)}';this.onerror=null">`
+      :`<div class="fc-ph">${esc(p.emoji||'📦')}</div>`;
     return`<div class="fcard" data-i="${i}" onclick="showDetail('${p.id}')">
       ${img}
       <div class="fc-info">
-        <div class="fc-nm">${p.name||''}</div>
+        <div class="fc-nm">${esc(p.name||'')}</div>
         <div class="fc-pr">${lkr(p.price)}</div>
       </div>
     </div>`;
@@ -4433,8 +4447,8 @@ async function loadExpenses(){
         <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead>
         <tbody>${exps.map(e=>`<tr>
           <td style="font-size:12px;color:var(--t3)">${e.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||''}</td>
-          <td><span class="sp sp-pend">${e.category||'General'}</span></td>
-          <td>${e.description||'—'}</td>
+          <td><span class="sp sp-pend">${esc(e.category||'General')}</span></td>
+          <td>${esc(e.description||'—')}</td>
           <td><strong style="color:var(--red)">${lkr(e.amount||0)}</strong></td>
           <td><button class="ta" onclick="delExpense('${e.id}')">Delete</button></td>
         </tr>`).join('')}</tbody>
@@ -4463,17 +4477,6 @@ async function saveExpense(){
     loadExpenses();
   }catch(e){toast('Error: '+e.message,'err');}
 }
-async function delExpense(id){
-  if(!confirm('Delete this expense?'))return;
-  await fDel('expenses',id);
-  toast('Deleted.','ok');loadExpenses();
-}
-function populateExpYears(){
-  const sel=document.getElementById('expYear');if(!sel||sel.options.length>1)return;
-  const yr=new Date().getFullYear();sel.innerHTML='';
-  for(let y=yr;y>=yr-4;y--){const o=new Option(y,y);if(y===yr)o.selected=true;sel.add(o);}
-}
-
 /* ════════════════════════════════════════
    ★ FEATURE BLOCK: Expenses, Carousel,
      Review delete, Drive review folder,
@@ -4535,8 +4538,8 @@ async function rAdmExpenses(){
           <span style="font-weight:700;color:var(--red)">${lkr(catTotal)}</span>
         </div>
         ${items.map(e=>`<div class="exp-row">
-          <span class="exp-cat">${e.category}</span>
-          <div class="exp-desc">${e.description}${e.notes?`<div style="font-size:12px;color:var(--t3)">${e.notes}</div>`:''}</div>
+          <span class="exp-cat">${esc(e.category)}</span>
+          <div class="exp-desc">${esc(e.description)}${e.notes?`<div style="font-size:12px;color:var(--t3)">${esc(e.notes)}</div>`:''}</div>
           <span class="exp-date">${e.date}</span>
           <span class="exp-amt">−${lkr(e.amount)}</span>
           <button class="exp-del" onclick="delExpense('${e.id}')">✕</button>
@@ -4568,10 +4571,10 @@ function renderFeaturedCarousel(){
           <div class="feat-card">
             <div class="feat-card-num">${i+1}</div>
             <div class="feat-card-img">
-              ${p.image?`<img src="${driveImgUrl(p.image)}" alt="${p.name||''}" onerror="this.style.display='none'">`:`<span style="font-size:2.5rem">${p.emoji||'📦'}</span>`}
+              ${p.image?`<img src="${escAttr(driveImgUrl(p.image))}" alt="${escAttr(p.name||'Product image')}" onerror="this.style.display='none'">`:`<span style="font-size:2.5rem">${esc(p.emoji||'📦')}</span>`}
             </div>
             <div class="feat-card-body">
-              <div class="feat-card-name">${(p.name||'').substr(0,18)}</div>
+              <div class="feat-card-name">${esc((p.name||'').substr(0,18))}</div>
               <div class="feat-card-price">${lkr(p.price)}</div>
             </div>
           </div>
