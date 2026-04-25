@@ -3,7 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SH Shopping — Sri Lanka</title>
+<title>SH Shopping — Sri Lanka's Premium Online Store | shstores.online</title>
+<meta name="description" content="SH Shopping — Sri Lanka's premium online store. Quality electronics, accessories and more. Island-wide delivery, secure bank transfer. Shop at shstores.online">
+<meta name="keywords" content="SH Shopping, SH Stores, shstores online, Sri Lanka online shopping, buy online Sri Lanka, island-wide delivery, SH Shopping Sri Lanka, shstores.online">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="SH Shopping Sri Lanka">
+<meta name="geo.region" content="LK">
+<meta name="geo.country" content="Sri Lanka">
+<!-- Google Search Console — replace with your verification code from search.google.com/search-console -->
+<meta name="google-site-verification" content="PASTE_YOUR_GOOGLE_VERIFICATION_CODE_HERE">
+<link rel="canonical" href="https://shstores.online">
+<!-- Open Graph — WhatsApp / Facebook / LinkedIn preview -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shstores.online">
+<meta property="og:title" content="SH Shopping — Sri Lanka's Premium Online Store">
+<meta property="og:description" content="Quality products, island-wide delivery, secure bank transfer. Sri Lanka's trusted premium online store.">
+<meta property="og:image" content="https://shstores.online/og-image.png">
+<meta property="og:site_name" content="SH Shopping">
+<meta property="og:locale" content="en_LK">
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SH Shopping — Sri Lanka">
+<meta name="twitter:description" content="Premium products, island-wide delivery. Shop at shstores.online">
+<!-- Schema.org for Google rich results -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Store","name":"SH Shopping","alternateName":["SH Stores","shstores.online"],"url":"https://shstores.online","description":"Sri Lanka's premium online store with island-wide delivery and secure bank transfer payment","address":{"@type":"PostalAddress","addressCountry":"LK","addressLocality":"Sri Lanka"},"priceRange":"Rs.500 - Rs.50000","currenciesAccepted":"LKR","paymentAccepted":"Bank Transfer","areaServed":{"@type":"Country","name":"Sri Lanka"},"sameAs":["https://shstores.online"]}
+</script>
 <!-- Golden SVG favicon matching the brand mark -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23A88020'/%3E%3Cstop offset='35%25' stop-color='%23D4AF45'/%3E%3Cstop offset='60%25' stop-color='%23F0CF70'/%3E%3Cstop offset='100%25' stop-color='%23A88020'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2306060A'/%3E%3Crect width='60' height='60' x='2' y='2' rx='12' fill='url(%23g)'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia%2Cserif' font-weight='700' font-size='28' fill='%2306060A'%3ESH%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,6 +92,46 @@
 .verified-badge{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb);font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--rp)}
 /* ── PHOTO REVIEW ── */
 .rv-photo{width:82px;height:72px;object-fit:cover;border-radius:var(--r2);margin-top:.75rem;cursor:pointer;border:1px solid var(--b2);transition:transform var(--dur)}.rv-photo:hover{transform:scale(1.06)}
+
+/* ── Expenses ── */
+.exp-row{display:flex;align-items:center;gap:1rem;padding:.9rem 1.1rem;background:var(--l3);border:1px solid var(--b2);border-radius:var(--r2);margin-bottom:.6rem;box-shadow:var(--s1);flex-wrap:wrap}
+.exp-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--g1);background:rgba(210,165,55,.08);border:1px solid var(--bg);padding:2px 8px;border-radius:var(--rp)}
+.exp-desc{flex:1;font-size:13.5px;color:var(--t1);min-width:120px}
+.exp-amt{font-weight:700;font-size:15px;color:var(--red);min-width:90px;text-align:right}
+.exp-date{font-size:11.5px;color:var(--t3);min-width:80px;text-align:right}
+
+/* ── Featured 3D Carousel ── */
+#featCarousel{position:relative;width:100%;overflow:visible;margin-bottom:4.5rem;height:230px;transition:height .55s var(--ease)}
+#featCarousel.expanded{height:370px}
+.feat-track{display:flex;position:relative;height:100%;perspective:1200px;align-items:center;justify-content:center}
+.fcard{
+  position:absolute;width:200px;border-radius:var(--r4);overflow:hidden;cursor:pointer;
+  box-shadow:var(--s4),var(--gx);border:1.5px solid var(--bgs);background:var(--l2b);
+  transition:transform .55s var(--ease),opacity .55s var(--ease),width .45s var(--ease);
+  will-change:transform;
+}
+.fcard img{width:100%;aspect-ratio:1;object-fit:cover;display:block;transition:transform .4s var(--ease)}
+.fcard:hover img{transform:scale(1.06)}
+.fcard .fc-info{padding:.7rem .85rem;background:linear-gradient(var(--l3b),var(--l2b))}
+.fcard .fc-nm{font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.fcard .fc-pr{font-size:13px;font-weight:700;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fcard .fc-ph{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:radial-gradient(var(--l3b),var(--l2b))}
+/* Collapsed stack */
+.fcard[data-i="0"]{transform:translateX(-230px) translateZ(-70px) rotateY(16deg);opacity:.6;z-index:1}
+.fcard[data-i="1"]{transform:translateX(-115px) translateZ(-35px) rotateY(8deg);opacity:.82;z-index:2}
+.fcard[data-i="2"]{transform:translateX(0) translateZ(0) rotateY(0);opacity:1;z-index:5;width:222px;box-shadow:var(--s5),var(--gm)}
+.fcard[data-i="3"]{transform:translateX(115px) translateZ(-35px) rotateY(-8deg);opacity:.82;z-index:2}
+.fcard[data-i="4"]{transform:translateX(230px) translateZ(-70px) rotateY(-16deg);opacity:.6;z-index:1}
+/* Expanded spread */
+#featCarousel.expanded .fcard[data-i="0"]{transform:translateX(-460px) translateZ(0) rotateY(0);opacity:1;z-index:2;width:190px}
+#featCarousel.expanded .fcard[data-i="1"]{transform:translateX(-230px) translateZ(0) rotateY(0);opacity:1;z-index:3;width:190px}
+#featCarousel.expanded .fcard[data-i="2"]{transform:translateX(0) translateZ(30px) rotateY(0);opacity:1;z-index:5;width:210px}
+#featCarousel.expanded .fcard[data-i="3"]{transform:translateX(230px) translateZ(0) rotateY(0);opacity:1;z-index:3;width:190px}
+#featCarousel.expanded .fcard[data-i="4"]{transform:translateX(460px) translateZ(0) rotateY(0);opacity:1;z-index:2;width:190px}
+.feat-hint{text-align:center;font-size:11.5px;color:var(--t3);margin-bottom:.65rem;display:flex;align-items:center;justify-content:center;gap:6px}
+.feat-hint::before,.feat-hint::after{content:'';flex:1;max-width:80px;height:1px;background:var(--b2)}
+.feat-expand-btn{position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);background:var(--l3);border:1px solid var(--b2);border-radius:var(--rp);padding:5px 20px;font-size:12px;color:var(--t3);cursor:pointer;transition:all var(--dur);white-space:nowrap;z-index:10}
+.feat-expand-btn:hover{border-color:var(--bg);color:var(--g1)}
 /* ╔══════════════════════════════════════════════════════════════╗
    ║  SH SHOPPING — PREMIUM DEPTH SYSTEM                        ║
    ║                                                             ║
@@ -1169,6 +1234,65 @@ textarea.fi{resize:vertical;min-height:80px}
 /* ── Review chip alignment ── */
 .tc svg{flex-shrink:0;color:var(--g1)}
 
+/* ── EXPENSES ── */
+.exp-row{display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;background:var(--l3);border:1px solid var(--b2);border-radius:var(--r2);margin-bottom:.65rem;box-shadow:var(--s1);transition:border-color var(--dur)}
+.exp-row:hover{border-color:var(--bg)}
+.exp-cat{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:var(--rp);background:var(--blud);color:var(--blu);border:1px solid var(--blub);flex-shrink:0}
+.exp-desc{flex:1;font-size:14px;font-weight:500;color:var(--t1)}
+.exp-date{font-size:12px;color:var(--t3);white-space:nowrap}
+.exp-amt{font-weight:700;font-size:15px;color:var(--red);min-width:90px;text-align:right;white-space:nowrap}
+.exp-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:.85rem;padding:4px;border-radius:var(--r1);transition:all var(--dur)}.exp-del:hover{color:var(--red);background:var(--redd)}
+
+/* ── FEATURED CAROUSEL 3D ── */
+#featCarouselWrap{margin-bottom:3rem}
+.feat-carousel{
+  position:relative;height:200px;perspective:900px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:height .5s var(--ease);
+}
+.feat-carousel.expanded{height:340px}
+.feat-card-slot{
+  position:absolute;width:160px;
+  transition:transform .55s var(--ease),opacity .55s var(--ease),z-index 0s;
+  transform-style:preserve-3d;
+  cursor:pointer;
+}
+/* collapsed — stacked fan */
+.feat-card-slot.c0{transform:translate(-260px,0) rotateY(28deg) scale(.85);z-index:1;opacity:.75}
+.feat-card-slot.c1{transform:translate(-130px,0) rotateY(14deg) scale(.92);z-index:2;opacity:.88}
+.feat-card-slot.c2{transform:translate(0,0) rotateY(0deg) scale(1);z-index:5;opacity:1}
+.feat-card-slot.c3{transform:translate(130px,0) rotateY(-14deg) scale(.92);z-index:2;opacity:.88}
+.feat-card-slot.c4{transform:translate(260px,0) rotateY(-28deg) scale(.85);z-index:1;opacity:.75}
+/* expanded — flat row */
+.feat-carousel.expanded .feat-card-slot.c0{transform:translate(-256px,0) rotateY(0) scale(.96);z-index:1;opacity:1}
+.feat-carousel.expanded .feat-card-slot.c1{transform:translate(-128px,0) rotateY(0) scale(.96);z-index:1;opacity:1}
+.feat-carousel.expanded .feat-card-slot.c2{transform:translate(0,0) rotateY(0) scale(1);z-index:5;opacity:1}
+.feat-carousel.expanded .feat-card-slot.c3{transform:translate(128px,0) rotateY(0) scale(.96);z-index:1;opacity:1}
+.feat-carousel.expanded .feat-card-slot.c4{transform:translate(256px,0) rotateY(0) scale(.96);z-index:1;opacity:1}
+.feat-card{
+  width:160px;background:linear-gradient(158deg,var(--l3b),var(--l2b));
+  border:1px solid var(--bgs);border-radius:var(--r4);overflow:hidden;
+  box-shadow:var(--s4),var(--gx);position:relative;
+  transition:box-shadow .3s var(--ease),border-color .3s var(--ease);
+}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(210,165,55,.7),transparent)}
+.feat-card:hover{box-shadow:var(--s4),var(--gm);border-color:var(--bgx)}
+.feat-card-img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--l2b);font-size:3rem;display:flex;align-items:center;justify-content:center}
+.feat-card-img img{width:100%;height:100%;object-fit:cover}
+.feat-card-body{padding:.6rem .7rem .75rem}
+.feat-card-num{
+  position:absolute;top:8px;left:8px;z-index:2;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--gg);color:var(--l1);
+  font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--gs);
+}
+.feat-card-name{font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.feat-card-price{font-size:11.5px;font-weight:700;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.feat-hint{text-align:center;font-size:12px;color:var(--t3);margin-top:.65rem}
+.feat-hint strong{color:var(--g1)}
+
 /* ── Review cards ── */
 .rv-card{
   background:var(--l3);border:1px solid var(--b2);
@@ -1392,22 +1516,24 @@ textarea.fi{resize:vertical;min-height:80px}
   <div id="heroBanner"></div>
   <!-- Free shipping progress bar -->
   <div id="freeShipBar"></div>
+  <!-- Featured Products 3D Carousel -->
+  <div id="featCarouselWrap"></div>
   <!-- Recently viewed -->
   <div id="recentlyViewed"></div>
 
-  <!-- L2 category chips with scroll reveal -->
-  <div class="reveal">
+  <!-- L2 category chips -->
+  <div>
     <div class="cat-scroll"><div class="cat-row" id="catRow"></div></div>
   </div>
 
   <div id="prodsAnchor"></div>
-  <div class="sh reveal">
+  <div class="sh">
     <h2 class="st" id="prodsTitle">All <em>Products</em></h2>
     <span class="sm" id="prodCt"></span>
   </div>
 
   <!-- L2 filter shelf -->
-  <div class="filter-bar reveal">
+  <div class="filter-bar">
     <div class="search-wrap">
       <input class="finp" id="srchIn" type="text" placeholder="Search products…" oninput="handleSearch(this.value)" autocomplete="off">
       <div class="ac-list" id="acList"></div>
@@ -1514,6 +1640,7 @@ textarea.fi{resize:vertical;min-height:80px}
       <button class="asi" onclick="aNav('alerts',this)"><span class="ic">🔔</span> Low Stock Alerts</button>
       <div class="asg">Reports</div>
       <button class="asi" onclick="aNav('reports',this)"><span class="ic">📈</span> Profit Reports</button>
+      <button class="asi" onclick="aNav('expenses',this)"><span class="ic">💸</span> Expenses</button>
       <div class="asg">Configure</div>
       <button class="asi" onclick="aNav('settings',this)"><span class="ic">⚙️</span> Settings</button>
       <div style="flex:1"></div>
@@ -1624,6 +1751,47 @@ textarea.fi{resize:vertical;min-height:80px}
           </select>
         </div>
         <div id="rptContent"></div>
+      </div>
+
+      <!-- Expenses -->
+      <div class="asec" id="as-expenses">
+        <div class="adm-hd"><h2>Expenses</h2></div>
+        <p style="font-size:13.5px;color:var(--t3);margin-bottom:1.75rem;max-width:600px">Track all business expenses manually. Monthly totals are shown in Profit Reports as net profit = revenue − expenses.</p>
+        <!-- Add expense form -->
+        <div class="sset" style="max-width:580px;margin-bottom:2rem">
+          <h4>➕ Add New Expense</h4>
+          <div class="fg2" style="margin-bottom:1rem">
+            <div class="fg"><label class="fl">Description *</label><input class="fi" id="expDesc" placeholder="e.g. Packaging materials"></div>
+            <div class="fg"><label class="fl">Amount (Rs.) *</label><input class="fi" id="expAmt" type="number" min="0" placeholder="1500"></div>
+            <div class="fg"><label class="fl">Category</label>
+              <select class="fi" id="expCat">
+                <option value="Packaging">Packaging</option>
+                <option value="Delivery">Delivery</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Salaries">Salaries</option>
+                <option value="Stock">Stock/Inventory</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="fg"><label class="fl">Date</label><input class="fi" id="expDate" type="date"></div>
+            <div class="fg fw"><label class="fl">Notes</label><input class="fi" id="expNotes" placeholder="Optional notes…"></div>
+          </div>
+          <button class="btn btn-gold" onclick="addExpense()">Add Expense</button>
+        </div>
+        <!-- Filter -->
+        <div style="display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center">
+          <select class="finp" id="expYear" onchange="rAdmExpenses()"></select>
+          <select class="finp" id="expMonth" onchange="rAdmExpenses()">
+            <option value="">All Months</option>
+            <option value="0">January</option><option value="1">February</option><option value="2">March</option>
+            <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+            <option value="6">July</option><option value="7">August</option><option value="8">September</option>
+            <option value="9">October</option><option value="10">November</option><option value="11">December</option>
+          </select>
+          <div id="expTotal" style="font-family:var(--fd);font-size:1.3rem;font-weight:700;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"></div>
+        </div>
+        <div id="expList"></div>
       </div>
 
       <!-- Settings -->
@@ -1777,6 +1945,8 @@ textarea.fi{resize:vertical;min-height:80px}
                 <div class="fg"><label class="fl">Google Client ID</label><input class="fi" id="sGdClientId" placeholder="123456789-abc….apps.googleusercontent.com"></div>
                 <div class="fg fw"><label class="fl">📎 Receipts Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdFolderId" placeholder="Paste Drive folder URL or ID — for payment receipts"></div>
                 <div class="fg fw"><label class="fl">🖼️ Product Images/Videos Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdProductFolderId" placeholder="Paste Drive folder URL or ID — for product media"></div>
+                <div class="fg fw"><label class="fl">⭐ Review Photos Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdReviewFolderId" placeholder="Paste Drive folder URL or ID — for customer review photos"></div>
+                <div class="fg fw"><label class="fl">⭐ Review Photos Folder ID <span style="font-weight:400;text-transform:none;letter-spacing:0">— paste full URL or ID</span></label><input class="fi" id="sGdReviewFolderId" placeholder="Paste Drive folder URL or ID — for review photos"></div>
                 <div class="fg fw">
                   <label class="fl">Apps Script Web App URL <span style="font-weight:400;text-transform:none;font-size:11px;letter-spacing:0">— same URL used for both folders</span></label>
                   <input class="fi" id="sGasUrl" placeholder="https://script.google.com/macros/s/AKfycb…/exec">
@@ -1922,13 +2092,13 @@ textarea.fi{resize:vertical;min-height:80px}
       <div class="asec" id="as-reviews">
         <div class="adm-hd"><h2>Product Reviews</h2></div>
         <p style="font-size:13.5px;color:var(--t3);margin-bottom:1.75rem;max-width:620px">
-          Customer reviews appear here after submission. Approve a review to make it visible on the product page. Reject to permanently remove it.
+          Customer reviews are posted automatically when customers submit them. You can delete any review you don't want shown.
         </p>
         <div style="display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
           <select class="finp" id="rvFilt" onchange="rAdmReviews()">
-            <option value="pending">Pending Approval</option>
-            <option value="approved">Approved</option>
             <option value="all">All Reviews</option>
+            <option value="approved">Visible Reviews</option>
+            <option value="rejected">Hidden Reviews</option>
           </select>
         </div>
         <div id="admRvT"></div>
@@ -1945,6 +2115,7 @@ textarea.fi{resize:vertical;min-height:80px}
     <div class="fg2" style="margin-bottom:1.5rem">
       <div class="fg"><label class="fl">Full Name *</label><input class="fi" id="co-name" placeholder="Your full name"></div>
       <div class="fg"><label class="fl">Phone Number *</label><input class="fi" id="co-phone" type="tel" placeholder="07XXXXXXXX"></div>
+      <div class="fg fw"><label class="fl">Email Address <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">optional — for order confirmation</span></label><input class="fi" id="co-email" type="email" placeholder="your@email.com"></div>
       <div class="fg fw"><label class="fl">Delivery Address *</label><textarea class="fi" id="co-addr" rows="2" placeholder="Full address with city / district"></textarea></div>
     </div>
     <div class="fg" style="margin-bottom:1.5rem">
@@ -2065,6 +2236,30 @@ textarea.fi{resize:vertical;min-height:80px}
 </div>
 
 <!-- Lightbox -->
+<!-- EXPENSE MODAL -->
+<div class="ov" id="expOv" onclick="if(event.target===this)closeExpenseModal()">
+  <div class="modal sm">
+    <div class="mhd"><h3>Add Expense</h3><button class="mclose" onclick="closeExpenseModal()">✕</button></div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div class="fg"><label class="fl">Category *</label>
+        <select class="fi" id="exp-cat">
+          <option>Product Purchase</option><option>Shipping / Delivery</option><option>Packaging</option>
+          <option>Marketing / Ads</option><option>Website / Hosting</option><option>Software</option>
+          <option>Staff / Labour</option><option>Rent / Utilities</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Description *</label><input class="fi" id="exp-desc" placeholder="e.g. Bought 50 units CapCut Premium"></div>
+      <div class="fg"><label class="fl">Amount (Rs.) *</label><input class="fi" id="exp-amt" type="number" min="0" placeholder="5000"></div>
+      <div class="fg"><label class="fl">Date *</label><input class="fi" id="exp-date" type="date"></div>
+      <div class="fg"><label class="fl">Notes</label><textarea class="fi" id="exp-notes" rows="2" placeholder="Optional notes…"></textarea></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-dark" onclick="closeExpenseModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveExpense()">Save Expense</button>
+    </div>
+  </div>
+</div>
+
 <div class="ov" id="lbOv" onclick="this.classList.remove('open')">
   <img id="lbImg" alt="Payment receipt">
 </div>
@@ -2198,8 +2393,16 @@ window.addEventListener('scroll',()=>{
         io.unobserve(e.target);
       }
     });
-  },{threshold:.1});
-  document.querySelectorAll('.reveal,.stagger').forEach(el=>io.observe(el));
+  },{threshold:.05,rootMargin:'0px 0px -10px 0px'});
+  document.querySelectorAll('.reveal,.stagger').forEach(el=>{
+    // If already in viewport on page load, show immediately
+    const rect=el.getBoundingClientRect();
+    if(rect.top<window.innerHeight+50){
+      el.classList.add('up');
+    } else {
+      io.observe(el);
+    }
+  });
 })();
 
 /* ── Navigation ── */
@@ -2210,9 +2413,11 @@ function go(p){
   const nm={store:0,wishlist:1,orders:2};
   document.querySelectorAll('.nv').forEach(b=>b.classList.remove('on'));
   if(nm[p]!==undefined)document.querySelectorAll('.nv')[nm[p]]?.classList.add('on');
-  if(p==='store'){renderCats();renderProds();
+  if(p==='store'){
+    renderCats();renderProds();
     if(typeof renderRecentlyViewed==='function')renderRecentlyViewed();
     if(typeof renderFreeShipBar==='function')renderFreeShipBar();
+    if(prods.length&&typeof renderFeaturedCarousel==='function')setTimeout(renderFeaturedCarousel,50);
   }
   if(p==='cart')renderCart();
   if(p==='wishlist')renderWishlist();
@@ -2244,7 +2449,10 @@ window._authCb=u=>{if(u)document.getElementById('admBtn').textContent='⚙️ Da
 const fCol=c=>window._fb.collection(window._db,c);
 const fDoc=(c,id)=>window._fb.doc(window._db,c,id);
 async function fGetAll(c){const s=await window._fb.getDocs(fCol(c));return s.docs.map(d=>({id:d.id,...d.data()}))}
-async function fAdd(c,d){return await window._fb.addDoc(fCol(c),{...d,createdAt:window._fb.serverTimestamp()})}
+async function fAdd(c,d){
+  if(c==='orders'&&window._coEmail){d={...d,customerEmail:window._coEmail};window._coEmail='';}
+  return await window._fb.addDoc(fCol(c),{...d,createdAt:window._fb.serverTimestamp()});
+}
 async function fSet(c,id,d){return await window._fb.setDoc(fDoc(c,id),d,{merge:true})}
 async function fUpd(c,id,d){return await window._fb.updateDoc(fDoc(c,id),d)}
 async function fDel(c,id){return await window._fb.deleteDoc(fDoc(c,id))}
@@ -2269,16 +2477,24 @@ function loadProds(){
     prods=await fGetAll('products');
     document.getElementById('ldProds').style.display='none';
     document.getElementById('prodGrid').style.display='grid';
-    // Update hero stage with a featured product
+    // Update hero stage — rotate through featured products
     const feat=prods.filter(p=>p.featured&&p.stock>0);
     if(feat.length){
-      const p=feat[Math.floor(Math.random()*feat.length)];
-      document.getElementById('hEm').textContent=p.emoji||'🛍️';
-      document.getElementById('hNm').textContent=(p.name||'').substr(0,26);
-      document.getElementById('hPr').textContent=lkr(p.price);
+      const showFeat=(p)=>{
+        document.getElementById('hEm').textContent=p.emoji||'🛍️';
+        document.getElementById('hNm').textContent=(p.name||'').substr(0,26);
+        document.getElementById('hPr').textContent=lkr(p.price);
+      };
+      showFeat(feat[0]);
+      if(feat.length>1){
+        let fi=0;
+        setInterval(()=>{fi=(fi+1)%feat.length;showFeat(feat[fi]);},4000);
+      }
     }
     document.getElementById('hStatP').textContent=prods.length;
     renderCats();renderProds();loadCfg();
+    // Render featured products 3D carousel
+    if(typeof renderFeaturedCarousel==='function')renderFeaturedCarousel();
     // Re-observe newly added stagger grid
     const io2=new IntersectionObserver(entries=>{
       entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('up');io2.unobserve(e.target);}});
@@ -2427,7 +2643,11 @@ function showDetail(id){
             <button type="button" onclick="pickStar('${p.id}',5)" data-v="5">★</button>
           </div>
         </div>
-        <div class="fg" style="margin-bottom:1.25rem"><label class="fl">Review *</label><textarea class="fi" id="rv-text-${p.id}" rows="3" placeholder="Share your experience with this product…"></textarea></div>
+        <div class="fg" style="margin-bottom:1rem"><label class="fl">Review *</label><textarea class="fi" id="rv-text-${p.id}" rows="3" placeholder="Share your experience with this product…"></textarea></div>
+        <div class="fg" style="margin-bottom:1.25rem">
+          <label class="fl">Photo <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">optional — uploaded to Google Drive</span></label>
+          <input type="file" accept="image/*" id="rv-photo-${p.id}" class="fi" style="padding:8px;cursor:pointer">
+        </div>
         <button class="btn btn-gold" onclick="submitRv('${p.id}','${(p.name||'').replace(/'/g,"\\'")}')">Submit Review</button>
         <div id="rvMsg-${p.id}" style="font-size:13px;margin-top:.75rem"></div>
       </div>
@@ -2521,7 +2741,7 @@ function renderWishlist(){
 async function openCO(){
   if(!Object.keys(cart).length)return;
   coDisc=null;proofLocalPreview=null;
-  ['co-name','co-phone','co-addr','co-coup'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  ['co-name','co-phone','co-email','co-addr','co-coup'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
   document.getElementById('coupMsg').textContent='';
   document.getElementById('upZone').classList.remove('filled');
   document.getElementById('proofPreview').style.display='none';
@@ -2580,6 +2800,7 @@ function handleProof(input){
   r.readAsDataURL(f);
 }
 async function placeOrder(){
+  window._coEmail=document.getElementById('co-email')?.value.trim()||'';
   const name=document.getElementById('co-name').value.trim();
   const phone=document.getElementById('co-phone').value.trim();
   const addr=document.getElementById('co-addr').value.trim();
@@ -2805,7 +3026,7 @@ async function lookupOrder(){
 /* ── Admin ── */
 function renderAdmin(){
   rAdmStats();rAdmProds();rAdmOrds();rAdmPayments();rAdmCoupons();rAdmReviews();
-  loadAdmCfg();populateRptYears();
+  loadAdmCfg();populateRptYears();populateExpYears();
   if(typeof renderDashboardCharts==='function')renderDashboardCharts();
 }
 
@@ -2819,6 +3040,7 @@ function aNav(sec,el){
   if(sec==='loyalty'&&typeof rAdmLoyalty==='function')rAdmLoyalty();
   if(sec==='alerts'&&typeof rLowStockAlerts==='function')rLowStockAlerts();
   if(sec==='dashboard'&&typeof renderDashboardCharts==='function')renderDashboardCharts();
+  if(sec==='expenses'){populateExpYears();rAdmExpenses();}
 }
 
 async function rAdmStats(){
@@ -2970,7 +3192,7 @@ async function renderReport(){
   wfb(async()=>{
     const el=document.getElementById('rptContent');
     el.innerHTML='<div class="ldc"><div class="spin"></div></div>';
-    const orders=await fGetAll('orders');
+    const [orders,expenses]=await Promise.all([fGetAll('orders'),fGetAll('expenses')]);
     const yr=parseInt(document.getElementById('rptYear')?.value||new Date().getFullYear());
     const mo=document.getElementById('rptMonth')?.value;
     const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -2980,35 +3202,61 @@ async function renderReport(){
       const filtered=orders.filter(o=>{if(!o.createdAt?.toDate||o.status==='Cancelled')return false;const d=o.createdAt.toDate();return d.getFullYear()===yr&&d.getMonth()===idx;});
       const revenue=filtered.reduce((s,o)=>s+(o.total||0),0);
       const confirmed=filtered.filter(o=>['Payment Received','Processing','Shipped','Delivered'].includes(o.status)).length;
+      const monthExp=expenses.filter(e=>{if(!e.date)return false;const d=new Date(e.date);return d.getFullYear()===yr&&d.getMonth()===idx;});
+      const totalExp=monthExp.reduce((s,e)=>s+(e.amount||0),0);
+      const netProfit=revenue-totalExp;
       el.innerHTML=`
-        <div class="rpt-cards">
+        <div class="rpt-cards" style="grid-template-columns:repeat(4,1fr)">
           <div class="rpt-card"><span class="rpt-val">${filtered.length}</span><span class="rpt-lbl">Total Orders</span></div>
           <div class="rpt-card"><span class="rpt-val">${lkr(revenue)}</span><span class="rpt-lbl">Revenue</span></div>
-          <div class="rpt-card"><span class="rpt-val">${confirmed}</span><span class="rpt-lbl">Confirmed</span></div>
+          <div class="rpt-card"><span class="rpt-val" style="color:var(--red);-webkit-text-fill-color:var(--red)">−${lkr(totalExp)}</span><span class="rpt-lbl">Expenses</span></div>
+          <div class="rpt-card"><span class="rpt-val" style="${netProfit<0?'color:var(--red);-webkit-text-fill-color:var(--red)':''}">${lkr(netProfit)}</span><span class="rpt-lbl">Net Profit</span></div>
         </div>
         <h4 style="font-family:var(--fd);margin-bottom:1rem;font-weight:700">${MONTHS[idx]} ${yr}</h4>
         ${filtered.length?`<table class="at">
-          <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+          <thead><tr><th>Order ID</th><th>Customer</th><th>Email</th><th>Total</th><th>Status</th></tr></thead>
           <tbody>${filtered.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).map(o=>`<tr>
             <td><strong>${o.orderId}</strong></td>
             <td>${o.customer?.name||'—'} — ${o.customer?.phone||''}</td>
+            <td style="font-size:12px;color:var(--t3)">${o.customerEmail||'—'}</td>
             <td><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
             <td><span class="sp ${'Delivered'===o.status||'Payment Received'===o.status?'sp-ok':'Cancelled'===o.status?'sp-bad':'sp-pend'}">${o.status}</span></td>
           </tr>`).join('')}</tbody>
-        </table>`:'<p style="color:var(--t3)">No orders in this period.</p>'}`;
+        </table>`:'<p style="color:var(--t3)">No orders in this period.</p>'}
+        ${monthExp.length?`<h4 style="font-family:var(--fd);margin:1.5rem 0 .75rem;font-weight:700">Expenses — ${MONTHS[idx]}</h4>
+        <table class="at"><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th></tr></thead>
+        <tbody>${monthExp.map(e=>`<tr><td>${e.date}</td><td>${e.category}</td><td>${e.description}</td><td style="color:var(--red);font-weight:600">−${lkr(e.amount)}</td></tr>`).join('')}</tbody></table>`:''}`;
     }else{
       const yearOrds=orders.filter(o=>{if(!o.createdAt?.toDate||o.status==='Cancelled')return false;return o.createdAt.toDate().getFullYear()===yr;});
+      const yearExp=expenses.filter(e=>{if(!e.date)return false;return new Date(e.date).getFullYear()===yr;});
       const totalRev=yearOrds.reduce((s,o)=>s+(o.total||0),0);
-      const months=SHORT.map((mn,i)=>{const mo=yearOrds.filter(o=>o.createdAt.toDate().getMonth()===i);return{mn,rev:mo.reduce((s,o)=>s+(o.total||0),0),cnt:mo.length}});
+      const totalExp=yearExp.reduce((s,e)=>s+(e.amount||0),0);
+      const netProfit=totalRev-totalExp;
+      const months=SHORT.map((mn,i)=>{
+        const mo=yearOrds.filter(o=>o.createdAt.toDate().getMonth()===i);
+        const exp=yearExp.filter(e=>new Date(e.date).getMonth()===i);
+        const rev=mo.reduce((s,o)=>s+(o.total||0),0);
+        const expAmt=exp.reduce((s,e)=>s+(e.amount||0),0);
+        return{mn,rev,cnt:mo.length,exp:expAmt,net:rev-expAmt};
+      });
       const best=months.reduce((a,b)=>b.rev>a.rev?b:a,months[0]);
       el.innerHTML=`
-        <div class="rpt-cards">
+        <div class="rpt-cards" style="grid-template-columns:repeat(4,1fr)">
           <div class="rpt-card"><span class="rpt-val">${yearOrds.length}</span><span class="rpt-lbl">Total Orders ${yr}</span></div>
-          <div class="rpt-card"><span class="rpt-val">${lkr(totalRev)}</span><span class="rpt-lbl">Total Revenue ${yr}</span></div>
-          <div class="rpt-card"><span class="rpt-val">${best.mn}</span><span class="rpt-lbl">Best Month · ${lkr(best.rev)}</span></div>
+          <div class="rpt-card"><span class="rpt-val">${lkr(totalRev)}</span><span class="rpt-lbl">Total Revenue</span></div>
+          <div class="rpt-card"><span class="rpt-val" style="color:var(--red);-webkit-text-fill-color:var(--red)">−${lkr(totalExp)}</span><span class="rpt-lbl">Total Expenses</span></div>
+          <div class="rpt-card"><span class="rpt-val" style="${netProfit<0?'color:var(--red);-webkit-text-fill-color:var(--red)':''}">${lkr(netProfit)}</span><span class="rpt-lbl">Net Profit</span></div>
         </div>
         <h4 style="font-family:var(--fd);margin-bottom:1.1rem;font-weight:700">Monthly Breakdown — ${yr}</h4>
-        <div class="month-grid">${months.map(m=>`<div class="month-cell"><div class="mn">${m.mn}</div><div class="mv">${lkr(m.rev)}</div><div class="mc">${m.cnt} orders</div></div>`).join('')}</div>`;
+        <div class="month-grid" style="grid-template-columns:repeat(6,1fr)">
+          ${months.map(m=>`<div class="month-cell">
+            <div class="mn">${m.mn}</div>
+            <div class="mv">${lkr(m.rev)}</div>
+            <div class="mc">${m.cnt} orders</div>
+            ${m.exp>0?`<div style="font-size:10px;color:var(--red);margin-top:2px">−${lkr(m.exp)}</div><div style="font-size:10px;color:${m.net>=0?'var(--grn)':'var(--red)'};font-weight:700">${m.net>=0?'':'-'}${lkr(Math.abs(m.net))}</div>`:''}
+          </div>`).join('')}
+        </div>
+        <div style="text-align:right;margin-top:1rem;font-size:13px;color:var(--t3)">Best month: <strong style="color:var(--g1)">${best.mn}</strong> · Revenue: ${lkr(best.rev)}</div>`;
     }
   });
 }
@@ -3267,14 +3515,14 @@ async function delCoupon(id){
 /* ── Admin Reviews ── */
 async function rAdmReviews(){
   wfb(async()=>{
-    const filt=document.getElementById('rvFilt')?.value||'pending';
+    const filt=document.getElementById('rvFilt')?.value||'all';
     let rvs=await fGetAll('reviews');
-    if(filt==='pending')rvs=rvs.filter(r=>r.status==='pending');
-    else if(filt==='approved')rvs=rvs.filter(r=>r.status==='approved');
+    if(filt==='approved')rvs=rvs.filter(r=>r.status!=='rejected');
+    else if(filt==='rejected')rvs=rvs.filter(r=>r.status==='rejected');
     rvs.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
     const el=document.getElementById('admRvT');
     if(!rvs.length){
-      el.innerHTML=`<div class="empty"><div class="empty-ico">💬</div><h3>No reviews ${filt==='pending'?'pending':'here'}</h3><p>${filt==='pending'?'New customer reviews will appear here for your approval.':'No reviews in this filter.'}</p></div>`;
+      el.innerHTML=`<div class="empty"><div class="empty-ico">💬</div><h3>No reviews here</h3><p>Customer reviews appear here automatically when submitted.</p></div>`;
       return;
     }
     const starsHtml=n=>'★'.repeat(Math.round(n||0))+'☆'.repeat(5-Math.round(n||0));
@@ -3285,27 +3533,29 @@ async function rAdmReviews(){
             <span class="rv-author">${r.authorName||'Anonymous'}</span>
             ${r.productName?`<span class="rv-prod" style="margin-left:8px">${r.productName}</span>`:''}
           </div>
-          <span class="sp ${r.status==='approved'?'sp-ok':r.status==='rejected'?'sp-bad':'sp-pend'}">${r.status||'pending'}</span>
+          <span class="sp ${r.status==='rejected'?'sp-bad':'sp-ok'}">${r.status==='rejected'?'Hidden':'Visible'}</span>
         </div>
         <div class="rv-stars">${starsHtml(r.rating)}</div>
         <div class="rv-text" style="margin-top:.5rem">${r.text||''}</div>
+        ${r.photoUrl?`<img src="${driveImgUrl?driveImgUrl(r.photoUrl):r.photoUrl}" class="rv-photo" onclick="openLB('${r.photoUrl}')" onerror="this.style.display='none'">`:''}
         <div class="rv-date">${r.createdAt?.toDate?.()?.toLocaleDateString('en-LK',{year:'numeric',month:'long',day:'numeric'})||''}</div>
         <div class="rv-actions">
-          ${r.status!=='approved'?`<button class="btn btn-grn btn-sm" onclick="approveRv('${r.id}')">✓ Approve</button>`:''}
-          ${r.status!=='rejected'?`<button class="btn btn-red btn-sm" onclick="rejectRv('${r.id}')">✕ Reject</button>`:''}
-          <button class="ta" onclick="delRv('${r.id}')">Delete</button>
+          ${r.status==='rejected'
+            ?`<button class="btn btn-grn btn-sm" onclick="approveRv('${r.id}')">👁 Show Review</button>`
+            :`<button class="btn btn-red btn-sm" onclick="rejectRv('${r.id}')">🚫 Hide Review</button>`}
+          <button class="ta" onclick="delRv('${r.id}')">🗑 Delete</button>
         </div>
       </div>`).join('');
   });
 }
 async function approveRv(id){
   await fUpd('reviews',id,{status:'approved'});
-  toast('Review approved — now visible on product page.','ok');
+  toast('Review is now visible on product page.','ok');
   rAdmReviews();
 }
 async function rejectRv(id){
   await fUpd('reviews',id,{status:'rejected'});
-  toast('Review rejected.','info');
+  toast('Review hidden from product page.','info');
   rAdmReviews();
 }
 async function delRv(id){
@@ -3378,6 +3628,7 @@ async function loadAdmCfg(){
   if(gd.clientId)document.getElementById('sGdClientId').value=gd.clientId;
   if(gd.folderId)document.getElementById('sGdFolderId').value=gd.folderId;
   if(gd.productFolderId){const el=document.getElementById('sGdProductFolderId');if(el)el.value=gd.productFolderId;}
+  if(gd.reviewFolderId){const el=document.getElementById('sGdReviewFolderId');if(el)el.value=gd.reviewFolderId;}
   const useGd=(s.storageMode||'gdrive')==='gdrive';
   document.getElementById('tGdrive').checked=useGd;
   document.getElementById('gdriveSection').style.display=useGd?'block':'none';
@@ -3903,14 +4154,40 @@ async function submitRv(pid,pname){
   if(!rating){msgEl.style.color='var(--red)';msgEl.textContent='Please select a star rating.';return;}
   if(!text||text.length<5){msgEl.style.color='var(--red)';msgEl.textContent='Please write a short review.';return;}
   msgEl.style.color='var(--t3)';msgEl.textContent='Submitting…';
+  // Handle photo upload
+  let photoUrl=null;
+  const photoInput=document.getElementById('rv-photo-'+pid);
+  if(photoInput?.files?.length){
+    const file=photoInput.files[0];
+    const reader=new FileReader();
+    const b64=await new Promise(res=>{reader.onload=e=>res(e.target.result);reader.readAsDataURL(file);});
+    // Upload to Drive review folder if configured
+    try{
+      const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
+      const gd=getGdCfg()||(cfg.googleDrive||{});
+      const reviewFolderId=gd.reviewFolderId||gd.productFolderId||gd.folderId||'';
+      if(gasUrl&&reviewFolderId){
+        const pure=b64.split(',')[1];
+        const mimeType=b64.split(';')[0].split(':')[1]||'image/jpeg';
+        const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},
+          body:JSON.stringify({action:'uploadFile',base64:pure,filename:'review_'+Date.now()+'.jpg',mimeType,folderId:reviewFolderId})});
+        if(res.ok){const j=await res.json();if(j.url)photoUrl=j.url;}
+      }
+      if(!photoUrl)photoUrl=b64; // fallback to base64 if Drive not set up
+    }catch(e){photoUrl=null;}
+  }
   try{
-    await fAdd('reviews',{productId:pid,productName:pname,authorName:name,text,rating,status:'pending'});
+    // Reviews now auto-approved — no admin approval needed
+    await fAdd('reviews',{productId:pid,productName:pname,authorName:name,text,rating,
+      status:'approved',photoUrl,createdAt:window._fb.serverTimestamp()});
     msgEl.style.color='var(--grn)';
-    msgEl.textContent='✓ Review submitted! It will appear after admin approval.';
-    document.getElementById('rv-name-'+pid).value='';
-    document.getElementById('rv-text-'+pid).value='';
+    msgEl.textContent='✓ Review posted! Thank you.';
+    if(document.getElementById('rv-name-'+pid))document.getElementById('rv-name-'+pid).value='';
+    if(document.getElementById('rv-text-'+pid))document.getElementById('rv-text-'+pid).value='';
+    if(photoInput)photoInput.value='';
     rvRatings[pid]=0;
     document.getElementById('starPick-'+pid)?.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+    loadProductReviews(pid); // reload to show new review
   }catch(e){
     msgEl.style.color='var(--red)';msgEl.textContent='Error: '+e.message;
   }
@@ -3922,17 +4199,14 @@ async function loadProductReviews(pid){
   wfb(async()=>{
     try{
       const all=await fGetAll('reviews');
+      // Show all approved reviews (auto-approved on submit)
       const approved=all.filter(r=>r.productId===pid&&r.status==='approved');
       approved.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
       if(!approved.length){
         listEl.innerHTML='<p style="color:var(--t3);font-size:14px">No reviews yet. Be the first to review!</p>';
         return;
       }
-      const starsHtml=n=>{
-        let s='';
-        for(let i=1;i<=5;i++)s+=`<span style="color:${i<=n?'var(--g1)':'var(--l5)'}">★</span>`;
-        return s;
-      };
+      const starsHtml=n=>{let s='';for(let i=1;i<=5;i++)s+=`<span style="color:${i<=n?'var(--g1)':'var(--l5)'}">★</span>`;return s;};
       listEl.innerHTML=approved.map(r=>`
         <div class="rv-item">
           <div class="rv-item-head">
@@ -3943,6 +4217,7 @@ async function loadProductReviews(pid){
             <span class="rv-item-date">${r.createdAt?.toDate?.()?.toLocaleDateString('en-LK',{month:'short',day:'numeric',year:'numeric'})||''}</span>
           </div>
           <div class="rv-item-body">${r.text||''}</div>
+          ${r.photoUrl?`<img src="${typeof driveImgUrl==='function'?driveImgUrl(r.photoUrl):r.photoUrl}" class="rv-photo" onclick="openLB('${r.photoUrl}')" alt="Review photo" onerror="this.style.display='none'">`:''}
         </div>`).join('');
     }catch(e){
       listEl.innerHTML='<p style="color:var(--t3);font-size:13px">Reviews unavailable.</p>';
@@ -3953,30 +4228,49 @@ async function loadProductReviews(pid){
 /* ── Gallery render helpers ── */
 function renderGalleryMain(m,mainId){
   if(!m)return`<div class="d-ph">📦</div>`;
-  if(m.type==='image')return`<img src="${m.url}" alt="" onclick="openLB('${m.url}')">`;
+  if(m.type==='image'){
+    const src=typeof driveImgUrl==='function'?driveImgUrl(m.url):m.url;
+    const safe=m.url.replace(/"/g,'&quot;');
+    return`<img src="${src}" alt="" onclick="openLB(this.dataset.src)" data-src="${safe}" onerror="this.src=this.dataset.src;this.onerror=null">`;
+  }
   if(m.type==='video')return`<video controls src="${m.url}" style="width:100%;height:100%;object-fit:contain;border-radius:var(--r5)"></video>`;
   if(m.type==='youtube'){
     const vid=getYTId(m.url);
-    return vid?`<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>`:`<div class="d-ph">▶</div>`;
+    return vid?`<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen style="width:100%;height:100%;border:none;border-radius:var(--r5)"></iframe>`:`<div class="d-ph">▶</div>`;
   }
   return`<div class="d-ph">📦</div>`;
 }
+
+// Global media registry — maps galleryId → media array, avoids encoding issues
+const _galleryMedia={};
+
 function renderGalleryThumb(m,i,mainId,thumbsId,pid){
+  // Store media in global registry
+  if(!_galleryMedia[thumbsId])_galleryMedia[thumbsId]=[];
+  _galleryMedia[thumbsId][i]=m;
+  const src=m.type==='image'&&typeof driveImgUrl==='function'?driveImgUrl(m.url):m.url;
   const preview=m.type==='image'
-    ?`<img src="${m.url}" alt="" onerror="this.style.display='none'">`
-    :m.type==='youtube'?`<div class="yt-thumb"><div class="gthumb-play">▶</div></div>`
-    :`<div class="vid-thumb"><div class="gthumb-play">🎬</div></div>`;
-  return`<div class="gthumb${i===0?' active':''}" onclick="switchGallery(this,'${mainId}','${thumbsId}',${JSON.stringify(m).replace(/'/g,"&#39;")})">${preview}</div>`;
+    ?`<img src="${src}" alt="" onerror="this.style.display='none'">`
+    :m.type==='youtube'?`<div class="yt-thumb" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center"><div class="gthumb-play">▶</div></div>`
+    :`<div class="vid-thumb" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center"><div class="gthumb-play">🎬</div></div>`;
+  return`<div class="gthumb${i===0?' active':''}" data-idx="${i}" onclick="switchGallery(this,'${mainId}','${thumbsId}',${i})">${preview}</div>`;
 }
-function switchGallery(thumbEl,mainId,thumbsId,m){
-  // Update main viewer
-  document.getElementById(mainId).innerHTML=renderGalleryMain(m,mainId);
+
+function switchGallery(thumbEl,mainId,thumbsId,idx){
+  // Look up media from global registry
+  const mediaArr=_galleryMedia[thumbsId];
+  if(!mediaArr||idx===undefined||idx===null)return;
+  const m=mediaArr[parseInt(idx)];
+  if(!m)return;
+  const mainEl=document.getElementById(mainId);
+  if(mainEl)mainEl.innerHTML=renderGalleryMain(m,mainId);
   // Update active thumb
   document.querySelectorAll(`#${thumbsId} .gthumb`).forEach(t=>t.classList.remove('active'));
-  thumbEl.classList.add('active');
+  if(thumbEl)thumbEl.classList.add('active');
 }
+
 function getYTId(url){
-  const m=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  const m=(url||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
   return m?m[1]:null;
 }
 
@@ -3992,13 +4286,16 @@ function saveGdriveCfg(){
   if(m1){folderId=m1[1];document.getElementById('sGdFolderId').value=folderId;}
   const m2=productFolderId.match(/folders\/([a-zA-Z0-9_-]+)/);
   if(m2){productFolderId=m2[1];document.getElementById('sGdProductFolderId').value=productFolderId;}
+  let reviewFolderId=(document.getElementById('sGdReviewFolderId')?.value||'').trim();
+  const m3=reviewFolderId.match(/folders\/([a-zA-Z0-9_-]+)/);
+  if(m3){reviewFolderId=m3[1];document.getElementById('sGdReviewFolderId').value=reviewFolderId;}
   if(!folderId||!gasUrl){toast('Receipts Folder ID and Apps Script URL are required.','err');return;}
-  const gd={apiKey:key,clientId,folderId,productFolderId:productFolderId||folderId};
+  const gd={apiKey:key,clientId,folderId,productFolderId:productFolderId||folderId,reviewFolderId:reviewFolderId||productFolderId||folderId};
   localStorage.setItem('sh_gd_cfg',JSON.stringify(gd));
   localStorage.setItem('sh_gas_url',gasUrl);
   fSet('settings','main',{googleDrive:gd,gasUrl,storageMode:'gdrive'});
   cfg.googleDrive=gd;cfg.storageMode='gdrive';cfg.gasUrl=gasUrl;
-  toast('Google Drive saved! Receipts: '+folderId+(productFolderId?' | Products: '+productFolderId:''),'ok');
+  toast('Google Drive saved! Receipts: '+folderId+(productFolderId?' | Products: '+productFolderId:'')+(reviewFolderId?' | Reviews: '+reviewFolderId:''),'ok');
 }
 async function testGdriveConnection(){
   const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
@@ -4073,6 +4370,219 @@ async function uploadToStorage(base64data,filename){
     console.warn('Google Drive upload failed:',e.message,'. Using base64 fallback.');
     return{url:base64data,source:'base64'};
   }
+}
+
+/* ── Featured 3D Carousel ── */
+function renderFeatured(){
+  const wrap=document.getElementById('featCarouselWrap');if(!wrap)return;
+  const featured=prods.filter(p=>p.featured&&p.stock>0).slice(0,5);
+  if(featured.length<1){wrap.innerHTML='';return;}
+  // Pad to 5 cards by repeating if fewer
+  while(featured.length<5)featured.push(featured[featured.length-1]||featured[0]);
+  const cards=featured.map((p,i)=>{
+    const img=p.image
+      ?`<img src="${typeof driveImgUrl==='function'?driveImgUrl(p.image):p.image}" alt="${p.name||''}" onerror="this.src='${p.image}';this.onerror=null">`
+      :`<div class="fc-ph">${p.emoji||'📦'}</div>`;
+    return`<div class="fcard" data-i="${i}" onclick="showDetail('${p.id}')">
+      ${img}
+      <div class="fc-info">
+        <div class="fc-nm">${p.name||''}</div>
+        <div class="fc-pr">${lkr(p.price)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  wrap.innerHTML=`
+    <div class="feat-hint">✦ Featured Products — hover or tap to expand</div>
+    <div id="featCarousel" onmouseenter="expandFeat(true)" onmouseleave="expandFeat(false)" ontouchstart="expandFeat(true)">
+      <div class="feat-track">${cards}</div>
+      <button class="feat-expand-btn" onclick="event.stopPropagation();expandFeat()">✦ View All Featured</button>
+    </div>`;
+}
+let _featExpanded=false;
+
+/* ── Expenses ── */
+async function loadExpenses(){
+  wfb(async()=>{
+    const yr=parseInt(document.getElementById('expYear')?.value||new Date().getFullYear());
+    const mo=document.getElementById('expMonth')?.value;
+    let exps=await fGetAll('expenses');
+    exps=exps.filter(e=>{
+      if(!e.createdAt?.toDate)return false;
+      const d=e.createdAt.toDate();
+      return d.getFullYear()===yr&&(mo===''||mo===undefined||d.getMonth()===parseInt(mo));
+    });
+    exps.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    const total=exps.reduce((s,e)=>s+(e.amount||0),0);
+    const el=document.getElementById('expList');if(!el)return;
+    // Also show revenue for the same period for profit calc
+    let ords=await fGetAll('orders');
+    ords=ords.filter(o=>{
+      if(!o.createdAt?.toDate||o.status==='Cancelled')return false;
+      const d=o.createdAt.toDate();
+      return d.getFullYear()===yr&&(mo===''||mo===undefined||d.getMonth()===parseInt(mo));
+    });
+    const revenue=ords.reduce((s,o)=>s+(o.total||0),0);
+    const profit=revenue-total;
+    el.innerHTML=`
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.75rem">
+        <div class="rpt-card"><span class="rpt-val" style="-webkit-text-fill-color:var(--grn);color:var(--grn)">${lkr(revenue)}</span><span class="rpt-lbl">Revenue</span></div>
+        <div class="rpt-card"><span class="rpt-val" style="-webkit-text-fill-color:var(--red);color:var(--red)">${lkr(total)}</span><span class="rpt-lbl">Total Expenses</span></div>
+        <div class="rpt-card"><span class="rpt-val" style="-webkit-text-fill-color:${profit>=0?'var(--grn)':'var(--red)'};color:${profit>=0?'var(--grn)':'var(--red)'}">${lkr(Math.abs(profit))}</span><span class="rpt-lbl">${profit>=0?'Net Profit':'Net Loss'}</span></div>
+      </div>
+      ${exps.length?`<table class="at">
+        <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead>
+        <tbody>${exps.map(e=>`<tr>
+          <td style="font-size:12px;color:var(--t3)">${e.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||''}</td>
+          <td><span class="sp sp-pend">${e.category||'General'}</span></td>
+          <td>${e.description||'—'}</td>
+          <td><strong style="color:var(--red)">${lkr(e.amount||0)}</strong></td>
+          <td><button class="ta" onclick="delExpense('${e.id}')">Delete</button></td>
+        </tr>`).join('')}</tbody>
+      </table>`:'<p style="color:var(--t3);padding:1rem 0">No expenses for this period.</p>'}`;
+  });
+}
+async function saveExpense(){
+  const amt=parseFloat(document.getElementById('expAmt')?.value||0);
+  const desc=(document.getElementById('expDesc')?.value||'').trim();
+  const cat=(document.getElementById('expCat')?.value||'General').trim();
+  const dateVal=document.getElementById('expDate')?.value;
+  if(!amt||amt<=0){toast('Enter a valid amount.','err');return;}
+  if(!desc){toast('Enter a description.','err');return;}
+  try{
+    const data={amount:amt,description:desc,category:cat};
+    // If a custom date is provided, use it; otherwise use server timestamp
+    if(dateVal){
+      data.createdAt={toDate:()=>new Date(dateVal),seconds:new Date(dateVal).getTime()/1000};
+      await window._fb.addDoc(window._fb.collection(window._db,'expenses'),{...data,createdAt:window._fb.serverTimestamp(),dateOverride:dateVal});
+    }else{
+      await fAdd('expenses',data);
+    }
+    document.getElementById('expAmt').value='';
+    document.getElementById('expDesc').value='';
+    toast('Expense added!','ok');
+    loadExpenses();
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+async function delExpense(id){
+  if(!confirm('Delete this expense?'))return;
+  await fDel('expenses',id);
+  toast('Deleted.','ok');loadExpenses();
+}
+function populateExpYears(){
+  const sel=document.getElementById('expYear');if(!sel||sel.options.length>1)return;
+  const yr=new Date().getFullYear();sel.innerHTML='';
+  for(let y=yr;y>=yr-4;y--){const o=new Option(y,y);if(y===yr)o.selected=true;sel.add(o);}
+}
+
+/* ════════════════════════════════════════
+   ★ FEATURE BLOCK: Expenses, Carousel,
+     Review delete, Drive review folder,
+     Order email field
+════════════════════════════════════════ */
+
+/* ── Feature 1: Expenses System ── */
+async function addExpense(){
+  const desc=document.getElementById('expDesc').value.trim();
+  const amt=parseFloat(document.getElementById('expAmt').value);
+  if(!desc||isNaN(amt)||amt<=0){toast('Description and amount are required.','err');return;}
+  const cat=document.getElementById('expCat').value;
+  const date=document.getElementById('expDate').value||new Date().toISOString().slice(0,10);
+  const notes=document.getElementById('expNotes').value.trim();
+  await fAdd('expenses',{description:desc,amount:amt,category:cat,date,notes});
+  document.getElementById('expDesc').value='';
+  document.getElementById('expAmt').value='';
+  document.getElementById('expNotes').value='';
+  toast('Expense added!','ok');
+  rAdmExpenses();
+}
+async function delExpense(id){
+  if(!confirm('Delete this expense?'))return;
+  await fDel('expenses',id);
+  toast('Deleted.','ok');rAdmExpenses();
+}
+function populateExpYears(){
+  const sel=document.getElementById('expYear');if(!sel)return;
+  const yr=new Date().getFullYear();sel.innerHTML='';
+  for(let y=yr;y>=yr-4;y--){const o=new Option(y,y);if(y===yr)o.selected=true;sel.add(o);}
+  // Default date input to today
+  const di=document.getElementById('expDate');if(di&&!di.value)di.value=new Date().toISOString().slice(0,10);
+}
+async function rAdmExpenses(){
+  wfb(async()=>{
+    const yr=parseInt(document.getElementById('expYear')?.value||new Date().getFullYear());
+    const moVal=document.getElementById('expMonth')?.value;
+    const all=await fGetAll('expenses');
+    let filtered=all.filter(e=>{
+      if(!e.date)return false;
+      const d=new Date(e.date);
+      if(d.getFullYear()!==yr)return false;
+      if(moVal!==''&&moVal!==undefined&&d.getMonth()!==parseInt(moVal))return false;
+      return true;
+    });
+    filtered.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    const total=filtered.reduce((s,e)=>s+(e.amount||0),0);
+    const el=document.getElementById('expTotal');
+    if(el)el.textContent=filtered.length?'Total: '+lkr(total):'No expenses';
+    const list=document.getElementById('expList');
+    if(!filtered.length){list.innerHTML='<p style="color:var(--t3);padding:1rem 0">No expenses recorded for this period.</p>';return;}
+    // Group by category
+    const cats={};filtered.forEach(e=>{if(!cats[e.category])cats[e.category]=[];cats[e.category].push(e);});
+    list.innerHTML=Object.entries(cats).map(([cat,items])=>{
+      const catTotal=items.reduce((s,e)=>s+(e.amount||0),0);
+      return`<div style="margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem;padding-bottom:.5rem;border-bottom:1px solid var(--b2)">
+          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--t3)">${cat}</span>
+          <span style="font-weight:700;color:var(--red)">${lkr(catTotal)}</span>
+        </div>
+        ${items.map(e=>`<div class="exp-row">
+          <span class="exp-cat">${e.category}</span>
+          <div class="exp-desc">${e.description}${e.notes?`<div style="font-size:12px;color:var(--t3)">${e.notes}</div>`:''}</div>
+          <span class="exp-date">${e.date}</span>
+          <span class="exp-amt">−${lkr(e.amount)}</span>
+          <button class="exp-del" onclick="delExpense('${e.id}')">✕</button>
+        </div>`).join('')}
+      </div>`;
+    }).join('');
+  });
+}
+
+/* ── Feature 3: Featured Products 3D Carousel ── */
+
+function renderFeaturedCarousel(){
+  const wrap=document.getElementById('featCarouselWrap');
+  if(!wrap)return;
+  const featured=prods.filter(p=>p.featured&&p.stock>0).slice(0,5);
+  _featProds=featured;
+  if(featured.length<2){wrap.innerHTML='';return;}
+
+  // Pad to 5 slots if fewer
+  while(_featProds.length<5)_featProds.push(null);
+
+  wrap.innerHTML=`
+    <div class="sh"><h2 class="st">Featured <em>Products</em></h2><span class="sm">Hover to expand</span></div>
+    <div class="feat-carousel" id="featCarousel"
+         onmouseenter="expandFeat(true)" ontouchstart="expandFeat(true)"
+         onmouseleave="expandFeat(false)">
+      ${_featProds.map((p,i)=>p?`
+        <div class="feat-card-slot c${i}" onclick="showDetail('${p.id}')">
+          <div class="feat-card">
+            <div class="feat-card-num">${i+1}</div>
+            <div class="feat-card-img">
+              ${p.image?`<img src="${driveImgUrl(p.image)}" alt="${p.name||''}" onerror="this.style.display='none'">`:`<span style="font-size:2.5rem">${p.emoji||'📦'}</span>`}
+            </div>
+            <div class="feat-card-body">
+              <div class="feat-card-name">${(p.name||'').substr(0,18)}</div>
+              <div class="feat-card-price">${lkr(p.price)}</div>
+            </div>
+          </div>
+        </div>`:`<div class="feat-card-slot c${i}"></div>`
+      ).join('')}
+    </div>
+    <div class="feat-hint">Hover / tap to expand · Click a product to view</div>`;
+}
+function expandFeat(expand){
+  _featExpanded=expand;
+  document.getElementById('featCarousel')?.classList.toggle('expanded',expand);
 }
 
 /* ── Init ── */
