@@ -31,7 +31,9 @@
 </script>
 <!-- Golden SVG favicon matching the brand mark -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="shortcut icon" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -235,6 +237,10 @@
 /* ━━━━━━━━━━━━━━━━━━━━━━ § 1  BASE ━━━━━━━━━━━━━━━━━━━━━━ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
 body{
   font-family:var(--fb);background:var(--l1);color:var(--t1);
   font-size:15px;line-height:1.65;overflow-x:hidden;
@@ -2720,6 +2726,8 @@ const normSizes=p=>Array.isArray(p?.sizes)?p.sizes.filter(Boolean):(typeof p?.si
 const normColors=p=>Array.isArray(p?.colors)?p.colors.filter(c=>c&&c.name):[];
 const hasVariants=p=>normSizes(p).length>0||normColors(p).length>0;
 const reviewClaimId=(orderId,productId)=>`${String(orderId||'').toUpperCase().replace(/[^A-Z0-9-]/g,'')}_${String(productId||'').replace(/[^A-Za-z0-9_-]/g,'')}`;
+const DELIVERY_TEXT='Estimated delivery: 3-7 days';
+const safeFilePart=value=>String(value||'').trim().replace(/[^a-z0-9_-]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,60)||'customer';
 function cartKey(id,variant={}){
   return [id,variant.size||'',variant.color||''].map(v=>String(v).replace(/[|]/g,'')).join('|');
 }
@@ -2732,6 +2740,9 @@ function variantChipsHtml(variant={}){
 }
 function orderItemHtml(i){
   return `${esc(i.name||'Product')}×${i.qty||1}${variantChipsHtml(i.variant||i)}`;
+}
+function deliveryHtml(cls='variant-note'){
+  return`<div class="${cls}">🚚 ${DELIVERY_TEXT}</div>`;
 }
 function buildProductMedia(p){
   const media=Array.isArray(p?.media)&&p.media.length?p.media.slice():(p?.image?[{type:'image',url:p.image}]:[]);
@@ -2771,11 +2782,16 @@ function toggleDark(){toast('Premium dark theme is always active ✦','info')}
 (function(){
   const stage=document.getElementById('heroStage');
   if(!stage)return;
+  const coarse=window.matchMedia&&window.matchMedia('(pointer: coarse)').matches;
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(coarse||reduce||window.innerWidth<980)return;
   let ticking=false;
   document.addEventListener('mousemove',e=>{
     if(ticking)return;ticking=true;
     requestAnimationFrame(()=>{
+      if(document.hidden){ticking=false;return;}
       const rect=stage.getBoundingClientRect();
+      if(rect.bottom<0||rect.top>window.innerHeight){ticking=false;return;}
       const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
       const dx=(e.clientX-cx)/window.innerWidth;
       const dy=(e.clientY-cy)/window.innerHeight;
@@ -2897,7 +2913,7 @@ function loadProds(){
       showFeat(feat[0]);
       if(feat.length>1){
         let fi=0;
-        setInterval(()=>{fi=(fi+1)%feat.length;showFeat(feat[fi]);},4000);
+        if(!window._heroFeatTimer)window._heroFeatTimer=setInterval(()=>{if(document.hidden)return;fi=(fi+1)%feat.length;showFeat(feat[fi]);},5000);
       }
     }
     document.getElementById('hStatP').textContent=prods.length;
@@ -2984,6 +3000,7 @@ function pCard(p){
       ${p.rating?`<div class="rat">${stars(p.rating)}<span class="rn">${p.rating} (${p.reviews||0})</span></div>`:''}
       <div class="pp"><span class="pmain">${lkr(p.price)}</span>${p.originalPrice?`<span class="porig">${lkr(p.originalPrice)}</span><span class="psave">−${pct}%</span>`:''}</div>
       <div class="pst ${sc}">${sl}</div>
+      ${deliveryHtml()}
       <button class="padd" onclick="event.stopPropagation();quickAddCart('${p.id}')" ${p.stock===0?'disabled':''}>
         <span>${p.stock===0?'Out of Stock':hasVariants(p)?'Choose Options':'Add to Cart'}</span>
       </button>
@@ -3029,6 +3046,7 @@ function showDetail(id){
         ${p.rating?`<div class="drat">${stars(p.rating,true)}<strong style="margin-left:4px">${p.rating}</strong><span style="color:var(--t3);font-size:13px;margin-left:4px">(${p.reviews||0} reviews)</span></div>`:''}
         <div class="dpr">${lkr(p.price)}${p.originalPrice?`<span class="dpro">${lkr(p.originalPrice)}</span><span class="dsave">Save ${pct}%</span>`:''}</div>
         ${shipHtml}
+        ${deliveryHtml('ship-fee ship-paid')}
         ${ptsHtml}
         <p class="ddesc">${safeDesc}</p>
         <div class="dstk ${sc}">${sl}</div>
@@ -3155,6 +3173,7 @@ function renderCart(){
                 <div class="ci-nm">${esc(i.p.name||'')}</div>
                 <div class="ci-mt">${esc(i.p.category||'')} · ${lkr(i.p.price)}${sf>0?` · 🚚 ${lkr(sf)}`:'&nbsp;<span style="color:var(--grn);font-size:11px">Free shipping</span>'}</div>
                 ${variantChipsHtml(i.variant)}
+                ${deliveryHtml()}
               </div>
               <div class="qc">
                 <button class="qbtn" onclick="chQty('${escAttr(i.key)}',-1)">−</button>
@@ -3261,6 +3280,8 @@ async function placeOrder(){
   const addr=document.getElementById('co-addr').value.trim();
   if(!name||!phone||!addr){toast('Please fill in name, phone and address.','err');return;}
   if(!proofLocalPreview){toast('Please upload your payment receipt.','err');return;}
+  const orderId=uid();
+  const receiptFilename=`${orderId}-${safeFilePart(name)}-receipt.jpg`;
   const btn=document.getElementById('placeBtn');
   const resetBtn=()=>{btn.disabled=false;btn.textContent='Place Order';};
   btn.disabled=true;btn.textContent='Uploading receipt…';
@@ -3271,7 +3292,7 @@ async function placeOrder(){
   try{
     const mode=cfg.storageMode||'gdrive';
     if(mode==='imgbb'&&cfg.imgbbKey){
-      const r=await uploadToImgbb(proofLocalPreview,'receipt_'+Date.now());
+      const r=await uploadToImgbb(proofLocalPreview,receiptFilename.replace(/\.[^.]+$/,''));
       receiptUrl=r.url;receiptSource='imgbb';
     }else if(mode==='imgbb'&&!cfg.imgbbKey){
       throw new Error('ImgBB key is missing. Save it in Admin > Settings first.');
@@ -3288,7 +3309,7 @@ async function placeOrder(){
         const res=await fetch(gasUrl,{
           method:'POST',
           headers:{'Content-Type':'text/plain'},
-          body:JSON.stringify({action:'uploadFile',base64:pure,filename:'receipt_'+Date.now()+'.jpg',mimeType,folderId}),
+          body:JSON.stringify({action:'uploadFile',base64:pure,filename:receiptFilename,mimeType,folderId}),
         });
         if(res.ok){
           const json=await res.json();
@@ -3312,7 +3333,6 @@ async function placeOrder(){
   const ship=typeof cartShipping==='function'?cartShipping():0;
   const disc=coDisc?.amt||0;
   const total=sub+ship-disc;
-  const orderId=uid();
   const items=Object.entries(cart).map(([key,i])=>({id:i.p.id,name:i.p.name,price:i.p.price,qty:i.qty,shippingFee:i.p.shippingFee||0,image:i.variant?.colorImage||i.p.image||null,variant:i.variant||{},variantKey:key,size:i.variant?.size||'',color:i.variant?.color||''}));
   try{
     await fAdd('orders',{orderId,customer:{name,phone,address:addr},items,subtotal:sub,shipping:ship,discount:disc,coupon:coDisc?.code||null,total,paymentProof:receiptUrl,paymentProofSource:receiptSource,status:'Pending Payment'});
@@ -3433,6 +3453,7 @@ function showBill(o){
           <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
           <tbody>${o.items.map(i=>`<tr><td>${esc(i.name)}${variantLabel(i.variant||i)?`<br><span style="font-size:11px;color:var(--g1)">${esc(variantLabel(i.variant||i))}</span>`:''}</td><td>${i.qty}</td><td>${lkr(i.price)}</td><td>${lkr(i.price*i.qty)}</td></tr>`).join('')}</tbody>
         </table>
+        <div class="pay-box" style="margin:0 0 1.25rem;padding:1rem"><h4>🚚 Delivery</h4><p>${DELIVERY_TEXT} after payment verification.</p></div>
         <div class="bill-tots">
           <div class="bt"><span>Subtotal</span><span>${lkr(o.subtotal)}</span></div>
           ${(o.shipping||0)>0?`<div class="bt"><span>Shipping</span><span>${lkr(o.shipping)}</span></div>`:`<div class="bt" style="color:var(--grn)"><span>Shipping</span><span>Free</span></div>`}
@@ -4490,7 +4511,7 @@ async function schedSocialProof(){
         }
       }
       setTimeout(showNext,9000);
-      setInterval(showNext,20000);
+      if(!window._socialProofTimer)window._socialProofTimer=setInterval(()=>{if(!document.hidden)showNext();},26000);
     }catch(e){}
   });
 }
