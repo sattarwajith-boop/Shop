@@ -11,6 +11,7 @@
 <meta name="geo.region" content="LK">
 <meta name="geo.country" content="Sri Lanka">
 <!-- Google Search Console — replace with your verification code from search.google.com/search-console -->
+<meta name="google-site-verification" content="PASTE_YOUR_GOOGLE_VERIFICATION_CODE_HERE">
 <link rel="canonical" href="https://shstores.online">
 <!-- Open Graph — WhatsApp / Facebook / LinkedIn preview -->
 <meta property="og:type" content="website">
@@ -99,6 +100,15 @@
 .pm-color-row{display:grid;grid-template-columns:1fr 92px 1.5fr auto;gap:8px;align-items:center;margin-bottom:8px}
 .pm-color-preview{width:30px;height:30px;border-radius:50%;border:1px solid var(--b3);box-shadow:var(--s1)}
 .adm-review-box{background:var(--l3);border:1px solid var(--b2);border-radius:var(--r3);padding:1.25rem;margin-bottom:1.5rem;box-shadow:var(--s2)}
+.pm-variant-card{background:var(--l2b);border:1px solid var(--b2);border-radius:var(--r3);padding:1rem;margin-bottom:.85rem}
+.pm-variant-head{display:flex;align-items:center;gap:8px;margin-bottom:.75rem;flex-wrap:wrap}
+.pm-variant-grid{display:grid;grid-template-columns:1fr 84px 1.5fr auto;gap:8px;align-items:center}
+.pm-color-imgbox{height:88px;border:1px dashed var(--b3);border-radius:var(--r2);background:var(--l1b);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;color:var(--t3);font-size:12px;text-align:center;padding:8px;transition:all var(--dur) var(--ease)}
+.pm-color-imgbox:hover{border-color:var(--bg);background:rgba(200,155,48,.04);color:var(--g1)}
+.pm-color-imgbox img{width:100%;height:100%;object-fit:cover}
+.pm-variant-chiprow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:.85rem}
+.pm-variant-chip{background:rgba(200,155,48,.08);border:1px solid var(--bg);border-radius:var(--rp);padding:4px 10px;font-size:12px;font-weight:700;color:var(--g1)}
+.pm-variant-help{font-size:12px;color:var(--t3);margin:.45rem 0 .85rem;line-height:1.6}
 /* ── VERIFIED BADGE ── */
 .verified-badge{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb);font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--rp)}
 /* ── PHOTO REVIEW ── */
@@ -1396,7 +1406,36 @@ textarea.fi{resize:vertical;min-height:80px}
 .ship-fee{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 12px;border-radius:var(--rp);margin-bottom:.75rem}
 .ship-free{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb)}
 .ship-paid{background:var(--blud);color:var(--blu);border:1px solid rgba(96,165,250,.28)}
-@media(max-width:1100px){.adm-shell{grid-template-columns:1fr}.adm-side{display:none}}
+@media(max-width:1100px){
+  .adm-shell{grid-template-columns:1fr}
+  .adm-side{
+    position:sticky;top:var(--nav-h);z-index:150;
+    display:flex!important;flex-direction:row;align-items:center;gap:8px;
+    overflow-x:auto;scrollbar-width:none;
+    padding:.75rem 1rem;background:rgba(9,9,14,.96);
+    border-right:none;border-bottom:1px solid var(--b1);
+  }
+  .adm-side::-webkit-scrollbar{display:none}
+  .adm-logo,.asg{display:none}
+  .asi{width:auto;white-space:nowrap;flex-shrink:0;padding:9px 13px}
+  .asi.on{border-left:none;border-bottom:2px solid var(--g0);padding-left:13px}
+  .adm-main{padding:2rem 1.5rem}
+}
+@media(min-width:761px) and (max-width:1100px){
+  .adm-shell{display:block;min-height:auto}
+  .adm-side{
+    display:flex!important;position:sticky;top:var(--nav-h);z-index:150;
+    flex-direction:row;gap:8px;overflow-x:auto;overflow-y:hidden;
+    padding:10px 2.5rem;background:rgba(6,6,10,.94);border-right:none;border-bottom:1px solid var(--b1);
+    scrollbar-width:none;
+  }
+  .adm-side::-webkit-scrollbar{display:none}
+  .adm-logo,.asg{display:none}
+  .asi{flex:0 0 auto;width:auto;white-space:nowrap;background:var(--l3);border:1px solid var(--b2);border-radius:var(--rp);padding:9px 14px}
+  .asi.on{border-left:none;padding-left:14px;border-color:var(--bg);box-shadow:var(--gx)}
+  .asi[style*="flex:1"]{display:none!important}
+  .adm-main{padding:2rem 2.5rem}
+}
 @media(max-width:980px){
   .sgrid{grid-template-columns:1fr 1fr}
   .cart-wrap{grid-template-columns:1fr}
@@ -1609,6 +1648,9 @@ textarea.fi{resize:vertical;min-height:80px}
   .pm-color-row{grid-template-columns:1fr 58px;gap:7px;background:var(--l2b);border:1px solid var(--b1);border-radius:var(--r2);padding:8px}
   .pm-color-row input:nth-child(3){grid-column:1/-1}
   .pm-color-row .ta{grid-column:1/-1;width:100%}
+  .pm-variant-grid{grid-template-columns:1fr 58px}
+  .pm-variant-grid input:nth-child(3),.pm-variant-grid .pm-color-imgbox,.pm-variant-grid .ta{grid-column:1/-1}
+  .pm-color-imgbox{height:110px}
   .adm-review-box .fg2{grid-template-columns:1fr}
 
   .cart-wrap{grid-template-columns:1fr}
@@ -2524,13 +2566,13 @@ textarea.fi{resize:vertical;min-height:80px}
         <!-- OR upload local image -->
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
           <div style="flex:1;height:1px;background:var(--b1)"></div>
-          <span style="font-size:12px;color:var(--t3)">or upload local image (base64)</span>
+          <span style="font-size:12px;color:var(--t3)">or upload local image to Google Drive</span>
           <div style="flex:1;height:1px;background:var(--b1)"></div>
         </div>
         <div class="iup" id="iUpArea" onclick="document.getElementById('pm-img-file').click()" style="padding:1rem">
           <div class="iup-ico" style="font-size:1.5rem">🖼️</div>
           <div class="iup-txt" style="font-size:12.5px">Click to upload local image</div>
-          <div class="iup-hint">JPG/PNG · Max 2MB</div>
+          <div class="iup-hint">JPG/PNG · Max 32MB · saved to Drive</div>
           <img id="pImgThumb" alt="" style="max-height:80px">
         </div>
         <input type="file" id="pm-img-file" accept="image/*" style="display:none" onchange="handlePImg(this)">
@@ -2684,6 +2726,24 @@ function cartKey(id,variant={}){
 function variantLabel(variant={}){
   return [variant.color?`Color: ${variant.color}`:'',variant.size?`Size: ${variant.size}`:''].filter(Boolean).join(' · ');
 }
+function variantChipsHtml(variant={}){
+  const label=variantLabel(variant);
+  return label?`<div class="variant-chip-meta">${label.split(' · ').map(v=>`<span>${esc(v)}</span>`).join('')}</div>`:'';
+}
+function orderItemHtml(i){
+  return `${esc(i.name||'Product')}×${i.qty||1}${variantChipsHtml(i.variant||i)}`;
+}
+function buildProductMedia(p){
+  const media=Array.isArray(p?.media)&&p.media.length?p.media.slice():(p?.image?[{type:'image',url:p.image}]:[]);
+  const seen=new Set(media.map(m=>m?.url||'').filter(Boolean));
+  normColors(p).forEach(c=>{
+    if(c.image&&!seen.has(c.image)){
+      media.push({type:'image',url:c.image,colorName:c.name});
+      seen.add(c.image);
+    }
+  });
+  return media;
+}
 
 function toast(msg,t='info'){
   const el=document.getElementById('toastEl');
@@ -2810,7 +2870,7 @@ async function fOne(c,id){const d=await window._fb.getDoc(fDoc(c,id));return d.e
 /* ── ImgBB Upload ── */
 async function uploadToImgbb(b64,name){
   const key=cfg.imgbbKey;
-  if(!key)return{url:b64,source:'base64'};
+  if(!key)throw new Error('ImgBB key is missing.');
   const pure=b64.includes(',')?b64.split(',')[1]:b64;
   const fd=new FormData();fd.append('key',key);fd.append('image',pure);if(name)fd.append('name',name);
   const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});
@@ -2908,7 +2968,7 @@ function pCard(p){
   const safeName=esc(p.name||'');
   const safeCat=esc(p.category||'');
   const safeBadge=esc(p.badge||'');
-  const img=p.image?`<img src="${escAttr(p.image)}" alt="${safeName||'Product image'}" loading="lazy">`:`<div class="pm-ph">${esc(p.emoji||'📦')}</div>`;
+  const img=p.image?`<img src="${escAttr(driveImgUrl(p.image))}" data-src="${escAttr(p.image)}" alt="${safeName||'Product image'}" loading="lazy" onerror="this.src=this.dataset.src;this.onerror=null">`:`<div class="pm-ph">${esc(p.emoji||'📦')}</div>`;
   // Live scarcity badge
   const scarce=(p.stock>0&&p.stock<=5)?`<div class="scar-badge">🔥 Only ${p.stock} left!</div>`:'';
   return`<div class="pcard" onclick="showDetail('${p.id}')">
@@ -2943,9 +3003,8 @@ function showDetail(id){
   const sl=p.stock>20?'✓ In Stock':p.stock>5?`⚠ Only ${p.stock} left`:p.stock===0?'✗ Out of Stock':`⚠ Only ${p.stock} left!`;
   const rel=prods.filter(x=>x.category===p.category&&x.id!==p.id).slice(0,4);
   const sizes=normSizes(p),colors=normColors(p);
-  detSelections[p.id]={size:sizes[0]||'',color:colors[0]?.name||'',colorIndex:colors.length?0:null};
-  const colorImg=colors[0]?.image||'';
-  const media=colorImg?[{type:'image',url:colorImg}]:Array.isArray(p.media)&&p.media.length>0?p.media:(p.image?[{type:'image',url:p.image}]:[]);
+  detSelections[p.id]={size:sizes[0]||'',color:colors[0]?.name||'',colorIndex:colors.length?0:null,colorImage:colors[0]?.image||''};
+  const media=buildProductMedia(p);
   const mainId=`gm-${p.id}`;const thumbsId=`gt-${p.id}`;
   const mainHtml=media.length?renderGalleryMain(media[0],mainId):`<div class="d-ph">${p.emoji||'📦'}</div>`;
   const thumbsHtml=media.length>1?media.map((m,i)=>renderGalleryThumb(m,i,mainId,thumbsId,p.id)).join(''):'';
@@ -3036,8 +3095,7 @@ function selectDetailColor(pid,idx){
   const colors=normColors(p),c=colors[idx];if(!c)return;
   detSelections[pid]={...(detSelections[pid]||{}),color:c.name,colorIndex:idx,colorImage:c.image||''};
   const label=document.getElementById('selColor-'+pid);if(label)label.textContent=c.name;
-  document.querySelectorAll(`#rvSec-${pid}`).forEach(()=>{});
-  document.querySelectorAll('.color-swatch').forEach((b,i)=>{if(b.closest('#detailCt'))b.classList.toggle('on',i===idx);});
+  document.querySelectorAll('#detailCt .color-swatch').forEach((b,i)=>b.classList.toggle('on',i===idx));
   if(c.image){
     const main=document.getElementById('gm-'+pid);
     if(main)main.innerHTML=renderGalleryMain({type:'image',url:c.image},'gm-'+pid);
@@ -3088,14 +3146,15 @@ function renderCart(){
       <div>
         <div class="clist">
           ${items.map(i=>{
-            const imgEl=i.p.image?`<img src="${escAttr(i.p.image)}" alt="${escAttr(i.p.name||'Product image')}">`:esc(i.p.emoji||'📦');
+            const itemImg=i.variant?.colorImage||i.p.image;
+            const imgEl=itemImg?`<img src="${escAttr(driveImgUrl(itemImg))}" data-src="${escAttr(itemImg)}" alt="${escAttr(i.p.name||'Product image')}" onerror="this.src=this.dataset.src;this.onerror=null">`:esc(i.p.emoji||'📦');
             const sf=i.p.shippingFee||0;
             return`<div class="ci">
               <div class="ci-img">${imgEl}</div>
               <div class="ci-b">
                 <div class="ci-nm">${esc(i.p.name||'')}</div>
                 <div class="ci-mt">${esc(i.p.category||'')} · ${lkr(i.p.price)}${sf>0?` · 🚚 ${lkr(sf)}`:'&nbsp;<span style="color:var(--grn);font-size:11px">Free shipping</span>'}</div>
-                ${variantLabel(i.variant)?`<div class="variant-chip-meta">${variantLabel(i.variant).split(' · ').map(v=>`<span>${esc(v)}</span>`).join('')}</div>`:''}
+                ${variantChipsHtml(i.variant)}
               </div>
               <div class="qc">
                 <button class="qbtn" onclick="chQty('${escAttr(i.key)}',-1)">−</button>
@@ -3208,12 +3267,14 @@ async function placeOrder(){
   document.getElementById('upStatus').textContent='Uploading receipt…';
 
   // Step 1: Upload receipt (never blocks order if it fails)
-  let receiptUrl=proofLocalPreview,receiptSource='base64';
+  let receiptUrl='',receiptSource='';
   try{
     const mode=cfg.storageMode||'gdrive';
     if(mode==='imgbb'&&cfg.imgbbKey){
       const r=await uploadToImgbb(proofLocalPreview,'receipt_'+Date.now());
       receiptUrl=r.url;receiptSource='imgbb';
+    }else if(mode==='imgbb'&&!cfg.imgbbKey){
+      throw new Error('ImgBB key is missing. Save it in Admin > Settings first.');
     }else if(mode==='gdrive'){
       const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
       const gd=getGdCfg()||(cfg.googleDrive||{});
@@ -3232,15 +3293,17 @@ async function placeOrder(){
         if(res.ok){
           const json=await res.json();
           if(json.url){receiptUrl=json.url;receiptSource='gdrive';}
-          else{console.warn('Drive response missing url:',json);}
-        }else{console.warn('Drive upload HTTP error:',res.status);}
-      }else{console.warn('Drive upload skipped: missing gasUrl or folderId');}
+          else{throw new Error(json.error||'Drive response missing receipt URL.');}
+        }else{throw new Error('Drive receipt upload failed — HTTP '+res.status);}
+      }else{throw new Error('Google Drive receipt upload is not configured. Save Apps Script URL and receipt folder ID in Settings.');}
     }
     document.getElementById('upStatus').textContent='Receipt uploaded ✓ ('+receiptSource+')';
   }catch(e){
-    console.warn('Receipt upload failed, using base64 fallback:',e.message);
-    document.getElementById('upStatus').textContent='Upload failed — receipt stored locally';
-    receiptUrl=proofLocalPreview;receiptSource='base64';
+    console.warn('Receipt upload failed:',e.message);
+    document.getElementById('upStatus').textContent='Receipt upload failed: '+e.message;
+    toast('Receipt upload failed: '+e.message,'err');
+    resetBtn();
+    return;
   }
 
   // Step 2: Place order in Firestore
@@ -3261,7 +3324,7 @@ async function placeOrder(){
     if(typeof earnPoints==='function')earnPoints(phone,total);
     localStorage.setItem('sh_last_phone',phone);
     if(typeof sendWhatsApp==='function'){
-      sendWhatsApp(`🛒 New Order! ID: ${orderId} | ${name} | ${phone} | ${items.map(i=>i.name+'×'+i.qty).join(', ')} | Total: ${lkr(total)}`);
+      sendWhatsApp(`🛒 New Order! ID: ${orderId} | ${name} | ${phone} | ${items.map(i=>i.name+'×'+i.qty+(variantLabel(i.variant||i)?' ('+variantLabel(i.variant||i)+')':'')).join(', ')} | Total: ${lkr(total)}`);
     }
     // Clear state
     cart={};saveCart();updBadge();coDisc=null;proofLocalPreview=null;
@@ -3280,7 +3343,7 @@ async function sendOrderEmail(order){
     if(!cfg.emailjs?.key||!cfg.emailjs?.service||!cfg.emailjs?.template)return;
     emailjs.init(cfg.emailjs.key);
     const admins=(cfg.adminEmails||'').split(',').map(e=>e.trim()).filter(Boolean);
-    const itemsList=order.items.map(i=>`${i.name} x${i.qty} = ${lkr(i.price*i.qty)}`).join('\n');
+    const itemsList=order.items.map(i=>`${i.name} x${i.qty}${variantLabel(i.variant||i)?' ('+variantLabel(i.variant||i)+')':''} = ${lkr(i.price*i.qty)}`).join('\n');
     for(const email of admins){
       await emailjs.send(cfg.emailjs.service,cfg.emailjs.template,{
         to_email:email,order_id:order.orderId,
@@ -3481,7 +3544,7 @@ async function rAdmProds(){
         const sc=p.stock>30?'sp-in':p.stock>5?'sp-lo':'sp-out';
         const sl=p.stock>30?'In Stock':p.stock>5?'Low Stock':'Out of Stock';
         const imgEl=p.image
-          ?`<img src="${escAttr(p.image)}" alt="${escAttr(p.name||'Product image')}" style="width:52px;height:44px;object-fit:cover;border-radius:var(--r1);border:1px solid var(--b2)">`
+          ?`<img src="${escAttr(driveImgUrl(p.image))}" data-src="${escAttr(p.image)}" alt="${escAttr(p.name||'Product image')}" onerror="this.src=this.dataset.src;this.onerror=null" style="width:52px;height:44px;object-fit:cover;border-radius:var(--r1);border:1px solid var(--b2)">`
           :`<div style="width:52px;height:44px;background:var(--l2b);border-radius:var(--r1);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.5rem">${esc(p.emoji||'📦')}</div>`;
         return`<tr>
           <td>${imgEl}</td>
@@ -3520,7 +3583,7 @@ async function rAdmOrds(){
       <tbody>${ords.map(o=>`<tr>
         <td><strong>${esc(o.orderId)}</strong><br><span style="font-size:11px;color:var(--t3)">${o.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||''}</span></td>
         <td>${esc(o.customer?.name||'—')}<br><span style="font-size:12px;color:var(--t3)">${esc(o.customer?.phone||'')}</span><br><span style="font-size:11px;color:var(--t4)">${esc(o.customer?.address||'')}</span></td>
-        <td>${o.items?.map(i=>`${esc(i.name)}×${i.qty}`).join('<br>')||'—'}<br><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
+        <td>${o.items?.map(orderItemHtml).join('<br>')||'—'}<br><strong style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${lkr(o.total)}</strong></td>
         <td>${o.paymentProof?`<img src="${escAttr(driveImgUrl(o.paymentProof))}" class="prf-img" onclick="openLB(this.dataset.src)" data-src="${escAttr(o.paymentProof)}" title="Click to view" onerror="this.outerHTML='<a href=&quot;'+this.src+'&quot; target=&quot;_blank&quot; style=&quot;color:var(--g1);font-size:12px&quot;>View</a>'">`:'<span style="font-size:12px;color:var(--t3)">None</span>'}</td>
         <td><span class="sp ${stm[o.status]||'sp-pend'}">${esc(o.status)}</span></td>
         <td>
@@ -3730,12 +3793,29 @@ function syncPMColor(i,key,val){
 function renderPMColors(){
   const el=document.getElementById('pm-color-list');if(!el)return;
   if(!pmColors.length){el.innerHTML='<p style="font-size:12px;color:var(--t3);margin-bottom:.75rem">No colors added. Product will have no color selector.</p>';return;}
-  el.innerHTML=pmColors.map((c,i)=>`<div class="pm-color-row">
-    <input class="fi" placeholder="Color name, e.g. Black" value="${escAttr(c.name||'')}" oninput="syncPMColor(${i},'name',this.value)">
-    <input class="fi" type="color" value="${escAttr(c.value||'#D4AF45')}" oninput="syncPMColor(${i},'value',this.value)">
-    <input class="fi" placeholder="Image URL for this color" value="${escAttr(c.image||'')}" oninput="syncPMColor(${i},'image',convertGdriveUrl(this.value.trim()))">
-    <button class="ta" type="button" onclick="rmPMColor(${i})">Remove</button>
-  </div>`).join('');
+  el.innerHTML=`<div class="pm-variant-chiprow">${pmColors.map(c=>`<span class="pm-variant-chip">${esc(c.name||'New Color')}</span>`).join('')}</div>
+    <p class="pm-variant-help">Add one image for each color. These images are uploaded to your Google Drive product folder and also appear in the customer gallery.</p>
+    ${pmColors.map((c,i)=>{
+      const img=c.image?`<img src="${escAttr(driveImgUrl(c.image))}" data-src="${escAttr(c.image)}" alt="${escAttr(c.name||'Color image')}" onerror="this.src=this.dataset.src;this.onerror=null">`:'<span>+ Color Image</span>';
+      return`<div class="pm-variant-card">
+        <div class="pm-variant-grid">
+          <input class="fi" placeholder="Color name, e.g. Black" value="${escAttr(c.name||'')}" oninput="syncPMColor(${i},'name',this.value)">
+          <input class="fi" type="color" value="${escAttr(c.value||'#D4AF45')}" oninput="syncPMColor(${i},'value',this.value)">
+          <input class="fi" placeholder="Or paste Google Drive image URL" value="${escAttr(c.image&&String(c.image).startsWith('data:')?'':c.image||'')}" oninput="syncPMColor(${i},'image',convertGdriveUrl(this.value.trim()))">
+          <button class="ta" type="button" onclick="rmPMColor(${i})">Remove</button>
+          <div class="pm-color-imgbox" onclick="document.getElementById('pm-color-file-${i}').click()">${img}</div>
+          <input id="pm-color-file-${i}" type="file" accept="image/*" style="display:none" onchange="handlePMColorFile(this,${i})">
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+function handlePMColorFile(input,i){
+  const f=input.files[0];if(!f||!pmColors[i])return;
+  if(f.size>32*1024*1024){toast('Image too large — max 32MB for Google Drive upload.','err');input.value='';return;}
+  const r=new FileReader();
+  r.onload=e=>{pmColors[i].image=e.target.result;renderPMColors();toast('Color image added — uploads to Drive when you save.','ok');};
+  r.readAsDataURL(f);
 }
 
 function addMediaItem(){
@@ -3766,7 +3846,7 @@ function renderPMGrid(){
   if(!pmMediaItems.length){grid.innerHTML='<p style="font-size:12px;color:var(--t3);padding:.25rem 0">No media added yet. First image = main product photo.</p>';return;}
   grid.innerHTML=pmMediaItems.map((m,i)=>{
     const preview=m.type==='image'
-      ?`<img src="${m.url}" alt="" onerror="this.parentElement.innerHTML='🖼️'">`
+      ?`<img src="${escAttr(driveImgUrl(m.url))}" data-src="${escAttr(m.url)}" alt="" onerror="this.src=this.dataset.src;this.onerror=null">`
       :m.type==='youtube'?`<div class="gthumb-play">▶</div>`
       :`<div class="gthumb-play">🎬</div>`;
     const label=i===0?'Main':(m.type==='video'?'VID':m.type==='youtube'?'YT':'IMG');
@@ -3790,7 +3870,7 @@ function pmRemove(i){pmMediaItems.splice(i,1);renderPMGrid()}
 
 function handlePImg(input){
   const f=input.files[0];if(!f)return;
-  if(f.size>2*1024*1024){toast('Max 2MB for local images.','err');return;}
+  if(f.size>32*1024*1024){toast('Image too large — max 32MB for Google Drive upload.','err');return;}
   const r=new FileReader();
   r.onload=e=>{
     const url=e.target.result;
@@ -3799,11 +3879,42 @@ function handlePImg(input){
     document.getElementById('pImgThumb').src=url;
     document.getElementById('pImgThumb').style.display='block';
     renderPMGrid();
-    toast('Image added as main photo ✓','ok');
+    toast('Image added as main photo — uploads to Drive when you save.','ok');
   };
   r.readAsDataURL(f);
 }
 function prevUrl(url){if(!url)return;curImgData=url}
+
+function productDriveTarget(){
+  const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url')||'';
+  const gd=getGdCfg()||(cfg.googleDrive||{});
+  let folderId=gd.productFolderId||gd.folderId||'';
+  const folderMatch=String(folderId).match(/folders\/([a-zA-Z0-9_-]+)/);
+  if(folderMatch)folderId=folderMatch[1];
+  if(!gasUrl||!folderId){
+    throw new Error('Google Drive product upload is not configured. In Admin > Settings > Media Storage, save Apps Script URL and Product Images Folder ID first.');
+  }
+  return{gasUrl,folderId};
+}
+async function uploadDataUrlToDrive(dataUrl,filename,folderId){
+  const {gasUrl,folderId:defaultFolder}=productDriveTarget();
+  const pure=dataUrl.includes(',')?dataUrl.split(',')[1]:dataUrl;
+  const mimeType=dataUrl.includes('data:')?dataUrl.split(';')[0].split(':')[1]:'image/jpeg';
+  const res=await fetch(gasUrl,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({action:'uploadFile',base64:pure,filename,mimeType,folderId:folderId||defaultFolder}),
+  });
+  if(!res.ok)throw new Error('Google Drive upload failed — HTTP '+res.status);
+  const json=await res.json();
+  if(!json.url)throw new Error(json.error||'Google Drive upload did not return a URL.');
+  return json.url;
+}
+async function processProductImageUrl(url,filename){
+  if(!url)return'';
+  if(!String(url).startsWith('data:'))return convertGdriveUrl(String(url).trim());
+  return uploadDataUrlToDrive(url,filename);
+}
 
 async function saveProd(){
   const name=document.getElementById('pm-n').value.trim();
@@ -3812,42 +3923,42 @@ async function saveProd(){
   const btn=document.getElementById('pmSaveBtn');
   btn.disabled=true;btn.textContent='Saving…';
 
-  // Upload any base64 images to Google Drive product folder before saving
-  const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
-  const gd=getGdCfg()||(cfg.googleDrive||{});
-  const productFolderId=gd.productFolderId||gd.folderId||'';
-
   const processedMedia=[];
-  for(let i=0;i<pmMediaItems.length;i++){
-    const m=pmMediaItems[i];
-    if(m.type==='image'&&m.url&&m.url.startsWith('data:')){
-      // This is a base64 image — upload to Drive product folder
-      if(gasUrl&&productFolderId){
-        try{
-          btn.textContent=`Uploading image ${i+1}/${pmMediaItems.length}…`;
-          const pure=m.url.split(',')[1];
-          const mimeType=m.url.split(';')[0].split(':')[1]||'image/jpeg';
-          const res=await fetch(gasUrl,{
-            method:'POST',
-            headers:{'Content-Type':'text/plain'},
-            body:JSON.stringify({action:'uploadFile',base64:pure,filename:'product_'+Date.now()+'_'+i+'.jpg',mimeType,folderId:productFolderId}),
-          });
-          if(res.ok){
-            const json=await res.json();
-            if(json.url){
-              processedMedia.push({type:'image',url:json.url});
-              continue;
-            }
-          }
-        }catch(e){console.warn('Product image upload failed:',e.message);}
+  const processedColors=[];
+  try{
+    for(let i=0;i<pmMediaItems.length;i++){
+      const m=pmMediaItems[i];
+      if(m.type==='image'){
+        btn.textContent=`Uploading main image ${i+1}/${pmMediaItems.length}…`;
+        processedMedia.push({type:'image',url:await processProductImageUrl(m.url,'product_'+Date.now()+'_'+i+'.jpg')});
+      }else{
+        processedMedia.push(m);
       }
-      // If Drive upload failed or not configured — compress before storing
-      const compressed=await compressBase64(m.url,0.55);
-      processedMedia.push({type:'image',url:compressed});
-    }else{
-      processedMedia.push(m);
     }
+    for(let i=0;i<pmColors.length;i++){
+      const c=pmColors[i];
+      if(!(c.name||'').trim())continue;
+      btn.textContent=`Uploading color image ${i+1}/${pmColors.length}…`;
+      const clean=(c.name||'color').replace(/[^a-z0-9_-]/gi,'_').toLowerCase();
+      processedColors.push({
+        name:(c.name||'').trim(),
+        value:c.value||'#777777',
+        image:c.image?await processProductImageUrl(c.image,'color_'+clean+'_'+Date.now()+'_'+i+'.jpg'):'',
+      });
+    }
+  }catch(e){
+    toast(e.message,'err');
+    btn.disabled=false;btn.textContent='Save Product';
+    return;
   }
+  const allMedia=processedMedia.slice();
+  const seen=new Set(allMedia.map(m=>m.url).filter(Boolean));
+  processedColors.forEach(c=>{
+    if(c.image&&!seen.has(c.image)){
+      allMedia.push({type:'image',url:c.image,colorName:c.name});
+      seen.add(c.image);
+    }
+  });
 
   btn.textContent='Saving product…';
   const data={
@@ -3862,9 +3973,9 @@ async function saveProd(){
     rating:parseFloat(document.getElementById('pm-r').value)||null,
     featured:document.getElementById('pm-feat').value==='true',
     sizes:document.getElementById('pm-sizes').value.split(',').map(s=>s.trim()).filter(Boolean),
-    colors:pmColors.map(c=>({name:(c.name||'').trim(),value:c.value||'#777777',image:(c.image||'').trim()})).filter(c=>c.name),
-    media:processedMedia,
-    image:pmColors.find(c=>c.image)?.image||(processedMedia.length>0&&processedMedia[0].type==='image'?processedMedia[0].url:null),
+    colors:processedColors,
+    media:allMedia,
+    image:(processedMedia.find(m=>m.type==='image')?.url)||(processedColors.find(c=>c.image)?.image)||null,
   };
   try{
     if(editProdId)await fUpd('products',editProdId,data);
@@ -3875,7 +3986,7 @@ async function saveProd(){
     toast(editProdId?'Product updated!':'Product added!','ok');
   }catch(e){
     if(e.message&&(e.message.includes('maximum allowed size')||e.message.includes('1,048,576'))){
-      toast('Images too large for Firestore (1MB limit). Set up a Google Drive product folder in Settings to upload images there instead.','err');
+      toast('Firestore refused the product size. Remove any old base64 images and save again with Google Drive upload configured.','err');
     }else{
       toast('Error saving product: '+e.message,'err');
     }
@@ -4506,7 +4617,7 @@ async function exportOrdersCSV(){
       const rows=[['Order ID','Date','Customer Name','Phone','Address','Items','Subtotal','Shipping','Discount','Total','Status','Payment Source']];
       orders.forEach(o=>{
         const date=o.createdAt?.toDate?.()?.toLocaleDateString('en-LK')||'';
-        const items=(o.items||[]).map(i=>`${i.name}x${i.qty}`).join(' | ');
+        const items=(o.items||[]).map(i=>`${i.name}x${i.qty}${variantLabel(i.variant||i)?' ('+variantLabel(i.variant||i)+')':''}`).join(' | ');
         rows.push([o.orderId,date,o.customer?.name||'',o.customer?.phone||'',o.customer?.address||'',items,o.subtotal||0,o.shipping||0,o.discount||0,o.total||0,o.status||'',o.paymentProofSource||'']);
       });
       const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
@@ -4575,14 +4686,16 @@ async function saveAbandonedCart(phone){
 // Convert Google Drive view URL to thumbnail URL that works in <img> tags
 function driveImgUrl(url){
   if(!url)return url;
+  if(String(url).startsWith('data:'))return url;
   // Already a thumbnail URL - return as is
   if(url.includes('thumbnail'))return url;
+  if(url.includes('googleusercontent.com'))return url;
   // Convert uc?export=view&id=FILE_ID to thumbnail
   const m1=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if(m1)return`https://drive.google.com/thumbnail?id=${m1[1]}&sz=w400`;
+  if(m1)return`https://drive.google.com/thumbnail?id=${m1[1]}&sz=w1000`;
   // Convert /file/d/FILE_ID/view
   const m2=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(m2)return`https://drive.google.com/thumbnail?id=${m2[1]}&sz=w400`;
+  if(m2)return`https://drive.google.com/thumbnail?id=${m2[1]}&sz=w1000`;
   return url;
 }
 
@@ -4645,15 +4758,14 @@ async function submitRv(pid){
       const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
       const gd=getGdCfg()||(cfg.googleDrive||{});
       const reviewFolderId=gd.reviewFolderId||gd.productFolderId||gd.folderId||'';
-      if(gasUrl&&reviewFolderId){
-        const pure=b64.split(',')[1];
-        const mimeType=b64.split(';')[0].split(':')[1]||'image/jpeg';
-        const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},
-          body:JSON.stringify({action:'uploadFile',base64:pure,filename:'review_'+Date.now()+'.jpg',mimeType,folderId:reviewFolderId})});
-        if(res.ok){const j=await res.json();if(j.url)photoUrl=j.url;}
-      }
-      if(!photoUrl)photoUrl=b64; // fallback to base64 if Drive not set up
-    }catch(e){photoUrl=null;}
+      if(!gasUrl||!reviewFolderId)throw new Error('Review image upload is not configured.');
+      const pure=b64.split(',')[1];
+      const mimeType=b64.split(';')[0].split(':')[1]||'image/jpeg';
+      const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'uploadFile',base64:pure,filename:'review_'+Date.now()+'.jpg',mimeType,folderId:reviewFolderId})});
+      if(res.ok){const j=await res.json();if(j.url)photoUrl=j.url;}
+      if(!photoUrl)throw new Error('Review image upload did not return a URL.');
+    }catch(e){msgEl.style.color='var(--red)';msgEl.textContent='Photo upload failed: '+e.message;return;}
   }
   try{
     // Reviews now auto-approved — no admin approval needed
@@ -4712,8 +4824,7 @@ function renderGalleryMain(m,mainId){
   if(!m)return`<div class="d-ph">📦</div>`;
   if(m.type==='image'){
     const src=typeof driveImgUrl==='function'?driveImgUrl(m.url):m.url;
-    const safe=m.url.replace(/"/g,'&quot;');
-    return`<img src="${src}" alt="" onclick="openLB(this.dataset.src)" data-src="${safe}" onerror="this.src=this.dataset.src;this.onerror=null">`;
+    return`<img src="${escAttr(src)}" alt="" onclick="openLB(this.dataset.src)" data-src="${escAttr(m.url)}" onerror="this.src=this.dataset.src;this.onerror=null">`;
   }
   if(m.type==='video')return`<video controls src="${m.url}" style="width:100%;height:100%;object-fit:contain;border-radius:var(--r5)"></video>`;
   if(m.type==='youtube'){
@@ -4732,7 +4843,7 @@ function renderGalleryThumb(m,i,mainId,thumbsId,pid){
   _galleryMedia[thumbsId][i]=m;
   const src=m.type==='image'&&typeof driveImgUrl==='function'?driveImgUrl(m.url):m.url;
   const preview=m.type==='image'
-    ?`<img src="${src}" alt="" onerror="this.style.display='none'">`
+    ?`<img src="${escAttr(src)}" alt="" onerror="this.style.display='none'">`
     :m.type==='youtube'?`<div class="yt-thumb" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center"><div class="gthumb-play">▶</div></div>`
     :`<div class="vid-thumb" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center"><div class="gthumb-play">🎬</div></div>`;
   return`<div class="gthumb${i===0?' active':''}" data-idx="${i}" onclick="switchGallery(this,'${mainId}','${thumbsId}',${i})">${preview}</div>`;
@@ -4829,14 +4940,12 @@ async function uploadToStorage(base64data,filename){
   // Google Drive upload via Apps Script
   const gd=getGdCfg();
   if(!gd||!gd.folderId){
-    console.warn('Google Drive not configured, falling back to base64');
-    return{url:base64data,source:'base64'};
+    throw new Error('Google Drive folder is not configured.');
   }
   try{
     const gasUrl=cfg.gasUrl||localStorage.getItem('sh_gas_url');
     if(!gasUrl){
-      console.warn('No Google Apps Script URL set. Using base64 fallback.');
-      return{url:base64data,source:'base64'};
+      throw new Error('Google Apps Script URL is not set.');
     }
     const pure=base64data.includes(',')?base64data.split(',')[1]:base64data;
     const mimeType=base64data.includes('data:')?base64data.split(';')[0].split(':')[1]:'image/jpeg';
@@ -4849,8 +4958,7 @@ async function uploadToStorage(base64data,filename){
     if(json.url)return{url:json.url,source:'gdrive'};
     throw new Error(json.error||'Upload failed');
   }catch(e){
-    console.warn('Google Drive upload failed:',e.message,'. Using base64 fallback.');
-    return{url:base64data,source:'base64'};
+    throw new Error('Google Drive upload failed: '+e.message);
   }
 }
 
